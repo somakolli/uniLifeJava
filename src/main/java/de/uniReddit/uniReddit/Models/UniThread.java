@@ -1,0 +1,41 @@
+package de.uniReddit.uniReddit.Models;
+
+import javax.persistence.*;
+
+/**
+ * @author Sokol Makolli
+ */
+@Entity
+@Inheritance
+@DiscriminatorValue("T")
+public class UniThread extends Post{
+    @Column
+    private String title;
+
+    @ManyToOne
+    private UniSubject uniSubject;
+
+    public UniThread(String title) {
+        this.title = title;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title, UniSubject subject) {
+        this.title = title;
+        this.uniSubject = subject;
+    }
+
+    UniThread(){
+        super();
+        //JPA
+    }
+
+    public UniThread(PostContent content, User creator, String title, UniSubject uniSubject) {
+        super(content, creator);
+        this.title = title;
+        this.uniSubject = uniSubject;
+    }
+}
