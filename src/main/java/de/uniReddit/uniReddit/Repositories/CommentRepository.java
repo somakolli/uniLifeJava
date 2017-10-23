@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
  * @author Sokol Makolli
  */
 @Repository
-public interface CommentRepository extends PagingAndSortingRepository<Comment, Long> {
+public interface CommentRepository extends JpaRepository<Comment, Long> {
 
 }

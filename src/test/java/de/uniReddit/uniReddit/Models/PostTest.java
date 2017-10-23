@@ -11,7 +11,9 @@ public class PostTest {
 
     private User user = new User(email, username);
 
-    private PostMock post = new PostMock();
+    private PostContent postContent = new PostContent("hallo");
+
+    private PostMock post = new PostMock(postContent,user);
 
 
     @Test
@@ -28,5 +30,19 @@ public class PostTest {
         post.setCreator(user);
         Assert.assertEquals(post.getCreator(), user);
         Assert.assertTrue(user.getCreatedPosts().contains(post));
+    }
+
+    @Test
+    public void upvotePostTest()
+    {
+        long karma = user.getKarma();
+        long upvotes = post.getUpVotes();
+        post.upvote(user);
+        Assert.assertEquals(upvotes+1, post.getUpVotes());
+        Assert.assertEquals(karma + 1, user.getKarma());
+        post.upvote(user);
+        Assert.assertEquals(upvotes,post.getUpVotes());
+        Assert.assertEquals(karma, user.getKarma());
+
     }
 }

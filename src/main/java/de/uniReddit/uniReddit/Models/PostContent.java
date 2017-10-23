@@ -37,4 +37,26 @@ public class PostContent {
     public String toString(){
         return content;
     }
+
+
+    public static final class PostContentBuilder {
+        private PostContent postContent;
+
+        private PostContentBuilder() {
+            postContent = new PostContent();
+        }
+
+        public static PostContentBuilder aPostContent() {
+            return new PostContentBuilder();
+        }
+
+        public PostContentBuilder content(String content) {
+            postContent.setContent(content);
+            return this;
+        }
+
+        public PostContent build() {
+            return postContent;
+        }
+    }
 }

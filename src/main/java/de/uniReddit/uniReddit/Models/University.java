@@ -1,5 +1,6 @@
 package de.uniReddit.uniReddit.Models;
 
+import com.fasterxml.jackson.annotation.*;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -11,6 +12,9 @@ import java.util.Set;
  * @author Sokol Makolli
  */
 @Entity
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class University {
     @Id
     @GeneratedValue
@@ -29,7 +33,7 @@ public class University {
     public University() {
         //JPA
     }
-
+    @JsonIgnore
     @OneToMany(mappedBy = "university")
     private Set<User> users = new HashSet<>();
 
@@ -60,5 +64,39 @@ public class University {
 
     public String getLocation() {
         return location;
+    }
+
+    @JsonIgnore
+    public HashSet<Long> getUserIds(){
+        HashSet<Long> ids = new HashSet<>();
+        getUsers().forEach(user -> ids.add(user.getId()));
+        return ids;
+    }
+
+
+    public static final class UniversityBuilder {
+        private University university;
+
+        public UniversityBuilder() {
+            university = new University();
+        }
+
+        public static UniversityBuilder anUniversity() {
+            return new UniversityBuilder();
+        }
+
+        public UniversityBuilder name(String name) {
+            university.setName(name);
+            return this;
+        }
+
+        public UniversityBuilder location(String location) {
+            university.setLocation(location);
+            return this;
+        }
+
+        public University build() {
+            return university;
+        }
     }
 }

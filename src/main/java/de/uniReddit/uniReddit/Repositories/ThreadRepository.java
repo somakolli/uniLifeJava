@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
  * @author Sokol Makolli
  */
 @Repository
-public interface ThreadRepository extends PagingAndSortingRepository<UniThread, Long> {
+public interface ThreadRepository extends JpaRepository<UniThread, Long> {
 }

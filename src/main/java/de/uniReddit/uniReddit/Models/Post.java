@@ -1,6 +1,9 @@
 package de.uniReddit.uniReddit.Models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
 
 import javax.persistence.*;
@@ -26,18 +29,20 @@ public abstract class Post {
     @Column
     private Date updated = new Date();
 
-    @Column
-    private long upvotes;
-
     @ManyToMany
     private Set<User> upvoters = new HashSet<>();
+
+    @Column
+    private long upvotes = 0;
 
     @OneToOne(mappedBy = "post")
     private PostContent content;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "parent")
     private Set<Comment> children = new HashSet<>();
 
+    @JsonBackReference
     @ManyToOne
     private User creator;
 
@@ -63,12 +68,11 @@ public abstract class Post {
         return updated;
     }
 
-
     public PostContent getContent(){
         return content;
     }
 
-    long getUpVotes(){
+    public long getUpVotes(){
         return this.upvotes;
     }
 
@@ -76,8 +80,8 @@ public abstract class Post {
         return this.creator;
     }
 
-    public void setContent(String content){
-        this.content = new PostContent(content);
+    public void setContent(PostContent content){
+        this.content = content;
         updated = new Date();
     }
 
@@ -98,15 +102,16 @@ public abstract class Post {
         return children.contains(comment);
     }
 
-    void upvote(User user) {
+    public void upvote(User user) {
         if(upvoters.contains(user)){
             upvoters.remove(user);
         }else{
             upvoters.add(user);
         }
+        upvotes = upvoters.size();
+        creator.updateKarma();
     }
 
-    long getUpvotes() {
-        return upvotes;
-    }
+
+
 }

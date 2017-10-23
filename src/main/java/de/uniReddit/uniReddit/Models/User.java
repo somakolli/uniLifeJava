@@ -1,6 +1,6 @@
 package de.uniReddit.uniReddit.Models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 import javax.validation.Constraint;
@@ -17,6 +17,9 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 
 @Entity
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class User {
     @Id
     @GeneratedValue
@@ -24,10 +27,11 @@ public class User {
 
     @NotNull
     @NotEmpty
-    @Column
+    @Column(unique = true)
     private String email;
 
-    @Column
+
+    @Column(unique = true)
     @NotNull
     @NotEmpty
     private String username;
@@ -38,6 +42,7 @@ public class User {
     @Column
     private Date registeredDate = new Date();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "creator")
     private Set<Post> createdPosts = new HashSet<>();
 
@@ -45,6 +50,7 @@ public class User {
     @ManyToMany
     private Set<UniSubject> subscribedSubjects = new HashSet<>();
 
+    @JsonIgnore
     @ManyToOne
     private University university;
 
@@ -64,6 +70,14 @@ public class User {
         return createdPosts;
     }
 
+    public Set<Long> getCreatedPostIds(){
+        HashSet<Long> ids = new HashSet<>();
+        getCreatedPosts().forEach(user -> ids.add(user.getId()));
+        return ids;
+    }
+
+
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -81,7 +95,7 @@ public class User {
         return registeredDate;
     }
 
-    String getUsername() {
+    public String getUsername() {
         return username;
     }
 
@@ -93,24 +107,77 @@ public class User {
         return university;
     }
 
+    public Long getUniversityId() {
+        return getUniversity().getId();
+    }
+
     public void setUniversity(University university) {
         university.getUsers().add(this);
         this.university = university;
     }
 
-     boolean subscribe(UniSubject uniSubject){
+    public boolean subscribe(UniSubject uniSubject){
         uniSubject.getSubscribedUsers().add(this);
         return subscribedSubjects.add(uniSubject);
     }
 
-    Set<UniSubject> getSubscribedSubjects() {
+    public Set<UniSubject> getSubscribedSubjects() {
         return subscribedSubjects;
     }
 
+    public Set<Long> getSubscribedSubjectsIds(){
+        HashSet<Long> ids = new HashSet<>();
+        getSubscribedSubjects().forEach(user -> ids.add(user.getId()));
+        return ids;
+    }
 
-    long getKarma() {
+    public long getKarma() {
         return karma.get();
     }
 
+    public long updateKarma() {
+        long karma = 0;
+        for (Post post :
+                createdPosts) {
+            karma += post.getUpVotes();
+        }
+        this.karma.set(karma);
+        return this.karma.get();
+    }
 
+    public void unSubscribe(UniSubject uniSubject) {
+        uniSubject.getSubscribedUsers().remove(this);
+        subscribedSubjects.remove(uniSubject);
+    }
+
+    public static final class UserBuilder {
+        private User user;
+
+        public UserBuilder() {
+            user = new User();
+        }
+
+        public static UserBuilder anUser() {
+            return new UserBuilder();
+        }
+
+        public UserBuilder email(String email) {
+            user.setEmail(email);
+            return this;
+        }
+
+        public UserBuilder username(String username) {
+            user.setUsername(username);
+            return this;
+        }
+
+        public UserBuilder university(University university) {
+            user.setUniversity(university);
+            return this;
+        }
+
+        public User build() {
+            return user;
+        }
+    }
 }
