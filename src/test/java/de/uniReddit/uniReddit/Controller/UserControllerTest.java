@@ -77,8 +77,8 @@ public class UserControllerTest {
     static private PostContent content;
     static private UniSubject uniSubject;
     static private UniThread thread;
-    private String email = "s.makolli@aol.de";
-    private String username = "sokol";
+    private String email = "s.m@aol.de";
+    private String username = "s";
     private static boolean setUpIsDone = false;
 
 
@@ -101,10 +101,11 @@ public class UserControllerTest {
         }
 
         uni = new University();
-        uni.setLocation("Stuttgart");
-        uni.setName("Uni Stuttgart");
-        content = new PostContent("Hallo");
+        uni.setLocation("Stuttgart1");
+        uni.setName("Uni Stuttgart1");
+        content = new PostContent("Hallo1");
         uniSubject = new UniSubject(uni);
+        uniSubject.setName("Architektur von Anwendungssysteme11");
         user = new User.UserBuilder().email(email).username(username).university(uni).build();
         thread = new UniThread(content,user, "Test",  uniSubject);
         this.universityRepository.save(uni);
@@ -214,6 +215,14 @@ public class UserControllerTest {
         params.add("name", "AAS");
         params.add("universityId", "1");
         mockMvc.perform(post("/api/unisubjects/").params(params)).andExpect(status().isCreated());
+    }
+
+    @Test
+    public void getSubjectsTest() throws Exception{
+        mockMvc = MockMvcBuilders.webAppContextSetup(context)
+                .build();
+        MvcResult  result = mockMvc.perform(get("/api/unisubjects?universityId=1")).andExpect(status().isOk()).andReturn();
+        System.out.println(result.getResponse().getContentAsString());
     }
 
 

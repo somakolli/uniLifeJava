@@ -1,5 +1,6 @@
 package de.uniReddit.uniReddit.Controllers;
 
+import de.uniReddit.uniReddit.Models.UniSubject;
 import de.uniReddit.uniReddit.Models.UniSubjectBuilder;
 import de.uniReddit.uniReddit.Models.University;
 import de.uniReddit.uniReddit.Repositories.UniSubjectRepository;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * Created by Sokol on 28.09.2017.
@@ -38,5 +41,9 @@ public class UniSubjectController {
         University university = universityRepository.findOne(universityId);
         this.uniSubjectRepository.save(UniSubjectBuilder.anUniSubject().name(name).university(university).build());
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+    @RequestMapping(method = RequestMethod.GET)
+    List<UniSubject> getSubjects(@RequestParam Long universityId){
+        return uniSubjectRepository.findAllByUniversityId(universityId);
     }
 }
