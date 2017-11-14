@@ -46,7 +46,7 @@ public class UniThread extends Post{
     public static final class UniThreadBuilder {
         private UniThread uniThread;
 
-        private UniThreadBuilder() {
+        public UniThreadBuilder() {
             uniThread = new UniThread();
         }
 

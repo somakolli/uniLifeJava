@@ -231,10 +231,11 @@ public class UserControllerTest {
     public void createThreadTest() throws Exception{
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("name", "test");
-        params.add("content", "testContent");
+        params.add("title", "test");
+        params.add("contentString", "testContent");
         params.add("subjectId", "1");
-        mockMvc.perform(post("/api/threads").params(params)).andExpect(status().isCreated());
+        params.add("authorId", "1");
+        mockMvc.perform(post("/api/unithreads").params(params)).andExpect(status().isCreated());
     }
 
 }

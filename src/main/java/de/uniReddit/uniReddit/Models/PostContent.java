@@ -42,7 +42,7 @@ public class PostContent {
     public static final class PostContentBuilder {
         private PostContent postContent;
 
-        private PostContentBuilder() {
+        public PostContentBuilder() {
             postContent = new PostContent();
         }
 
