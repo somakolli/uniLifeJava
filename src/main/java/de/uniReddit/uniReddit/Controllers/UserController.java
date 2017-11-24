@@ -44,6 +44,9 @@ public class UserController {
         if(userRepository.existsByEmail(email))
             return ResponseEntity.status(HttpStatus.CONFLICT).body("email exists");
 
+        if(!universityRepository.exists(universityId)){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("university not found");
+        }
         University university = this.universityRepository.findOne(universityId);
 
         this.userRepository.save(new User.UserBuilder().username(username).email(email).university(university).build());
@@ -76,6 +79,29 @@ public class UserController {
         user.unSubscribe(uniSubject);
         userRepository.save(user);
         uniSubjectRepository.save(uniSubject);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+    }
+    @RequestMapping(method = RequestMethod.PUT)
+    ResponseEntity<?> update(@RequestParam String username,
+                             @RequestParam String email,
+                             @RequestParam Long universityId){
+        if(!userRepository.existsByUsername(username))
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("username not found");
+        if(!universityRepository.exists(universityId))
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("universoty not found");
+        User user = userRepository.findByUsername(username);
+
+        user.setEmail(email);
+        user.setUniversity(universityRepository.findOne(universityId));
+        user.setEmail(email);
+        this.userRepository.save(user);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+    }
+    @RequestMapping(method = RequestMethod.DELETE)
+    ResponseEntity<?> delete(@RequestParam String username){
+        if(!userRepository.existsByUsername(username))
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("username not found");
+        this.universityRepository.delete(userRepository.findByUsername(username).getId());
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 

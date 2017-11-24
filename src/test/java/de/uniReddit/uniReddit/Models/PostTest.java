@@ -13,7 +13,7 @@ public class PostTest {
 
     private PostContent postContent = new PostContent("hallo");
 
-    private PostMock post = new PostMock(postContent,user);
+    private PostMock post = new PostMock(postContent.getId(),user);
 
 
     @Test

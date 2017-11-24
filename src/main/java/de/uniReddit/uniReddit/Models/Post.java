@@ -7,9 +7,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Sokol Makolli
@@ -35,8 +33,8 @@ public abstract class Post {
     @Column
     private long upvotes = 0;
 
-    @OneToOne(mappedBy = "post")
-    private PostContent content;
+    @Column
+    private Long contentId;
 
     @JsonIgnore
     @OneToMany(mappedBy = "parent")
@@ -46,9 +44,9 @@ public abstract class Post {
     @ManyToOne
     private User creator;
 
-    Post(PostContent content, User creator)
+    Post(Long contentId, User creator)
     {
-        this.content = content;
+        this.contentId = contentId;
         setCreator(creator);
     }
 
@@ -68,8 +66,8 @@ public abstract class Post {
         return updated;
     }
 
-    public PostContent getContent(){
-        return content;
+    public Long getContentId(){
+        return contentId;
     }
 
     public long getUpVotes(){
@@ -80,18 +78,18 @@ public abstract class Post {
         return this.creator;
     }
 
-    public void setContent(PostContent content){
-        this.content = content;
+    public void setContent(Long contentId){
+        this.contentId = contentId;
         updated = new Date();
     }
 
-    void setCreator(User creator) {
+    public void setCreator(User creator) {
         creator.getCreatedPosts().add(this);
         this.creator = creator;
     }
 
 
-    void addChild(Comment comment){
+    public void addChild(Comment comment){
         if(!comment.getParent().equals(this))
             comment.setParent(this);
         if(!children.contains(comment))
@@ -112,6 +110,14 @@ public abstract class Post {
         creator.updateKarma();
     }
 
+    public List<Long> getChildrenIds(){
+        List<Long> childrenIds = new ArrayList<>();
+        for (Comment comment :
+                children) {
+            childrenIds.add(comment.getId());
+        }
+        return childrenIds;
+    }
 
 
 }

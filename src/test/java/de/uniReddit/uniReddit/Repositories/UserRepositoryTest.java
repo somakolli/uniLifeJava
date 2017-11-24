@@ -50,7 +50,7 @@ public class UserRepositoryTest {
         content = new PostContent("Hallo");
         uniSubject = new UniSubject(uni);
         user = new User.UserBuilder().email(email).username(username).university(uni).build();
-        thread = new UniThread(content,user, "Test",  uniSubject);
+        thread = new UniThread(content.getId(),user, "Test",  uniSubject);
         entityManager.persist(uni);
         entityManager.persist(user);
         entityManager.persist(content);

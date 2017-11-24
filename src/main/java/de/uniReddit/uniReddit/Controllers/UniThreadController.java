@@ -8,10 +8,9 @@ import de.uniReddit.uniReddit.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Collection;
 
 import static javafx.scene.input.KeyCode.T;
 
@@ -32,7 +31,7 @@ public class UniThreadController {
                         UniversityRepository universityRepository,
                         ThreadRepository threadRepository,
                         PostContentRepository postContentRepository
-                         ){
+    ){
         this.userRepository = userRepository;
         this.uniSubjectRepository = uniSubjectRepository;
         this.universityRepository = universityRepository;
@@ -42,14 +41,22 @@ public class UniThreadController {
 
     @RequestMapping(method = RequestMethod.POST)
     ResponseEntity<?> add(@RequestParam String title, @RequestParam long subjectId, @RequestParam String contentString, @RequestParam long authorId){
+        if(!uniSubjectRepository.exists(subjectId))
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("subject not found");
         User author = userRepository.findOne(authorId);
         UniSubject uniSubject = uniSubjectRepository.findOne(subjectId);
         PostContent content = new PostContent.PostContentBuilder().content(contentString).build();
-        UniThread thread = new UniThread.UniThreadBuilder().content(content).creator(author).title(title).uniSubject(uniSubject).build();
         postContentRepository.save(content);
+        UniThread thread = new UniThread.UniThreadBuilder().content(content.getId()).creator(author).title(title).uniSubject(uniSubject).build();
         uniThreadRepository.save(thread);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
-
-
+    @RequestMapping(method = RequestMethod.GET)
+    Collection<UniThread> getAll(@RequestParam Long subjectId){
+        return uniThreadRepository.findAllByUniSubject(uniSubjectRepository.findOne(subjectId));
+    }
+    @RequestMapping(method = RequestMethod.GET, value = "/{threadId}")
+    UniThread getOne(@PathVariable Long threadId){
+        return uniThreadRepository.findOne(threadId);
+    }
 }

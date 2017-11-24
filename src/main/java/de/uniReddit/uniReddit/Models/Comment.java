@@ -17,12 +17,11 @@ import java.util.Set;
 @DiscriminatorValue("C")
 public class Comment extends Post{
     @ManyToOne
-    @NotEmpty
     @NotNull
     private Post parent;
 
-    public Comment(PostContent content, User creator, Post parent){
-        super(content, creator);
+    public Comment(Long contentId, User creator, Post parent){
+        super(contentId, creator);
         setParent(parent);
 
     }
@@ -58,8 +57,8 @@ public class Comment extends Post{
             return this;
         }
 
-        public CommentBuilder content(PostContent content) {
-            comment.setContent(content);
+        public CommentBuilder content(Long contentId) {
+            comment.setContent(contentId);
             return this;
         }
 

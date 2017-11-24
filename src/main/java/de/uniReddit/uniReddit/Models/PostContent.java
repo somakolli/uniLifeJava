@@ -1,5 +1,7 @@
 package de.uniReddit.uniReddit.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 /**
@@ -10,6 +12,7 @@ public class PostContent {
    @Id
    @GeneratedValue
    private long id;
+
 
     @Column
     private String content;
@@ -28,6 +31,8 @@ public class PostContent {
     PostContent(){
         // JPA
     }
+
+    public Long getId() {return id;}
 
     public void setContent(String content) {
         this.content = content;

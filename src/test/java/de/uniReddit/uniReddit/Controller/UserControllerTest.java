@@ -104,16 +104,16 @@ public class UserControllerTest {
         uni.setLocation("Stuttgart1");
         uni.setName("Uni Stuttgart1");
         content = new PostContent("Hallo1");
+        this.postContentRepository.save(content);
         uniSubject = new UniSubject(uni);
         uniSubject.setName("Architektur von Anwendungssysteme11");
         user = new User.UserBuilder().email(email).username(username).university(uni).build();
-        thread = new UniThread(content,user, "Test",  uniSubject);
+        thread = new UniThread(content.getId(),user, "Test",  uniSubject);
         this.universityRepository.save(uni);
         this.uniSubjectRepository.save(uniSubject);
         this.userRepository.save(user);
         user.subscribe(uniSubject);
         this.userRepository.save(user);
-        this.postContentRepository.save(content);
         this.threadRepository.save(thread);
         setUpIsDone = true;
     }
@@ -236,6 +236,24 @@ public class UserControllerTest {
         params.add("subjectId", "1");
         params.add("authorId", "1");
         mockMvc.perform(post("/api/unithreads").params(params)).andExpect(status().isCreated());
+        Long contentId = threadRepository.findOne((long)2).getContentId();
+        Assert.assertTrue(contentId==2);
+    }
+
+    @Test
+    public void getThreadTest() throws Exception{
+        mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+        MvcResult result = mockMvc.perform(get("/api/unithreads/1")).andExpect(status().isOk()).andReturn();
+    }
+
+    @Test
+    public void createCommentTest() throws Exception{
+        mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("content", "Test");
+        params.add("username", "s");
+        params.add("parentId", "1");
+        mockMvc.perform(post("/api/comments").params(params)).andExpect(status().isCreated());
     }
 
 }

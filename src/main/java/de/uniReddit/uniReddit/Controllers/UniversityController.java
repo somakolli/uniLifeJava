@@ -36,4 +36,20 @@ public class UniversityController {
     List<University> getUniversities(){
         return universityRepository.findAll();
     }
+    @RequestMapping(method = RequestMethod.PUT)
+    ResponseEntity<?> update(@RequestParam Long id, @RequestParam String name, @RequestParam String location){
+        if(!universityRepository.exists(id))
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("university not found");
+        University uni = universityRepository.findOne(id);
+        uni.setName(name);
+        uni.setLocation(location);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+    }
+    @RequestMapping(method = RequestMethod.DELETE)
+    ResponseEntity<?> delete(@RequestParam Long id){
+        if(!universityRepository.exists(id))
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("university not found");
+        universityRepository.delete(id);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+    }
 }
