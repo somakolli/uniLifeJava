@@ -37,6 +37,7 @@ public class UserRepositoryTest {
     static private PostContent content;
     static private UniSubject uniSubject;
     static private UniThread thread;
+    String password = "password";
     String email = "s.makolli@aol.de";
     String username = "sokol";
 
@@ -49,7 +50,7 @@ public class UserRepositoryTest {
         uni.setName("Uni Stuttgart");
         content = new PostContent("Hallo");
         uniSubject = new UniSubject(uni);
-        user = new User.UserBuilder().email(email).username(username).university(uni).build();
+        user = new User.UserBuilder().email(email).username(username).university(uni).password(password).build();
         thread = new UniThread(content.getId(),user, "Test",  uniSubject);
         entityManager.persist(uni);
         entityManager.persist(user);
@@ -98,7 +99,7 @@ public class UserRepositoryTest {
 
     @Test (expected = PersistenceException.class)
     public void usernameDuplication() throws Exception {
-            entityManager.persist(new User.UserBuilder().email(email).username(username).build());
+            entityManager.persist(new User.UserBuilder().email(email).username(username).password(password).build());
     }
 
     @Test

@@ -72,8 +72,9 @@ public class UniversityControllerTest{
     static private PostContent content;
     static private UniSubject uniSubject;
     static private UniThread thread;
-    String email = "s.makolli@aol.de";
-    String username = "sokol";
+    private String email = "s.makolli@aol.de";
+    private String username = "sokol";
+    private String password = "password";
     private static boolean setUpIsDone = false;
 
 
@@ -100,7 +101,7 @@ public class UniversityControllerTest{
         uni.setName("Uni Stuttgart");
         content = new PostContent("Hallo");
         uniSubject = new UniSubject(uni);
-        user = new User.UserBuilder().email(email).username(username).university(uni).build();
+        user = new User.UserBuilder().email(email).username(username).password(password).university(uni).build();
         thread = new UniThread(content.getId(),user, "Test",  uniSubject);
         this.universityRepository.save(uni);
         this.uniSubjectRepository.save(uniSubject);

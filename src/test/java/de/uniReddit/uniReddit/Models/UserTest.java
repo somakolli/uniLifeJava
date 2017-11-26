@@ -20,7 +20,7 @@ public class UserTest {
 
     @Before
     public void setup(){
-        user = new User(email, username);
+        user = new User.UserBuilder().username(username).email(email).build();
         uni = new University("Uni Stuttgart", "Stuttgart");
         uniSubject = new UniSubject(uni);
 

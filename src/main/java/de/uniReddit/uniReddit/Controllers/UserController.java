@@ -1,5 +1,6 @@
 package de.uniReddit.uniReddit.Controllers;
 
+import com.sun.org.apache.regexp.internal.RE;
 import de.uniReddit.uniReddit.Models.UniSubject;
 import de.uniReddit.uniReddit.Models.University;
 import de.uniReddit.uniReddit.Models.User;
@@ -9,10 +10,14 @@ import de.uniReddit.uniReddit.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Objects;
 
 /**
  * Created by Sokol on 25.09.2017.
@@ -23,20 +28,24 @@ public class UserController {
     private final UserRepository userRepository;
     private final UniSubjectRepository uniSubjectRepository;
     private final UniversityRepository universityRepository;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     UserController(UserRepository userRepository,
                    UniSubjectRepository uniSubjectRepository,
-                   UniversityRepository universityRepository){
+                   UniversityRepository universityRepository,
+                   BCryptPasswordEncoder bCryptPasswordEncoder){
         this.userRepository = userRepository;
         this.uniSubjectRepository = uniSubjectRepository;
         this.universityRepository = universityRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST, value = "/sign-up")
     ResponseEntity<?> add(@RequestParam String username,
                           @RequestParam String email,
-                          @RequestParam Long universityId) throws URISyntaxException {
+                          @RequestParam Long universityId,
+                          @RequestParam String password) throws URISyntaxException {
 
         if(userRepository.existsByUsername(username))
             return ResponseEntity.status(HttpStatus.CONFLICT).body("username exists");
@@ -49,7 +58,10 @@ public class UserController {
         }
         University university = this.universityRepository.findOne(universityId);
 
-        this.userRepository.save(new User.UserBuilder().username(username).email(email).university(university).build());
+        String passwordEnc = bCryptPasswordEncoder.encode(password);
+
+        this.userRepository.save(new User.UserBuilder().username(username).email(email).university(university).password(passwordEnc).build());
+
         URI uri = new URI("/api/users/" + username);
         return ResponseEntity.created(uri).build();
 
@@ -61,6 +73,10 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/subscribe")
     ResponseEntity<?> subscribe(@RequestParam String username, @RequestParam Long uniSubjectId){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        if(!(currentUsername.equals(username)))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         if(!uniSubjectRepository.existsById(uniSubjectId))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("uniSubject not found");
         User user = userRepository.findByUsername(username);

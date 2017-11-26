@@ -79,6 +79,7 @@ public class UserControllerTest {
     static private UniThread thread;
     private String email = "s.m@aol.de";
     private String username = "s";
+    private String password = "p";
     private static boolean setUpIsDone = false;
 
 
@@ -107,7 +108,7 @@ public class UserControllerTest {
         this.postContentRepository.save(content);
         uniSubject = new UniSubject(uni);
         uniSubject.setName("Architektur von Anwendungssysteme11");
-        user = new User.UserBuilder().email(email).username(username).university(uni).build();
+        user = new User.UserBuilder().email(email).username(username).password(password).university(uni).build();
         thread = new UniThread(content.getId(),user, "Test",  uniSubject);
         this.universityRepository.save(uni);
         this.uniSubjectRepository.save(uniSubject);
@@ -124,9 +125,10 @@ public class UserControllerTest {
         params.add("username", "sokol1");
         params.add("email", "s.makolli1@aol.de");
         params.add("universityId", "1");
+        params.add("password", "password");
         mockMvc = MockMvcBuilders.webAppContextSetup(context)
                 .build();
-        MvcResult response = mockMvc.perform(post("/api/users").params(params)).
+        MvcResult response = mockMvc.perform(post("/api/users/sign-up").params(params)).
                 andExpect(status().isCreated()).andReturn();
         Assert.assertEquals("s.makolli1@aol.de", userRepository.findByUsername("sokol1").getEmail());
     }
@@ -137,9 +139,10 @@ public class UserControllerTest {
         params.add("username", username);
         params.add("email", "s.makolli1@aol.de");
         params.add("universityId", "1");
+        params.add("password", "password");
         mockMvc = MockMvcBuilders.webAppContextSetup(context)
                 .build();
-        MvcResult response = mockMvc.perform(post("/api/users").params(params)).
+        MvcResult response = mockMvc.perform(post("/api/users/sign-up").params(params)).
                 andExpect(status().isConflict()).andReturn();
         Assert.assertEquals("username exists", response.getResponse().getContentAsString());
     }
@@ -149,9 +152,10 @@ public class UserControllerTest {
         params.add("username", "sokol12");
         params.add("email", email);
         params.add("universityId", "1");
+        params.add("password", "password");
         mockMvc = MockMvcBuilders.webAppContextSetup(context)
                 .build();
-        MvcResult response = mockMvc.perform(post("/api/users").params(params)).
+        MvcResult response = mockMvc.perform(post("/api/users/sign-up").params(params)).
                 andExpect(status().isConflict()).andReturn();
         Assert.assertEquals("email exists", response.getResponse().getContentAsString());
     }

@@ -9,7 +9,7 @@ public class PostTest {
 
     private static final String username = "sokol";
 
-    private User user = new User(email, username);
+    private User user = new User.UserBuilder().username(username).email(email).build();
 
     private PostContent postContent = new PostContent("hallo");
 

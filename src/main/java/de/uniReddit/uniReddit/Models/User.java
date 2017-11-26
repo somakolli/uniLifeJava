@@ -17,24 +17,18 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 
 @Entity
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
-public class User {
-    @Id
-    @GeneratedValue
-    private Long id;
+public class User extends UserMin {
+
 
     @NotNull
     @NotEmpty
     @Column(unique = true)
     private String email;
 
-
-    @Column(unique = true)
     @NotNull
     @NotEmpty
-    private String username;
+    @Column
+    private String password;
 
     @Column
     private AtomicLong karma = new AtomicLong(0);
@@ -54,16 +48,8 @@ public class User {
     @ManyToOne
     private University university;
 
-    User(String email, String username)
-    {
-        this.email = email;
-        this.username = username;
-    }
     public User() {
         // JPA
-    }
-    public Long getId() {
-        return id;
     }
 
     public Set<Post> getCreatedPosts(){
@@ -76,10 +62,14 @@ public class User {
         return ids;
     }
 
+    @Override
+    public String getPassword() {
+        return password;
+    }
 
-
-    public void setId(Long id) {
-        this.id = id;
+    @Override
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getEmail() {
@@ -93,14 +83,6 @@ public class User {
     public Date getRegisteredDate()
     {
         return registeredDate;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public University getUniversity() {
@@ -150,6 +132,7 @@ public class User {
         subscribedSubjects.remove(uniSubject);
     }
 
+
     public static final class UserBuilder {
         private User user;
 
@@ -173,6 +156,11 @@ public class User {
 
         public UserBuilder university(University university) {
             user.setUniversity(university);
+            return this;
+        }
+
+        public UserBuilder password(String password) {
+            user.setPassword(password);
             return this;
         }
 
