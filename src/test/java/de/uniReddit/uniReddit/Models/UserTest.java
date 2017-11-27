@@ -12,11 +12,11 @@ public class UserTest {
 
     private static final String username = "sokol";
 
-    User user;
+    private User user;
 
-    UniSubject uniSubject;
+    private UniSubject uniSubject;
 
-    University uni;
+    private University uni;
 
     @Before
     public void setup(){
@@ -30,8 +30,6 @@ public class UserTest {
 
     @Test
     public void testMinConstructor(){
-        //Before
-
         Assert.assertEquals(email, user.getEmail());
         Assert.assertEquals(username, user.getUsername());
     }

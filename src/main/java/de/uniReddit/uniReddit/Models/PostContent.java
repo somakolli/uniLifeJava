@@ -32,6 +32,10 @@ public class PostContent {
         // JPA
     }
 
+    public Long getUniversityId(){
+        return post.getUniversityId();
+    }
+
     public Long getId() {return id;}
 
     public void setContent(String content) {
@@ -43,6 +47,9 @@ public class PostContent {
         return content;
     }
 
+    public Post getPost() {
+        return post;
+    }
 
     public static final class PostContentBuilder {
         private PostContent postContent;

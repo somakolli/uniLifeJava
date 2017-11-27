@@ -5,6 +5,8 @@ import de.uniReddit.uniReddit.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -40,9 +42,10 @@ public class CommentController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    ResponseEntity<?> add(@RequestParam String content,@RequestParam String username,@RequestParam Long parentId){
-        if (!userRepository.existsByUsername(username))
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("user not found");
+    ResponseEntity<?> add(@RequestParam String content,@RequestParam Long parentId){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
         if(!postRepository.exists(parentId))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("parent not found");
         PostContent contentO = PostContent.PostContentBuilder.aPostContent().content(content).build();
@@ -64,14 +67,16 @@ public class CommentController {
 
     @RequestMapping(method = RequestMethod.PUT)
     ResponseEntity<?> update(@RequestParam Long commentId,
-                             @RequestParam String content,
-                             @RequestParam String username){
+                             @RequestParam String content){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
         if(!commentRepository.exists(commentId))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("comment not found");
-        if (!userRepository.existsByUsername(username))
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("user not found");
 
         Comment comment = commentRepository.findOne(commentId);
+        if(!comment.getCreator().getUsername().equals(username))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         Long postContentId = comment.getContentId();
         PostContent postContent = postContentRepository.findOne(postContentId);
         postContent.setContent(content);
@@ -84,6 +89,11 @@ public class CommentController {
     ResponseEntity<?> delete(@PathVariable Long commentId){
         if(!commentRepository.exists(commentId))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("comment not found");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        if(!commentRepository.getOne(commentId).getCreator().getUsername().equals(username)
+                ||userRepository.findByUsername(username).getRole()!=Roles.Admin)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         commentRepository.delete(commentId);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }

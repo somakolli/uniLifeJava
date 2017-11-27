@@ -20,6 +20,9 @@ public class PostContentController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{postContentId)")
     PostContent get(@PathVariable Long postContentId){
+        PostContent postContent = postContentRepository.findOne(postContentId);
+        if (postContent.getPost()==null)
+            return null;
         return postContentRepository.findOne(postContentId);
     }
 }

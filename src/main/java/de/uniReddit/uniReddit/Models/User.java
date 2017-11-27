@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.*;
 import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 import javax.validation.Constraint;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
 import java.util.Date;
@@ -17,7 +18,11 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 
 @Entity
-public class User extends UserMin {
+public class User{
+
+    @Id
+    @GeneratedValue
+    private Long id;
 
 
     @NotNull
@@ -27,8 +32,18 @@ public class User extends UserMin {
 
     @NotNull
     @NotEmpty
+    @Column(unique = true)
+    private String username;
+
+    @NotNull
+    @NotEmpty
     @Column
     private String password;
+
+    @NotNull
+    @Column
+    @Enumerated(EnumType.STRING)
+    private Roles role = Roles.User;
 
     @Column
     private AtomicLong karma = new AtomicLong(0);
@@ -52,6 +67,10 @@ public class User extends UserMin {
         // JPA
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public Set<Post> getCreatedPosts(){
         return createdPosts;
     }
@@ -62,12 +81,26 @@ public class User extends UserMin {
         return ids;
     }
 
-    @Override
+    public Roles getRole() {
+        return role;
+    }
+
+    public void setRole(Roles role) {
+        this.role = role;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String getPassword() {
         return password;
     }
 
-    @Override
     public void setPassword(String password) {
         this.password = password;
     }

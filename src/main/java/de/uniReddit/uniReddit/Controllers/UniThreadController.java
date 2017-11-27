@@ -8,6 +8,8 @@ import de.uniReddit.uniReddit.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -40,10 +42,13 @@ public class UniThreadController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    ResponseEntity<?> add(@RequestParam String title, @RequestParam long subjectId, @RequestParam String contentString, @RequestParam long authorId){
+    ResponseEntity<?> add(@RequestParam String title, @RequestParam long subjectId, @RequestParam String contentString){
         if(!uniSubjectRepository.exists(subjectId))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("subject not found");
-        User author = userRepository.findOne(authorId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        User author = userRepository.findByUsername(username);
         UniSubject uniSubject = uniSubjectRepository.findOne(subjectId);
         PostContent content = new PostContent.PostContentBuilder().content(contentString).build();
         postContentRepository.save(content);

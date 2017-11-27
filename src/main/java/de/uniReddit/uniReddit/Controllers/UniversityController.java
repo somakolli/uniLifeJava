@@ -32,10 +32,12 @@ public class UniversityController {
         this.universityRepository.save(new University.UniversityBuilder().name(name).location(location).build());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
     @RequestMapping(method = RequestMethod.GET)
-    List<University> getUniversities(){
-        return universityRepository.findAll();
+    ResponseEntity<List<University>> getUniversities(){
+        return ResponseEntity.ok(universityRepository.findAll());
     }
+
     @RequestMapping(method = RequestMethod.PUT)
     ResponseEntity<?> update(@RequestParam Long id, @RequestParam String name, @RequestParam String location){
         if(!universityRepository.exists(id))

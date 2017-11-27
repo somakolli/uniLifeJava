@@ -1,6 +1,7 @@
 package de.uniReddit.uniReddit.Controllers;
 
 import com.sun.org.apache.regexp.internal.RE;
+import de.uniReddit.uniReddit.Models.Roles;
 import de.uniReddit.uniReddit.Models.UniSubject;
 import de.uniReddit.uniReddit.Models.University;
 import de.uniReddit.uniReddit.Models.User;
@@ -60,7 +61,9 @@ public class UserController {
 
         String passwordEnc = bCryptPasswordEncoder.encode(password);
 
-        this.userRepository.save(new User.UserBuilder().username(username).email(email).university(university).password(passwordEnc).build());
+        User user = new User.UserBuilder().username(username).email(email).university(university).password(passwordEnc).build();
+
+        this.userRepository.save(user);
 
         URI uri = new URI("/api/users/" + username);
         return ResponseEntity.created(uri).build();
@@ -72,11 +75,11 @@ public class UserController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/subscribe")
-    ResponseEntity<?> subscribe(@RequestParam String username, @RequestParam Long uniSubjectId){
+    ResponseEntity<?> subscribe(@RequestParam Long uniSubjectId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName();
-        if(!(currentUsername.equals(username)))
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        String username = authentication.getName();
+
+
         if(!uniSubjectRepository.existsById(uniSubjectId))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("uniSubject not found");
         User user = userRepository.findByUsername(username);
@@ -87,9 +90,12 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
     @RequestMapping(method = RequestMethod.GET, value = "/unsubscribe")
-    ResponseEntity<?> unsubscribe(@RequestParam String username, @RequestParam Long uniSubjectId){
+    ResponseEntity<?> unsubscribe( @RequestParam Long uniSubjectId){
         if(!uniSubjectRepository.existsById(uniSubjectId))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("uniSubject not found");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
         User user = userRepository.findByUsername(username);
         UniSubject uniSubject = uniSubjectRepository.findOne(uniSubjectId);
         user.unSubscribe(uniSubject);
@@ -101,6 +107,11 @@ public class UserController {
     ResponseEntity<?> update(@RequestParam String username,
                              @RequestParam String email,
                              @RequestParam Long universityId){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+
+        if(!currentUsername.equals(username))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         if(!userRepository.existsByUsername(username))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("username not found");
         if(!universityRepository.exists(universityId))
@@ -113,13 +124,47 @@ public class UserController {
         this.userRepository.save(user);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
+
     @RequestMapping(method = RequestMethod.DELETE)
     ResponseEntity<?> delete(@RequestParam String username){
         if(!userRepository.existsByUsername(username))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("username not found");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+
+        if(!currentUsername.equals(username))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
         this.universityRepository.delete(userRepository.findByUsername(username).getId());
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
+    @RequestMapping(method = RequestMethod.PUT, value = "/elevate")
+    ResponseEntity elevate(@RequestParam String username){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        if(!userRepository.findByUsername(currentUsername).getRole().equals(Roles.Admin))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        User user = userRepository.findByUsername(username);
+        user.setRole(Roles.Admin);
+        userRepository.save(user);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+    }
 
+
+    @RequestMapping(method = RequestMethod.GET, value = "/role")
+    ResponseEntity<?> getRole(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username);
+        return ResponseEntity.ok(user.getRole());
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/me")
+    ResponseEntity<User> getCurrentUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username);
+        return ResponseEntity.ok(user);
+    }
 }

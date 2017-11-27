@@ -2,7 +2,6 @@ package de.uniReddit.uniReddit.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.uniReddit.uniReddit.Models.User;
-import de.uniReddit.uniReddit.Models.UserMin;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -41,8 +40,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication(HttpServletRequest req,
                                                 HttpServletResponse res) throws AuthenticationException {
         try {
-            UserMin creds = new ObjectMapper()
-                    .readValue(req.getInputStream(), UserMin.class);
+            User creds = new ObjectMapper()
+                    .readValue(req.getInputStream(), User.class);
 
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.*;
 
 /**
@@ -54,6 +55,10 @@ public abstract class Post {
         // JPA
     }
 
+    public Long getUniversityId() {
+        return creator.getUniversityId();
+    }
+
     public Long getId() {
         return id;
     }
@@ -76,6 +81,10 @@ public abstract class Post {
 
     public User getCreator(){
         return this.creator;
+    }
+
+    public String getCreatorUsername(){
+        return this.creator.getUsername();
     }
 
     public void setContent(Long contentId){

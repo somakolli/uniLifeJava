@@ -8,6 +8,8 @@ import de.uniReddit.uniReddit.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -27,11 +29,13 @@ public class PostController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/{postId}")
-    ResponseEntity<?> upvote(@PathVariable Long postId, @RequestParam String username){
+    ResponseEntity<?> upvote(@PathVariable Long postId){
         if(!postRepository.exists(postId))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found");
-        if(!userRepository.existsByUsername(username))
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("username not found");
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
         Post post = postRepository.findOne(postId);
         post.upvote(userRepository.findByUsername(username));
         postRepository.save(post);
