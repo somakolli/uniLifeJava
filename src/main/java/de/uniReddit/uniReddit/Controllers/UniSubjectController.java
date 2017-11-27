@@ -39,9 +39,9 @@ public class UniSubjectController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user = userRepository.findByUsername(username);
-        if(!user.getRole().equals(Roles.Admin))
-            ResponseEntity.status(HttpStatus.UNAUTHORIZED);
         University university = universityRepository.findOne(universityId);
+        if(!user.getRole().equals(Roles.Admin)&&!user.getUniversityId().equals(universityId))
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED);
         this.uniSubjectRepository.save(UniSubjectBuilder.anUniSubject().name(name).university(university).build());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -52,7 +52,7 @@ public class UniSubjectController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user = userRepository.findByUsername(username);
-        if(!user.getUniversityId().equals(universityId))
+        if(!user.getUniversityId().equals(universityId)&&!user.getRole().equals(Roles.Admin))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         return ResponseEntity.ok(uniSubjectRepository.findAllByUniversityId(universityId));
     }
@@ -64,7 +64,7 @@ public class UniSubjectController {
         String username = authentication.getName();
         User user = userRepository.findByUsername(username);
         UniSubject uniSubject = uniSubjectRepository.findOne(uniSubjectId);
-        if(!user.getUniversityId().equals(uniSubject.getUniversity().getId()))
+        if(!user.getUniversityId().equals(uniSubject.getUniversity().getId())&&!user.getRole().equals(Roles.Admin))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         return ResponseEntity.ok(uniSubjectRepository.findOne(uniSubjectId));
     }

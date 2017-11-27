@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
+import org.springframework.core.annotation.Order;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -32,6 +33,8 @@ public abstract class Post {
     private Set<User> upvoters = new HashSet<>();
 
     @Column
+    @NotNull
+    @Order
     private long upvotes = 0;
 
     @Column
@@ -75,8 +78,12 @@ public abstract class Post {
         return contentId;
     }
 
-    public long getUpVotes(){
+    public long getUpvotes(){
         return this.upvotes;
+    }
+
+    public long getChildrenCount(){
+        return children.size();
     }
 
     public User getCreator(){

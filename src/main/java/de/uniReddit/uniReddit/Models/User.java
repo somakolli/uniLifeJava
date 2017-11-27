@@ -160,7 +160,7 @@ public class User{
         long karma = 0;
         for (Post post :
                 createdPosts) {
-            karma += post.getUpVotes();
+            karma += post.getUpvotes();
         }
         this.karma.set(karma);
         return this.karma.get();

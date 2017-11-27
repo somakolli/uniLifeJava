@@ -1,11 +1,11 @@
 package de.uniReddit.uniReddit.Controllers;
 
-import de.uniReddit.uniReddit.Models.PostContent;
-import de.uniReddit.uniReddit.Models.UniSubject;
-import de.uniReddit.uniReddit.Models.UniThread;
-import de.uniReddit.uniReddit.Models.User;
+import de.uniReddit.uniReddit.Models.*;
 import de.uniReddit.uniReddit.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -42,7 +42,9 @@ public class UniThreadController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    ResponseEntity<?> add(@RequestParam String title, @RequestParam long subjectId, @RequestParam String contentString){
+    ResponseEntity<?> add(@RequestParam String title,
+                          @RequestParam long subjectId,
+                          @RequestParam String contentString){
         if(!uniSubjectRepository.exists(subjectId))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("subject not found");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -52,16 +54,42 @@ public class UniThreadController {
         UniSubject uniSubject = uniSubjectRepository.findOne(subjectId);
         PostContent content = new PostContent.PostContentBuilder().content(contentString).build();
         postContentRepository.save(content);
-        UniThread thread = new UniThread.UniThreadBuilder().content(content.getId()).creator(author).title(title).uniSubject(uniSubject).build();
+        UniThread thread = new UniThread.UniThreadBuilder().content(content.getId())
+                .creator(author).title(title).uniSubject(uniSubject).build();
         uniThreadRepository.save(thread);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+    @RequestMapping(method = RequestMethod.GET, value = "/one")
+    ResponseEntity<UniThread> getOne(@RequestParam Long threadId){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username);
+        if(!uniThreadRepository.exists(threadId))
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        UniThread uniThread = uniThreadRepository.findOne(threadId);
+        if(!user.getRole().equals(Roles.Admin)
+                &&!user.getUniversityId().equals(uniThread.getUniversityId()))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return ResponseEntity.ok(uniThread);
+    }
     @RequestMapping(method = RequestMethod.GET)
-    Collection<UniThread> getAll(@RequestParam Long subjectId){
-        return uniThreadRepository.findAllByUniSubject(uniSubjectRepository.findOne(subjectId));
+    ResponseEntity<Page<UniThread>> getAll(@RequestParam Long subjectId,
+                                           @RequestParam int page,
+                                           @RequestParam int pageSize,
+                                           @RequestParam String sortDirection,
+                                           @RequestParam String sortProperties){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username);
+        if(!user.getRole().equals(Roles.Admin)
+                &&!user.getUniversityId().equals(uniSubjectRepository.findOne(subjectId).getUniversity().getId()))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        UniSubject uniSubject = uniSubjectRepository.findOne(subjectId);
+        return ResponseEntity
+                .ok(uniThreadRepository
+                        .findAllByUniSubject(uniSubject,
+                                new PageRequest(page, pageSize, Sort.Direction.fromString(sortDirection),
+                                        sortProperties)));
     }
-    @RequestMapping(method = RequestMethod.GET, value = "/{threadId}")
-    UniThread getOne(@PathVariable Long threadId){
-        return uniThreadRepository.findOne(threadId);
-    }
+
 }

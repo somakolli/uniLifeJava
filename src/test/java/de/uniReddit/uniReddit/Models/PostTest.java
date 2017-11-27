@@ -36,12 +36,12 @@ public class PostTest {
     public void upvotePostTest()
     {
         long karma = user.getKarma();
-        long upvotes = post.getUpVotes();
+        long upvotes = post.getUpvotes();
         post.upvote(user);
-        Assert.assertEquals(upvotes+1, post.getUpVotes());
+        Assert.assertEquals(upvotes+1, post.getUpvotes());
         Assert.assertEquals(karma + 1, user.getKarma());
         post.upvote(user);
-        Assert.assertEquals(upvotes,post.getUpVotes());
+        Assert.assertEquals(upvotes,post.getUpvotes());
         Assert.assertEquals(karma, user.getKarma());
 
     }
