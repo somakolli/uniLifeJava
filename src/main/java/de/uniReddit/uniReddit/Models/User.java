@@ -22,17 +22,20 @@ public class User{
 
     @Id
     @GeneratedValue
+    @JsonView(View.Authorized.class)
     private Long id;
 
 
     @NotNull
     @NotEmpty
     @Column(unique = true)
+    @JsonView(View.Everyone.class)
     private String email;
 
     @NotNull
     @NotEmpty
     @Column(unique = true)
+    @JsonView(View.Everyone.class)
     private String username;
 
     @NotNull
@@ -43,12 +46,15 @@ public class User{
     @NotNull
     @Column
     @Enumerated(EnumType.STRING)
+    @JsonView(View.Authorized.class)
     private Roles role = Roles.User;
 
     @Column
+    @JsonView(View.Everyone.class)
     private AtomicLong karma = new AtomicLong(0);
 
     @Column
+    @JsonView(View.Authorized.class)
     private Date registeredDate = new Date();
 
     @JsonIgnore

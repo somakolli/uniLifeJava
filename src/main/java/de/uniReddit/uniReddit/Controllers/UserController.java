@@ -1,10 +1,8 @@
 package de.uniReddit.uniReddit.Controllers;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.sun.org.apache.regexp.internal.RE;
-import de.uniReddit.uniReddit.Models.Roles;
-import de.uniReddit.uniReddit.Models.UniSubject;
-import de.uniReddit.uniReddit.Models.University;
-import de.uniReddit.uniReddit.Models.User;
+import de.uniReddit.uniReddit.Models.*;
 import de.uniReddit.uniReddit.Repositories.UniSubjectRepository;
 import de.uniReddit.uniReddit.Repositories.UniversityRepository;
 import de.uniReddit.uniReddit.Repositories.UserRepository;
@@ -70,6 +68,7 @@ public class UserController {
 
     }
     @RequestMapping(method = RequestMethod.GET, value = "/{username}")
+    @JsonView(View.Everyone.class)
     User get(@PathVariable String username){
         return userRepository.findByUsername(username);
     }
@@ -160,6 +159,7 @@ public class UserController {
         return ResponseEntity.ok(user.getRole());
     }
 
+    @JsonView(View.Authorized.class)
     @RequestMapping(method = RequestMethod.GET, value = "/me")
     ResponseEntity<User> getCurrentUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
