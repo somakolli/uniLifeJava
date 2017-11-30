@@ -70,6 +70,7 @@ public class User{
     private University university;
 
     @Transient
+    @JsonView(View.Everyone.class)
     private Long universityId;
 
     public User() {
