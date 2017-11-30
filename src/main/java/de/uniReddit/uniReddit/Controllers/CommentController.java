@@ -12,9 +12,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.ws.rs.Path;
-import java.util.Collection;
-
 /**
  * Created by Sokol on 23.11.2017.
  */
@@ -26,7 +23,6 @@ public class CommentController {
     private final UniversityRepository universityRepository;
     private final ThreadRepository uniThreadRepository;
     private final PostRepository postRepository;
-    private final PostContentRepository postContentRepository;
     private final CommentRepository commentRepository;
 
     @Autowired
@@ -34,7 +30,6 @@ public class CommentController {
                         UniSubjectRepository uniSubjectRepository,
                         UniversityRepository universityRepository,
                         ThreadRepository threadRepository,
-                        PostContentRepository postContentRepository,
                         CommentRepository commentRepository,
                         PostRepository postRepository
     ){
@@ -42,26 +37,25 @@ public class CommentController {
         this.uniSubjectRepository = uniSubjectRepository;
         this.universityRepository = universityRepository;
         this.uniThreadRepository = threadRepository;
-        this.postContentRepository = postContentRepository;
         this.commentRepository = commentRepository;
         this.postRepository = postRepository;
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    ResponseEntity<?> add(@RequestParam String content,@RequestParam Long parentId){
+    ResponseEntity<?> add(@RequestBody Comment comment){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user = userRepository.findByUsername(username);
-        Post parentPost = postRepository.findOne(parentId);
-        if(!postRepository.exists(parentId))
+        if(!postRepository.exists(comment.getParentId()))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("parent not found");
+        Post parentPost = postRepository.findOne(comment.getParentId());
         if(!user.getRole().equals(Roles.Admin)
                 &&!user.getUniversityId().equals(parentPost.getUniversityId()))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        PostContent contentO = PostContent.PostContentBuilder.aPostContent().content(content).build();
-        postContentRepository.save(contentO);
-        Comment comment = Comment.CommentBuilder.aComment().content(contentO.getId()).parent(parentPost).creator(user).build();
+        comment.setParent(parentPost);
+
         parentPost.addChild(comment);
+        comment.setCreator(user);
         commentRepository.save(comment);
         postRepository.save(parentPost);
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -109,10 +103,7 @@ public class CommentController {
         Comment comment = commentRepository.findOne(commentId);
         if(!comment.getCreator().getUsername().equals(username))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        Long postContentId = comment.getContentId();
-        PostContent postContent = postContentRepository.findOne(postContentId);
-        postContent.setContent(content);
-        postContentRepository.save(postContent);
+        comment.setContent(content);
         comment.setCreator(userRepository.findByUsername(username));
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();

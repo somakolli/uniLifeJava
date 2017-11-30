@@ -2,7 +2,6 @@ package de.uniReddit.uniReddit.Controllers;
 
 import de.uniReddit.uniReddit.Models.Post;
 import de.uniReddit.uniReddit.Models.UniThread;
-import de.uniReddit.uniReddit.Repositories.PostContentRepository;
 import de.uniReddit.uniReddit.Repositories.PostRepository;
 import de.uniReddit.uniReddit.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

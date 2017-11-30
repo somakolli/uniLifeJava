@@ -33,7 +33,7 @@ public class DataLoader implements ApplicationRunner {
 
     public void run(ApplicationArguments args){
         University university = new University.UniversityBuilder()
-                .name("Universität Suttgart").location("Stuttgart").build();
+                .name("Universität Stuttgart").location("Stuttgart").build();
         universityRepository.save(university);
         String password = bCryptPasswordEncoder.encode("password");
         User user = new User.UserBuilder()

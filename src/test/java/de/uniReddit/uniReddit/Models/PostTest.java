@@ -11,9 +11,7 @@ public class PostTest {
 
     private User user = new User.UserBuilder().username(username).email(email).build();
 
-    private PostContent postContent = new PostContent("hallo");
-
-    private PostMock post = new PostMock(postContent.getId(),user);
+    private PostMock post = new PostMock("test",user);
 
 
     @Test

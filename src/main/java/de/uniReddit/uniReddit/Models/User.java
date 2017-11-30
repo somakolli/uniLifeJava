@@ -69,6 +69,9 @@ public class User{
     @ManyToOne
     private University university;
 
+    @Transient
+    private Long universityId;
+
     public User() {
         // JPA
     }
@@ -86,6 +89,7 @@ public class User{
         getCreatedPosts().forEach(user -> ids.add(user.getId()));
         return ids;
     }
+
 
     public Roles getRole() {
         return role;
@@ -128,8 +132,18 @@ public class User{
         return university;
     }
 
+
+
     public Long getUniversityId() {
-        return getUniversity().getId();
+        if(university!=null)
+            return university.getId();
+        return universityId;
+    }
+
+
+
+    public void setUniversityId(Long universityId) {
+        this.universityId = universityId;
     }
 
     public void setUniversity(University university) {

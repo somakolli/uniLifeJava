@@ -41,29 +41,26 @@ public class UserController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/sign-up")
-    ResponseEntity<?> add(@RequestParam String username,
-                          @RequestParam String email,
-                          @RequestParam Long universityId,
-                          @RequestParam String password) throws URISyntaxException {
+    ResponseEntity<?> add(@RequestBody User user) throws URISyntaxException {
 
-        if(userRepository.existsByUsername(username))
+        user.setUniversity(universityRepository.findOne(user.getUniversityId()));
+
+        if(userRepository.existsByUsername(user.getUsername()))
             return ResponseEntity.status(HttpStatus.CONFLICT).body("username exists");
 
-        if(userRepository.existsByEmail(email))
+        if(userRepository.existsByEmail(user.getEmail()))
             return ResponseEntity.status(HttpStatus.CONFLICT).body("email exists");
 
-        if(!universityRepository.exists(universityId)){
+        if(!universityRepository.exists(user.getUniversity().getId())){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("university not found");
         }
-        University university = this.universityRepository.findOne(universityId);
+        University university = this.universityRepository.findOne(user.getUniversityId());
 
-        String passwordEnc = bCryptPasswordEncoder.encode(password);
-
-        User user = new User.UserBuilder().username(username).email(email).university(university).password(passwordEnc).build();
+        String passwordEnc = bCryptPasswordEncoder.encode(user.getPassword());
 
         this.userRepository.save(user);
 
-        URI uri = new URI("/api/users/" + username);
+        URI uri = new URI("/api/users/" + user.getUsername());
         return ResponseEntity.created(uri).build();
 
     }
@@ -77,7 +74,6 @@ public class UserController {
     ResponseEntity<?> subscribe(@RequestParam Long uniSubjectId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-
 
         if(!uniSubjectRepository.existsById(uniSubjectId))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("uniSubject not found");

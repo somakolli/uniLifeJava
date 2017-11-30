@@ -33,7 +33,8 @@ public class UniSubjectController {
         this.universityRepository = universityRepository;
     }
     @RequestMapping(method = RequestMethod.POST)
-    ResponseEntity<?> add(@RequestParam String name, @RequestParam Long universityId){
+    ResponseEntity<?> add(@RequestBody UniSubject uniSubject){
+        Long universityId = uniSubject.getUniversityId();
         if (!universityRepository.exists(universityId))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("university not found");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -42,7 +43,8 @@ public class UniSubjectController {
         University university = universityRepository.findOne(universityId);
         if(!user.getRole().equals(Roles.Admin)&&!user.getUniversityId().equals(universityId))
             ResponseEntity.status(HttpStatus.UNAUTHORIZED);
-        this.uniSubjectRepository.save(UniSubjectBuilder.anUniSubject().name(name).university(university).build());
+        uniSubject.setUniversity(universityRepository.findOne(universityId));
+        this.uniSubjectRepository.save(uniSubject);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -54,7 +56,8 @@ public class UniSubjectController {
         User user = userRepository.findByUsername(username);
         if(!user.getUniversityId().equals(universityId)&&!user.getRole().equals(Roles.Admin))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        return ResponseEntity.ok(uniSubjectRepository.findAllByUniversityId(universityId));
+
+        return ResponseEntity.ok(uniSubjectRepository.findAllByUniversity(universityRepository.findOne(universityId)));
     }
 
 

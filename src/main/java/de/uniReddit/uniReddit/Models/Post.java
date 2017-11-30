@@ -1,10 +1,7 @@
 package de.uniReddit.uniReddit.Models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.core.annotation.Order;
 
 import javax.persistence.*;
@@ -20,7 +17,7 @@ import java.util.*;
 @Table(name = "POST")
 public abstract class Post {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
     @Column
@@ -38,7 +35,7 @@ public abstract class Post {
     private long upvotes = 0;
 
     @Column
-    private Long contentId;
+    private String content;
 
     @JsonIgnore
     @OneToMany(mappedBy = "parent")
@@ -48,9 +45,9 @@ public abstract class Post {
     @ManyToOne
     private User creator;
 
-    Post(Long contentId, User creator)
+    Post(String content, User creator)
     {
-        this.contentId = contentId;
+        this.content = content;
         setCreator(creator);
     }
 
@@ -74,8 +71,8 @@ public abstract class Post {
         return updated;
     }
 
-    public Long getContentId(){
-        return contentId;
+    public String getContent(){
+        return content;
     }
 
     public long getUpvotes(){
@@ -94,8 +91,8 @@ public abstract class Post {
         return this.creator.getUsername();
     }
 
-    public void setContent(Long contentId){
-        this.contentId = contentId;
+    public void setContent(String content){
+        this.content = content;
         updated = new Date();
     }
 

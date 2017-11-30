@@ -2,10 +2,7 @@ package de.uniReddit.uniReddit.Models;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,8 +17,11 @@ public class Comment extends Post{
     @NotNull
     private Post parent;
 
-    public Comment(Long contentId, User creator, Post parent){
-        super(contentId, creator);
+    @Transient
+    private Long parentId;
+
+    public Comment(String content, User creator, Post parent){
+        super(content, creator);
         setParent(parent);
 
     }
@@ -30,11 +30,19 @@ public class Comment extends Post{
         // JPA
     }
 
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
     Post getParent() {
         return parent;
     }
 
-    void setParent(Post parent) {
+    public void setParent(Post parent) {
         this.parent = parent;
         if(!parent.containsChild(this))
             parent.addChild(this);
@@ -57,8 +65,8 @@ public class Comment extends Post{
             return this;
         }
 
-        public CommentBuilder content(Long contentId) {
-            comment.setContent(contentId);
+        public CommentBuilder content(String content) {
+            comment.setContent(content);
             return this;
         }
 

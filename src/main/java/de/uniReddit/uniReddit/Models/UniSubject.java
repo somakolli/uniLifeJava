@@ -20,6 +20,7 @@ public class UniSubject {
     @Column
     private String name;
 
+    @JsonIgnore
     @ManyToOne
     private University university;
 
@@ -31,7 +32,20 @@ public class UniSubject {
     @OneToMany(mappedBy = "uniSubject")
     private Set<UniThread> uniThreads = new HashSet<>();
 
+    @Transient
+    private Long universityId;
+
     UniSubject() {
+    }
+
+    public Long getUniversityId() {
+        if(university!=null)
+            return university.getId();
+        return universityId;
+    }
+
+    public void setUniversityId(Long universityId) {
+        this.universityId = universityId;
     }
 
     public UniSubject(University university) {
@@ -41,6 +55,7 @@ public class UniSubject {
     public long getId() {
         return id;
     }
+
 
     public University getUniversity() {
         return university;
@@ -56,12 +71,6 @@ public class UniSubject {
 
     public void setSubscribedUsers(Set<User> subscribedUsers) {
         this.subscribedUsers = subscribedUsers;
-    }
-
-    public Set<Long> getUniThreadIds(){
-        HashSet<Long> ids = new HashSet<>();
-        getUniThreads().forEach(thread -> ids.add(thread.getId()));
-        return ids;
     }
 
     public Set<UniThread> getUniThreads() {

@@ -15,8 +15,23 @@ public class UniThread extends Post{
     @ManyToOne
     private UniSubject uniSubject;
 
+    @Transient
+    private Long uniSubjectId;
+
     public String getTitle() {
         return title;
+    }
+
+    public UniSubject getUniSubject() {
+        return uniSubject;
+    }
+
+    public Long getUniSubjectId() {
+        return uniSubjectId;
+    }
+
+    public void setUniSubjectId(Long uniSubjectId) {
+        this.uniSubjectId = uniSubjectId;
     }
 
     public void setTitle(String title) {
@@ -32,8 +47,8 @@ public class UniThread extends Post{
         //JPA
     }
 
-    public UniThread(Long contentId, User creator, String title, UniSubject uniSubject) {
-        super(contentId, creator);
+    public UniThread(String content, User creator, String title, UniSubject uniSubject) {
+        super(content, creator);
         this.title = title;
         this.uniSubject = uniSubject;
     }
@@ -60,8 +75,8 @@ public class UniThread extends Post{
             return this;
         }
 
-        public UniThreadBuilder content(Long contentId) {
-            uniThread.setContent(contentId);
+        public UniThreadBuilder content(String content) {
+            uniThread.setContent(content);
             return this;
         }
 

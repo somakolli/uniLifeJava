@@ -26,37 +26,31 @@ public class UniThreadController {
     private final UniSubjectRepository uniSubjectRepository;
     private final UniversityRepository universityRepository;
     private final ThreadRepository uniThreadRepository;
-    private final PostContentRepository postContentRepository;
+
     @Autowired
     UniThreadController(UserRepository userRepository,
                         UniSubjectRepository uniSubjectRepository,
                         UniversityRepository universityRepository,
-                        ThreadRepository threadRepository,
-                        PostContentRepository postContentRepository
+                        ThreadRepository threadRepository
     ){
         this.userRepository = userRepository;
         this.uniSubjectRepository = uniSubjectRepository;
         this.universityRepository = universityRepository;
         this.uniThreadRepository = threadRepository;
-        this.postContentRepository = postContentRepository;
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    ResponseEntity<?> add(@RequestParam String title,
-                          @RequestParam long subjectId,
-                          @RequestParam String contentString){
-        if(!uniSubjectRepository.exists(subjectId))
+    ResponseEntity<?> add(@RequestBody UniThread uniThread){
+        if(!uniSubjectRepository.exists(uniThread.getUniSubjectId()))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("subject not found");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
         User author = userRepository.findByUsername(username);
-        UniSubject uniSubject = uniSubjectRepository.findOne(subjectId);
-        PostContent content = new PostContent.PostContentBuilder().content(contentString).build();
-        postContentRepository.save(content);
-        UniThread thread = new UniThread.UniThreadBuilder().content(content.getId())
-                .creator(author).title(title).uniSubject(uniSubject).build();
-        uniThreadRepository.save(thread);
+        UniSubject uniSubject = uniSubjectRepository.findOne(uniThread.getUniSubjectId());
+        uniThread.setUniSubject(uniSubject);
+        uniThread.setCreator(author);
+        uniThreadRepository.save(uniThread);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     @RequestMapping(method = RequestMethod.GET, value = "/one")

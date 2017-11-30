@@ -1,5 +1,6 @@
 package de.uniReddit.uniReddit.Controllers;
 
+import de.uniReddit.uniReddit.Models.Roles;
 import de.uniReddit.uniReddit.Models.University;
 import de.uniReddit.uniReddit.Repositories.UniSubjectRepository;
 import de.uniReddit.uniReddit.Repositories.UniversityRepository;
@@ -7,10 +8,9 @@ import de.uniReddit.uniReddit.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,15 +21,24 @@ import java.util.List;
 @RequestMapping("/api/universities")
 public class UniversityController {
     private final UniversityRepository universityRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    UniversityController(UniversityRepository universityRepository){
+    UniversityController(UniversityRepository universityRepository,
+                         UserRepository userRepository){
         this.universityRepository = universityRepository;
+        this.userRepository = userRepository;
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    ResponseEntity<?> add(@RequestParam String name, @RequestParam String location){
-        this.universityRepository.save(new University.UniversityBuilder().name(name).location(location).build());
+    ResponseEntity<?> add(@RequestBody University university){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        if(!userRepository.findByUsername(username).getRole().equals(Roles.Admin))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+
+        this.universityRepository.save(university);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -42,6 +51,10 @@ public class UniversityController {
     ResponseEntity<?> update(@RequestParam Long id, @RequestParam String name, @RequestParam String location){
         if(!universityRepository.exists(id))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("university not found");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        if(!userRepository.findByUsername(username).getRole().equals(Roles.Admin))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         University uni = universityRepository.findOne(id);
         uni.setName(name);
         uni.setLocation(location);
@@ -51,6 +64,10 @@ public class UniversityController {
     ResponseEntity<?> delete(@RequestParam Long id){
         if(!universityRepository.exists(id))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("university not found");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        if(!userRepository.findByUsername(username).getRole().equals(Roles.Admin))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         universityRepository.delete(id);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
