@@ -18,7 +18,7 @@ import java.util.List;
  * Created by Sokol on 28.09.2017.
  */
 @RestController
-@RequestMapping("/api/unisubjects")
+@RequestMapping("/api/uniSubjects")
 public class UniSubjectController {
     private final UserRepository userRepository;
     private final UniSubjectRepository uniSubjectRepository;

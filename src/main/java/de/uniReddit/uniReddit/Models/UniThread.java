@@ -53,7 +53,6 @@ public class UniThread extends Post{
         this.uniSubject = uniSubject;
     }
 
-
     public static final class UniThreadBuilder {
         private UniThread uniThread;
 

@@ -101,7 +101,6 @@ public abstract class Post {
         this.creator = creator;
     }
 
-
     public void addChild(Comment comment){
         if(!comment.getParent().equals(this))
             comment.setParent(this);

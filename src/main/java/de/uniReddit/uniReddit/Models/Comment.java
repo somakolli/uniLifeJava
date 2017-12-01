@@ -48,7 +48,6 @@ public class Comment extends Post{
             parent.addChild(this);
     }
 
-
     public static final class CommentBuilder {
         private Comment comment;
 

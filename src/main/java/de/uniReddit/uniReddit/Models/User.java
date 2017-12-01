@@ -25,7 +25,6 @@ public class User{
     @JsonView(View.Authorized.class)
     private Long id;
 
-
     @NotNull
     @NotEmpty
     @Column(unique = true)
@@ -91,7 +90,6 @@ public class User{
         return ids;
     }
 
-
     public Roles getRole() {
         return role;
     }
@@ -133,15 +131,11 @@ public class User{
         return university;
     }
 
-
-
     public Long getUniversityId() {
         if(university!=null)
             return university.getId();
         return universityId;
     }
-
-
 
     public void setUniversityId(Long universityId) {
         this.universityId = universityId;
@@ -185,7 +179,6 @@ public class User{
         uniSubject.getSubscribedUsers().remove(this);
         subscribedSubjects.remove(uniSubject);
     }
-
 
     public static final class UserBuilder {
         private User user;

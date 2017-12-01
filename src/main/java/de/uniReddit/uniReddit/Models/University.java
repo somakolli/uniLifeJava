@@ -73,7 +73,6 @@ public class University {
         return ids;
     }
 
-
     public static final class UniversityBuilder {
         private University university;
 

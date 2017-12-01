@@ -56,7 +56,6 @@ public class UniSubject {
         return id;
     }
 
-
     public University getUniversity() {
         return university;
     }
