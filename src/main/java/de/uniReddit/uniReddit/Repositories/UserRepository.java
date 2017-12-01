@@ -1,19 +1,16 @@
 package de.uniReddit.uniReddit.Repositories;
 
-import de.uniReddit.uniReddit.Models.User;
+import de.uniReddit.uniReddit.Models.UTUser;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
-
-import javax.persistence.Entity;
 
 /**
  * @author Sokol Makolli
  */
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
-    User findByEmail(String email);
-    User findByUsername(String username);
+public interface UserRepository extends JpaRepository<UTUser, Long> {
+    UTUser findByEmail(String email);
+    UTUser findByUsername(String username);
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
 

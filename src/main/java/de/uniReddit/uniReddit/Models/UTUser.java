@@ -3,14 +3,10 @@ package de.uniReddit.uniReddit.Models;
 import com.fasterxml.jackson.annotation.*;
 import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
-import javax.validation.Constraint;
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.math.BigInteger;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -18,7 +14,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 
 @Entity
-public class User{
+public class UTUser {
 
     @Id
     @GeneratedValue
@@ -72,7 +68,7 @@ public class User{
     @JsonView(View.Everyone.class)
     private Long universityId;
 
-    public User() {
+    public UTUser() {
         // JPA
     }
 
@@ -142,12 +138,12 @@ public class User{
     }
 
     public void setUniversity(University university) {
-        university.getUsers().add(this);
+        university.getUTUsers().add(this);
         this.university = university;
     }
 
     public boolean subscribe(UniSubject uniSubject){
-        uniSubject.getSubscribedUsers().add(this);
+        uniSubject.getSubscribedUTUsers().add(this);
         return subscribedSubjects.add(uniSubject);
     }
 
@@ -176,15 +172,15 @@ public class User{
     }
 
     public void unSubscribe(UniSubject uniSubject) {
-        uniSubject.getSubscribedUsers().remove(this);
+        uniSubject.getSubscribedUTUsers().remove(this);
         subscribedSubjects.remove(uniSubject);
     }
 
     public static final class UserBuilder {
-        private User user;
+        private UTUser UTUser;
 
         public UserBuilder() {
-            user = new User();
+            UTUser = new UTUser();
         }
 
         public static UserBuilder anUser() {
@@ -192,27 +188,27 @@ public class User{
         }
 
         public UserBuilder email(String email) {
-            user.setEmail(email);
+            UTUser.setEmail(email);
             return this;
         }
 
         public UserBuilder username(String username) {
-            user.setUsername(username);
+            UTUser.setUsername(username);
             return this;
         }
 
         public UserBuilder university(University university) {
-            user.setUniversity(university);
+            UTUser.setUniversity(university);
             return this;
         }
 
         public UserBuilder password(String password) {
-            user.setPassword(password);
+            UTUser.setPassword(password);
             return this;
         }
 
-        public User build() {
-            return user;
+        public UTUser build() {
+            return UTUser;
         }
     }
 }

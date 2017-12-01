@@ -1,11 +1,7 @@
 package de.uniReddit.uniReddit.Models;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author Sokol Makolli
@@ -20,7 +16,7 @@ public class Comment extends Post{
     @Transient
     private Long parentId;
 
-    public Comment(String content, User creator, Post parent){
+    public Comment(String content, UTUser creator, Post parent){
         super(content, creator);
         setParent(parent);
 
@@ -69,7 +65,7 @@ public class Comment extends Post{
             return this;
         }
 
-        public CommentBuilder creator(User creator) {
+        public CommentBuilder creator(UTUser creator) {
             comment.setCreator(creator);
             return this;
         }

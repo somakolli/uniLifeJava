@@ -42,7 +42,7 @@ public class UniThreadController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
-        User author = userRepository.findByUsername(username);
+        UTUser author = userRepository.findByUsername(username);
         UniSubject uniSubject = uniSubjectRepository.findOne(uniThread.getUniSubjectId());
         uniThread.setUniSubject(uniSubject);
         uniThread.setCreator(author);
@@ -53,12 +53,12 @@ public class UniThreadController {
     ResponseEntity<UniThread> getOne(@RequestParam Long threadId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        User user = userRepository.findByUsername(username);
+        UTUser UTUser = userRepository.findByUsername(username);
         if(!uniThreadRepository.exists(threadId))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         UniThread uniThread = uniThreadRepository.findOne(threadId);
-        if(!user.getRole().equals(Roles.Admin)
-                &&!user.getUniversityId().equals(uniThread.getUniversityId()))
+        if(!UTUser.getRole().equals(Roles.Admin)
+                &&!UTUser.getUniversityId().equals(uniThread.getUniversityId()))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         return ResponseEntity.ok(uniThread);
     }
@@ -70,9 +70,9 @@ public class UniThreadController {
                                            @RequestParam String sortProperties){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        User user = userRepository.findByUsername(username);
-        if(!user.getRole().equals(Roles.Admin)
-                &&!user.getUniversityId().equals(uniSubjectRepository.findOne(subjectId).getUniversity().getId()))
+        UTUser UTUser = userRepository.findByUsername(username);
+        if(!UTUser.getRole().equals(Roles.Admin)
+                &&!UTUser.getUniversityId().equals(uniSubjectRepository.findOne(subjectId).getUniversity().getId()))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         UniSubject uniSubject = uniSubjectRepository.findOne(subjectId);
         return ResponseEntity

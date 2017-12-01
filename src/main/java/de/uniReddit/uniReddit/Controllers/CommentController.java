@@ -45,17 +45,17 @@ public class CommentController {
     ResponseEntity<?> add(@RequestBody Comment comment){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        User user = userRepository.findByUsername(username);
+        UTUser UTUser = userRepository.findByUsername(username);
         if(!postRepository.exists(comment.getParentId()))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("parent not found");
         Post parentPost = postRepository.findOne(comment.getParentId());
-        if(!user.getRole().equals(Roles.Admin)
-                &&!user.getUniversityId().equals(parentPost.getUniversityId()))
+        if(!UTUser.getRole().equals(Roles.Admin)
+                &&!UTUser.getUniversityId().equals(parentPost.getUniversityId()))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         comment.setParent(parentPost);
 
         parentPost.addChild(comment);
-        comment.setCreator(user);
+        comment.setCreator(UTUser);
         commentRepository.save(comment);
         postRepository.save(parentPost);
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -64,11 +64,11 @@ public class CommentController {
     ResponseEntity<Comment> get(@PathVariable Long commentId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        User user = userRepository.findByUsername(username);
+        UTUser UTUser = userRepository.findByUsername(username);
         if(!commentRepository.exists(commentId))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        if(!user.getRole().equals(Roles.Admin)
-                &&!user.getUniversityId().equals(commentRepository.getOne(commentId).getUniversityId()))
+        if(!UTUser.getRole().equals(Roles.Admin)
+                &&!UTUser.getUniversityId().equals(commentRepository.getOne(commentId).getUniversityId()))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         return ResponseEntity.ok(commentRepository.findOne(commentId));
@@ -82,9 +82,9 @@ public class CommentController {
                                                 @RequestParam String sortProperties){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        User user = userRepository.findByUsername(username);
-        if(!user.getRole().equals(Roles.Admin)
-                &&!user.getUniversityId().equals(postRepository.getOne(parentId).getUniversityId()))
+        UTUser UTUser = userRepository.findByUsername(username);
+        if(!UTUser.getRole().equals(Roles.Admin)
+                &&!UTUser.getUniversityId().equals(postRepository.getOne(parentId).getUniversityId()))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         return ResponseEntity.ok(commentRepository.findAllByParentId(parentId,
                 new PageRequest(page, pageSize, Sort.Direction.fromString(sortDirection),sortProperties)));

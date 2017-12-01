@@ -1,8 +1,8 @@
 package de.uniReddit.uniReddit;
 
 import de.uniReddit.uniReddit.Models.Roles;
+import de.uniReddit.uniReddit.Models.UTUser;
 import de.uniReddit.uniReddit.Models.University;
-import de.uniReddit.uniReddit.Models.User;
 import de.uniReddit.uniReddit.Repositories.UniversityRepository;
 import de.uniReddit.uniReddit.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +10,6 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-
-
-import javax.xml.crypto.Data;
 
 /**
  * Created by Sokol on 26.11.2017.
@@ -36,10 +33,10 @@ public class DataLoader implements ApplicationRunner {
                 .name("Universität Stuttgart").location("Stuttgart").build();
         universityRepository.save(university);
         String password = bCryptPasswordEncoder.encode("password");
-        User user = new User.UserBuilder()
+        UTUser UTUser = new UTUser.UserBuilder()
                 .username("admin").email("info@unitalq.com").password(password).university(university).build();
-        user.setRole(Roles.Admin);
-        userRepository.save(user);
+        UTUser.setRole(Roles.Admin);
+        userRepository.save(UTUser);
     }
 
 }

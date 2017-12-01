@@ -27,7 +27,7 @@ public abstract class Post {
     private Date updated = new Date();
 
     @ManyToMany
-    private Set<User> upvoters = new HashSet<>();
+    private Set<UTUser> upvoters = new HashSet<>();
 
     @Column
     @NotNull
@@ -43,9 +43,9 @@ public abstract class Post {
 
     @JsonBackReference
     @ManyToOne
-    private User creator;
+    private UTUser creator;
 
-    Post(String content, User creator)
+    Post(String content, UTUser creator)
     {
         this.content = content;
         setCreator(creator);
@@ -83,7 +83,7 @@ public abstract class Post {
         return children.size();
     }
 
-    public User getCreator(){
+    public UTUser getCreator(){
         return this.creator;
     }
 
@@ -96,7 +96,7 @@ public abstract class Post {
         updated = new Date();
     }
 
-    public void setCreator(User creator) {
+    public void setCreator(UTUser creator) {
         creator.getCreatedPosts().add(this);
         this.creator = creator;
     }
@@ -112,11 +112,11 @@ public abstract class Post {
         return children.contains(comment);
     }
 
-    public void upvote(User user) {
-        if(upvoters.contains(user)){
-            upvoters.remove(user);
+    public void upvote(UTUser UTUser) {
+        if(upvoters.contains(UTUser)){
+            upvoters.remove(UTUser);
         }else{
-            upvoters.add(user);
+            upvoters.add(UTUser);
         }
         upvotes = upvoters.size();
         creator.updateKarma();

@@ -1,7 +1,6 @@
 package de.uniReddit.uniReddit.Controllers;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.sun.org.apache.regexp.internal.RE;
 import de.uniReddit.uniReddit.Models.*;
 import de.uniReddit.uniReddit.Repositories.UniSubjectRepository;
 import de.uniReddit.uniReddit.Repositories.UniversityRepository;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Objects;
 
 /**
  * Created by Sokol on 25.09.2017.
@@ -41,32 +39,32 @@ public class UserController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/sign-up")
-    ResponseEntity<?> add(@RequestBody User user) throws URISyntaxException {
+    ResponseEntity<?> add(@RequestBody UTUser UTUser) throws URISyntaxException {
 
-        user.setUniversity(universityRepository.findOne(user.getUniversityId()));
+        UTUser.setUniversity(universityRepository.findOne(UTUser.getUniversityId()));
 
-        if(userRepository.existsByUsername(user.getUsername()))
+        if(userRepository.existsByUsername(UTUser.getUsername()))
             return ResponseEntity.status(HttpStatus.CONFLICT).body("username exists");
 
-        if(userRepository.existsByEmail(user.getEmail()))
+        if(userRepository.existsByEmail(UTUser.getEmail()))
             return ResponseEntity.status(HttpStatus.CONFLICT).body("email exists");
 
-        if(!universityRepository.exists(user.getUniversity().getId())){
+        if(!universityRepository.exists(UTUser.getUniversity().getId())){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("university not found");
         }
-        University university = this.universityRepository.findOne(user.getUniversityId());
+        University university = this.universityRepository.findOne(UTUser.getUniversityId());
 
-        String passwordEnc = bCryptPasswordEncoder.encode(user.getPassword());
+        String passwordEnc = bCryptPasswordEncoder.encode(UTUser.getPassword());
 
-        this.userRepository.save(user);
+        this.userRepository.save(UTUser);
 
-        URI uri = new URI("/api/users/" + user.getUsername());
+        URI uri = new URI("/api/users/" + UTUser.getUsername());
         return ResponseEntity.created(uri).build();
 
     }
     @RequestMapping(method = RequestMethod.GET, value = "/{username}")
     @JsonView(View.Everyone.class)
-    User get(@PathVariable String username){
+    UTUser get(@PathVariable String username){
         return userRepository.findByUsername(username);
     }
 
@@ -77,10 +75,10 @@ public class UserController {
 
         if(!uniSubjectRepository.existsById(uniSubjectId))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("uniSubject not found");
-        User user = userRepository.findByUsername(username);
+        UTUser UTUser = userRepository.findByUsername(username);
         UniSubject uniSubject = uniSubjectRepository.findOne(uniSubjectId);
-        user.subscribe(uniSubject);
-        userRepository.save(user);
+        UTUser.subscribe(uniSubject);
+        userRepository.save(UTUser);
         uniSubjectRepository.save(uniSubject);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
@@ -91,10 +89,10 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
-        User user = userRepository.findByUsername(username);
+        UTUser UTUser = userRepository.findByUsername(username);
         UniSubject uniSubject = uniSubjectRepository.findOne(uniSubjectId);
-        user.unSubscribe(uniSubject);
-        userRepository.save(user);
+        UTUser.unSubscribe(uniSubject);
+        userRepository.save(UTUser);
         uniSubjectRepository.save(uniSubject);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
@@ -111,12 +109,12 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("username not found");
         if(!universityRepository.exists(universityId))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("universoty not found");
-        User user = userRepository.findByUsername(username);
+        UTUser UTUser = userRepository.findByUsername(username);
 
-        user.setEmail(email);
-        user.setUniversity(universityRepository.findOne(universityId));
-        user.setEmail(email);
-        this.userRepository.save(user);
+        UTUser.setEmail(email);
+        UTUser.setUniversity(universityRepository.findOne(universityId));
+        UTUser.setEmail(email);
+        this.userRepository.save(UTUser);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
@@ -140,9 +138,9 @@ public class UserController {
         String currentUsername = authentication.getName();
         if(!userRepository.findByUsername(currentUsername).getRole().equals(Roles.Admin))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        User user = userRepository.findByUsername(username);
-        user.setRole(Roles.Admin);
-        userRepository.save(user);
+        UTUser UTUser = userRepository.findByUsername(username);
+        UTUser.setRole(Roles.Admin);
+        userRepository.save(UTUser);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
@@ -151,16 +149,16 @@ public class UserController {
     ResponseEntity<?> getRole(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        User user = userRepository.findByUsername(username);
-        return ResponseEntity.ok(user.getRole());
+        UTUser UTUser = userRepository.findByUsername(username);
+        return ResponseEntity.ok(UTUser.getRole());
     }
 
     @JsonView(View.Authorized.class)
     @RequestMapping(method = RequestMethod.GET, value = "/me")
-    ResponseEntity<User> getCurrentUser(){
+    ResponseEntity<UTUser> getCurrentUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        User user = userRepository.findByUsername(username);
-        return ResponseEntity.ok(user);
+        UTUser UTUser = userRepository.findByUsername(username);
+        return ResponseEntity.ok(UTUser);
     }
 }

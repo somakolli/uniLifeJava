@@ -26,8 +26,8 @@ public final class UniSubjectBuilder {
         return this;
     }
 
-    public UniSubjectBuilder subscribedUsers(Set<User> subscribedUsers) {
-        uniSubject.setSubscribedUsers(subscribedUsers);
+    public UniSubjectBuilder subscribedUsers(Set<UTUser> subscribedUTUsers) {
+        uniSubject.setSubscribedUTUsers(subscribedUTUsers);
         return this;
     }
 

@@ -47,7 +47,7 @@ public class UniThread extends Post{
         //JPA
     }
 
-    public UniThread(String content, User creator, String title, UniSubject uniSubject) {
+    public UniThread(String content, UTUser creator, String title, UniSubject uniSubject) {
         super(content, creator);
         this.title = title;
         this.uniSubject = uniSubject;
@@ -79,7 +79,7 @@ public class UniThread extends Post{
             return this;
         }
 
-        public UniThreadBuilder creator(User creator) {
+        public UniThreadBuilder creator(UTUser creator) {
             uniThread.setCreator(creator);
             return this;
         }

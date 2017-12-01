@@ -35,7 +35,7 @@ public class University {
     }
     @JsonIgnore
     @OneToMany(mappedBy = "university")
-    private Set<User> users = new HashSet<>();
+    private Set<UTUser> UTUsers = new HashSet<>();
 
     University(String name, String location) {
         this.name = name;
@@ -46,8 +46,8 @@ public class University {
         this.name = name;
     }
 
-    public Set<User> getUsers() {
-        return users;
+    public Set<UTUser> getUTUsers() {
+        return UTUsers;
     }
 
     public void setLocation(String location) {
@@ -69,7 +69,7 @@ public class University {
     @JsonIgnore
     public HashSet<Long> getUserIds(){
         HashSet<Long> ids = new HashSet<>();
-        getUsers().forEach(user -> ids.add(user.getId()));
+        getUTUsers().forEach(user -> ids.add(user.getId()));
         return ids;
     }
 

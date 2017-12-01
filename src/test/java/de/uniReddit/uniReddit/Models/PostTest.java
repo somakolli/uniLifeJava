@@ -9,9 +9,9 @@ public class PostTest {
 
     private static final String username = "sokol";
 
-    private User user = new User.UserBuilder().username(username).email(email).build();
+    private UTUser UTUser = new UTUser.UserBuilder().username(username).email(email).build();
 
-    private PostMock post = new PostMock("test",user);
+    private PostMock post = new PostMock("test", UTUser);
 
 
     @Test
@@ -25,22 +25,22 @@ public class PostTest {
     @Test
     public void createPostTest()
     {
-        post.setCreator(user);
-        Assert.assertEquals(post.getCreator(), user);
-        Assert.assertTrue(user.getCreatedPosts().contains(post));
+        post.setCreator(UTUser);
+        Assert.assertEquals(post.getCreator(), UTUser);
+        Assert.assertTrue(UTUser.getCreatedPosts().contains(post));
     }
 
     @Test
     public void upvotePostTest()
     {
-        long karma = user.getKarma();
+        long karma = UTUser.getKarma();
         long upvotes = post.getUpvotes();
-        post.upvote(user);
+        post.upvote(UTUser);
         Assert.assertEquals(upvotes+1, post.getUpvotes());
-        Assert.assertEquals(karma + 1, user.getKarma());
-        post.upvote(user);
+        Assert.assertEquals(karma + 1, UTUser.getKarma());
+        post.upvote(UTUser);
         Assert.assertEquals(upvotes,post.getUpvotes());
-        Assert.assertEquals(karma, user.getKarma());
+        Assert.assertEquals(karma, UTUser.getKarma());
 
     }
 }

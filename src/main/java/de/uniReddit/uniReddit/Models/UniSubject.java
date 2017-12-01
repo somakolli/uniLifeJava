@@ -1,10 +1,8 @@
 package de.uniReddit.uniReddit.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,7 +24,7 @@ public class UniSubject {
 
     @JsonIgnore
     @ManyToMany
-    private Set<User> subscribedUsers = new HashSet<>();
+    private Set<UTUser> subscribedUTUsers = new HashSet<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "uniSubject")
@@ -64,12 +62,12 @@ public class UniSubject {
         this.university = university;
     }
 
-    public Set<User> getSubscribedUsers() {
-        return subscribedUsers;
+    public Set<UTUser> getSubscribedUTUsers() {
+        return subscribedUTUsers;
     }
 
-    public void setSubscribedUsers(Set<User> subscribedUsers) {
-        this.subscribedUsers = subscribedUsers;
+    public void setSubscribedUTUsers(Set<UTUser> subscribedUTUsers) {
+        this.subscribedUTUsers = subscribedUTUsers;
     }
 
     public Set<UniThread> getUniThreads() {

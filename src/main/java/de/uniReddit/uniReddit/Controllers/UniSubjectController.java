@@ -1,6 +1,5 @@
 package de.uniReddit.uniReddit.Controllers;
 
-import com.sun.org.apache.regexp.internal.RE;
 import de.uniReddit.uniReddit.Models.*;
 import de.uniReddit.uniReddit.Repositories.UniSubjectRepository;
 import de.uniReddit.uniReddit.Repositories.UniversityRepository;
@@ -39,9 +38,9 @@ public class UniSubjectController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("university not found");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        User user = userRepository.findByUsername(username);
+        UTUser UTUser = userRepository.findByUsername(username);
         University university = universityRepository.findOne(universityId);
-        if(!user.getRole().equals(Roles.Admin)&&!user.getUniversityId().equals(universityId))
+        if(!UTUser.getRole().equals(Roles.Admin)&&!UTUser.getUniversityId().equals(universityId))
             ResponseEntity.status(HttpStatus.UNAUTHORIZED);
         uniSubject.setUniversity(universityRepository.findOne(universityId));
         this.uniSubjectRepository.save(uniSubject);
@@ -53,8 +52,8 @@ public class UniSubjectController {
     ResponseEntity<List<UniSubject>> getSubjects(@RequestParam Long universityId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        User user = userRepository.findByUsername(username);
-        if(!user.getUniversityId().equals(universityId)&&!user.getRole().equals(Roles.Admin))
+        UTUser UTUser = userRepository.findByUsername(username);
+        if(!UTUser.getUniversityId().equals(universityId)&&!UTUser.getRole().equals(Roles.Admin))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         return ResponseEntity.ok(uniSubjectRepository.findAllByUniversity(universityRepository.findOne(universityId)));
@@ -65,9 +64,9 @@ public class UniSubjectController {
     ResponseEntity<UniSubject> getSubject(@PathVariable Long uniSubjectId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        User user = userRepository.findByUsername(username);
+        UTUser UTUser = userRepository.findByUsername(username);
         UniSubject uniSubject = uniSubjectRepository.findOne(uniSubjectId);
-        if(!user.getUniversityId().equals(uniSubject.getUniversity().getId())&&!user.getRole().equals(Roles.Admin))
+        if(!UTUser.getUniversityId().equals(uniSubject.getUniversity().getId())&&!UTUser.getRole().equals(Roles.Admin))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         return ResponseEntity.ok(uniSubjectRepository.findOne(uniSubjectId));
     }
