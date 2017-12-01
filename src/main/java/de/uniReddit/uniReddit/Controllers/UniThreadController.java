@@ -12,10 +12,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
-
-import static javafx.scene.input.KeyCode.T;
-
 /**
  * Created by Sokol on 14.11.2017.
  */
