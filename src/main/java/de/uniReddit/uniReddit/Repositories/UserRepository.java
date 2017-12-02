@@ -15,6 +15,6 @@ public interface UserRepository extends JpaRepository<UTUser, Long> {
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
     @Query("SELECT sum(upvotes) FROM Post where creator_id = ?1 group by creator_id")
-    long findKarma(Long userId);
+    long countKarma(Long userId);
 
 }

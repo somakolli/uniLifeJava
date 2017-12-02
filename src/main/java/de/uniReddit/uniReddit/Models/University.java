@@ -46,6 +46,7 @@ public class University {
         this.name = name;
     }
 
+    @JsonIgnore
     public Set<UTUser> getUTUsers() {
         return UTUsers;
     }

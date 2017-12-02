@@ -40,7 +40,7 @@ public class PostController {
         post.upvote(userRepository.findByUsername(username));
         postRepository.save(post);
         UTUser creator = post.getCreator();
-        creator.setKarma(userRepository.findKarma(creator.getId()));
+        creator.setKarma(userRepository.countKarma(creator.getId()));
         userRepository.save(creator);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }

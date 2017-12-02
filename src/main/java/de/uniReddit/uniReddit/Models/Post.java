@@ -26,6 +26,7 @@ public abstract class Post {
     @Column
     private Date updated = new Date();
 
+    @JsonIgnore
     @ManyToMany
     private Set<UTUser> upvoters = new HashSet<>();
 
