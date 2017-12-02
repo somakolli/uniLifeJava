@@ -36,7 +36,6 @@ public class UTUser {
     @NotNull
     @NotEmpty
     @Column
-    @JsonIgnore
     private String password;
 
     @NotNull
