@@ -14,7 +14,5 @@ public interface UserRepository extends JpaRepository<UTUser, Long> {
     UTUser findByUsername(String username);
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
-    @Query("SELECT sum (karma) from UTUser where ")
-    long karma(String username);
 
 }
