@@ -1,6 +1,7 @@
 package de.uniReddit.uniReddit.Controllers;
 
 import de.uniReddit.uniReddit.Models.Post;
+import de.uniReddit.uniReddit.Models.UTUser;
 import de.uniReddit.uniReddit.Models.UniThread;
 import de.uniReddit.uniReddit.Repositories.PostRepository;
 import de.uniReddit.uniReddit.Repositories.UserRepository;
@@ -38,6 +39,9 @@ public class PostController {
         Post post = postRepository.findOne(postId);
         post.upvote(userRepository.findByUsername(username));
         postRepository.save(post);
+        UTUser creator = post.getCreator();
+        creator.setKarma(userRepository.findKarma(creator.getId()));
+        userRepository.save(creator);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 }

@@ -161,19 +161,13 @@ public class UTUser {
         return karma.get();
     }
 
-    public long updateKarma() {
-        long karma = 0;
-        for (Post post :
-                createdPosts) {
-            karma += post.getUpvotes();
-        }
-        this.karma.set(karma);
-        return this.karma.get();
-    }
-
     public void unSubscribe(UniSubject uniSubject) {
         uniSubject.getSubscribedUTUsers().remove(this);
         subscribedSubjects.remove(uniSubject);
+    }
+
+    public void setKarma(long karma) {
+        this.karma.set(karma);
     }
 
     public static final class UserBuilder {

@@ -119,7 +119,6 @@ public abstract class Post {
             upvoters.add(UTUser);
         }
         upvotes = upvoters.size();
-        creator.updateKarma();
     }
 
     public List<Long> getChildrenIds(){
