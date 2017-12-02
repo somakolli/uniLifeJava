@@ -49,7 +49,7 @@ public class DataLoader implements ApplicationRunner {
             userRepository.save(UTUser);
             UniSubject uniSubject = UniSubjectBuilder.anUniSubject().name("test").university(university).build();
             uniSubjectRepository.save(uniSubject);
-            for (long i = 0; i <= 299_999_999; i++) {
+            for (long i = 0; i <= 1_000_000; i++) {
                 UniThread uniThread = UniThread.UniThreadBuilder.anUniThread().creator(UTUser).title("testThread " + i).uniSubject(uniSubject).build();
                 uniThread.upvote(UTUser);
                 threadRepository.save(uniThread);
