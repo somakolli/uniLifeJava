@@ -165,9 +165,13 @@ public class UserController {
         return ResponseEntity.ok(UTUser);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/exists")
-    ResponseEntity<Boolean> exists(@RequestParam String username){
-        return ResponseEntity.ok(userRepository.existsByUsername(username));
+    @RequestMapping(method = RequestMethod.GET, value = "/exists/{property}/{value}")
+    ResponseEntity<Boolean> exists(@PathVariable String property,@PathVariable String value){
+        if(property.equals("username"))
+            return ResponseEntity.ok(userRepository.existsByUsername(value));
+        if(property.equals("email"))
+            return ResponseEntity.ok(userRepository.existsByEmail(value));
+        return ResponseEntity.badRequest().build();
     }
 
 }
