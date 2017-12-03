@@ -38,6 +38,9 @@ public class UserController {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
+    /*
+    creates a user given the user encoded in json
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/sign-up")
     ResponseEntity<?> add(@RequestBody UTUser UTUser) throws URISyntaxException {
 
@@ -63,12 +66,18 @@ public class UserController {
 
     }
 
+    /*
+    returns the given user given the pathvariable username
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/{username}")
     @JsonView(View.Everyone.class)
     UTUser get(@PathVariable String username){
         return userRepository.findByUsername(username);
     }
 
+    /*
+    subscribes the current user to the given subject
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/subscribe")
     ResponseEntity<?> subscribe(@RequestParam Long uniSubjectId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -84,6 +93,9 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
+    /*
+    @promise unbscribes the current user to the given subject
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/unsubscribe")
     ResponseEntity<?> unsubscribe( @RequestParam Long uniSubjectId){
         if(!uniSubjectRepository.existsById(uniSubjectId))
@@ -135,6 +147,9 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
+    /*
+    @promise elevates the given user to the role admin if the currently authenticated user is an admin
+     */
     @RequestMapping(method = RequestMethod.PUT, value = "/elevate")
     ResponseEntity elevate(@RequestParam String username){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -147,7 +162,9 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
-
+    /*
+    @return the role of the currently authenticated user
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/role")
     ResponseEntity<?> getRole(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -156,6 +173,9 @@ public class UserController {
         return ResponseEntity.ok(UTUser.getRole());
     }
 
+    /*
+    @return the currently authenticated user
+     */
     @JsonView(View.Authorized.class)
     @RequestMapping(method = RequestMethod.GET, value = "/me")
     ResponseEntity<UTUser> getCurrentUser(){
@@ -165,6 +185,11 @@ public class UserController {
         return ResponseEntity.ok(UTUser);
     }
 
+    /*
+    validates the property with the given value
+    @return if value valid returns 200
+    @return if value invalid returns http error with Error-Message header
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/validate/{property}/{value}")
     ResponseEntity<?> exists(@PathVariable String property,@PathVariable String value){
         value = value.replace("(dot)", ".");
@@ -180,7 +205,6 @@ public class UserController {
             }
             return ResponseEntity.ok().build();
         }
-
         return ResponseEntity.badRequest().build();
     }
 
