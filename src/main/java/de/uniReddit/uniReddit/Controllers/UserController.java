@@ -170,13 +170,13 @@ public class UserController {
         value = value.replace("(dot)", ".");
         if(property.equals("username")) {
             if (userRepository.existsByUsername(value)) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("Username already in use.");
+                return ResponseEntity.status(HttpStatus.CONFLICT).header("Error-Message", "Username already in use.").body("Username already in use.");
             }
             return ResponseEntity.ok().build();
         }
         if(property.equals("email")) {
             if (userRepository.existsByEmail(value)) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already in use.");
+                return ResponseEntity.status(HttpStatus.CONFLICT).header("Error-Message", "Email already in use.").body("Email already in use.");
             }
             return ResponseEntity.ok().build();
         }
