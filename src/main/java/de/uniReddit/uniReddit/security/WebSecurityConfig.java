@@ -39,7 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
                 .antMatchers(HttpMethod.GET, "/api/universities").permitAll()
                 .antMatchers(HttpMethod.GET, "/_ah/health").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/users/exists/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/users/validate/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))

@@ -165,13 +165,21 @@ public class UserController {
         return ResponseEntity.ok(UTUser);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/exists/{property}/{value}")
-    ResponseEntity<Boolean> exists(@PathVariable String property,@PathVariable String value){
+    @RequestMapping(method = RequestMethod.GET, value = "/validate/{property}/{value}")
+    ResponseEntity<?> exists(@PathVariable String property,@PathVariable String value){
         value = value.replace("(dot)", ".");
-        if(property.equals("username"))
-            return ResponseEntity.ok(userRepository.existsByUsername(value));
-        if(property.equals("email"))
-            return ResponseEntity.ok(userRepository.existsByEmail(value));
+        if(property.equals("username")) {
+            if (userRepository.existsByUsername(value)) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Username already in use.");
+            }
+            return ResponseEntity.ok().build();
+        }
+        if(property.equals("email")) {
+            if (userRepository.existsByEmail(value)) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already in use.");
+            }
+            return ResponseEntity.ok().build();
+        }
 
         return ResponseEntity.badRequest().build();
     }
