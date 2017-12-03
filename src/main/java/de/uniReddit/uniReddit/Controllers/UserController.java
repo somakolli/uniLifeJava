@@ -62,6 +62,7 @@ public class UserController {
         return ResponseEntity.created(uri).build();
 
     }
+
     @RequestMapping(method = RequestMethod.GET, value = "/{username}")
     @JsonView(View.Everyone.class)
     UTUser get(@PathVariable String username){
@@ -82,6 +83,7 @@ public class UserController {
         uniSubjectRepository.save(uniSubject);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
+
     @RequestMapping(method = RequestMethod.GET, value = "/unsubscribe")
     ResponseEntity<?> unsubscribe( @RequestParam Long uniSubjectId){
         if(!uniSubjectRepository.existsById(uniSubjectId))
@@ -96,6 +98,7 @@ public class UserController {
         uniSubjectRepository.save(uniSubject);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
+
     @RequestMapping(method = RequestMethod.PUT)
     ResponseEntity<?> update(@RequestParam String username,
                              @RequestParam String email,
@@ -161,4 +164,10 @@ public class UserController {
         UTUser UTUser = userRepository.findByUsername(username);
         return ResponseEntity.ok(UTUser);
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/exists")
+    ResponseEntity<Boolean> exists(@RequestParam String username){
+        return ResponseEntity.ok(userRepository.existsByUsername(username));
+    }
+
 }
