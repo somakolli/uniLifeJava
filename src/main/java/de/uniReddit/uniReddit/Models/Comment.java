@@ -27,6 +27,8 @@ public class Comment extends Post{
     }
 
     public Long getParentId() {
+        if(parent != null)
+        return parent.getId();
         return parentId;
     }
 
