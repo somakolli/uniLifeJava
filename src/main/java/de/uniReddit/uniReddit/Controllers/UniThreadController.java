@@ -63,7 +63,7 @@ public class UniThreadController {
         return ResponseEntity.ok(uniThread);
     }
     @RequestMapping(method = RequestMethod.GET)
-    ResponseEntity<Page<UniThread>> getAll(@RequestParam Long subjectId,
+    ResponseEntity<Page<UniThread>> getAll(@RequestParam Long uniSubjectId,
                                            @RequestParam int page,
                                            @RequestParam int pageSize,
                                            @RequestParam String sortDirection,
@@ -72,9 +72,9 @@ public class UniThreadController {
         String username = authentication.getName();
         UTUser UTUser = userRepository.findByUsername(username);
         if(!UTUser.getRole().equals(Roles.Admin)
-                &&!UTUser.getUniversityId().equals(uniSubjectRepository.findOne(subjectId).getUniversity().getId()))
+                &&!UTUser.getUniversityId().equals(uniSubjectRepository.findOne(uniSubjectId).getUniversity().getId()))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        UniSubject uniSubject = uniSubjectRepository.findOne(subjectId);
+        UniSubject uniSubject = uniSubjectRepository.findOne(uniSubjectId);
         return ResponseEntity
                 .ok(uniThreadRepository
                         .findAllByUniSubject(uniSubject,
