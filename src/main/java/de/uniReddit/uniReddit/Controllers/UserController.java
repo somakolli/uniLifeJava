@@ -85,7 +85,7 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
-        if(!uniSubjectRepository.existsById(uniSubjectId))
+        if(!uniSubjectRepository.exists(uniSubjectId))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("uniSubject not found");
         UTUser UTUser = userRepository.findByUsername(username);
         UniSubject uniSubject = uniSubjectRepository.findOne(uniSubjectId);
@@ -100,7 +100,7 @@ public class UserController {
      */
     @RequestMapping(method = RequestMethod.GET, value = "/unsubscribe")
     ResponseEntity<?> unsubscribe( @RequestParam Long uniSubjectId){
-        if(!uniSubjectRepository.existsById(uniSubjectId))
+        if(!uniSubjectRepository.exists(uniSubjectId))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("uniSubject not found");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
