@@ -84,9 +84,10 @@ public class CommentController {
         String username = authentication.getName();
         UTUser UTUser = userRepository.findByUsername(username);
         if(!UTUser.getRole().equals(Roles.Admin)
-                &&!UTUser.getUniversityId().equals(postRepository.getOne(parentId).getUniversityId()))
+                &&!UTUser.getUniversityId().equals(postRepository.findOne(parentId).getUniversityId()))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        return ResponseEntity.ok(commentRepository.findAllByParentId(parentId,
+        Post parent = postRepository.findOne(parentId);
+        return ResponseEntity.ok(commentRepository.findAllByParent(parent,
                 new PageRequest(page, pageSize, Sort.Direction.fromString(sortDirection),sortProperties)));
     }
 

@@ -1,6 +1,7 @@
 package de.uniReddit.uniReddit.Repositories;
 
 import de.uniReddit.uniReddit.Models.Comment;
+import de.uniReddit.uniReddit.Models.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,5 +16,5 @@ import java.util.List;
  */
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    Page<Comment> findAllByParentId(Long parentId, Pageable pageable);
+    Page<Comment> findAllByParent(Post parent, Pageable pageable);
 }
