@@ -32,8 +32,7 @@ public class UniversityController {
 
     @RequestMapping(method = RequestMethod.POST)
     ResponseEntity<?> add(@RequestBody University university){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         if(!userRepository.findByUsername(username).getRole().equals(Roles.Admin))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
@@ -51,8 +50,7 @@ public class UniversityController {
     ResponseEntity<?> update(@RequestParam Long id, @RequestParam String name, @RequestParam String location){
         if(!universityRepository.exists(id))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("university not found");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         if(!userRepository.findByUsername(username).getRole().equals(Roles.Admin))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         University uni = universityRepository.findOne(id);
@@ -64,8 +62,7 @@ public class UniversityController {
     ResponseEntity<?> delete(@RequestParam Long id){
         if(!universityRepository.exists(id))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("university not found");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         if(!userRepository.findByUsername(username).getRole().equals(Roles.Admin))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         universityRepository.delete(id);

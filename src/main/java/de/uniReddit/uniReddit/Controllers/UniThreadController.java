@@ -39,8 +39,7 @@ public class UniThreadController {
     ResponseEntity<?> add(@RequestBody UniThread uniThread){
         if(!uniSubjectRepository.exists(uniThread.getUniSubjectId()))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("subject not found");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         UTUser author = userRepository.findByUsername(username);
         UniSubject uniSubject = uniSubjectRepository.findOne(uniThread.getUniSubjectId());
@@ -51,8 +50,7 @@ public class UniThreadController {
     }
     @RequestMapping(method = RequestMethod.GET, value = "/one")
     ResponseEntity<UniThread> getOne(@RequestParam Long threadId){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         UTUser UTUser = userRepository.findByUsername(username);
         if(!uniThreadRepository.exists(threadId))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -68,8 +66,7 @@ public class UniThreadController {
                                            @RequestParam int pageSize,
                                            @RequestParam String sortDirection,
                                            @RequestParam String sortProperties){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         UTUser UTUser = userRepository.findByUsername(username);
         if(!UTUser.getRole().equals(Roles.Admin)
                 &&!UTUser.getUniversityId().equals(uniSubjectRepository.findOne(uniSubjectId).getUniversity().getId()))

@@ -41,8 +41,7 @@ public class UniSubjectController {
         if (!universityRepository.exists(universityId))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("university not found");
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         UTUser user = userRepository.findByUsername(username);
 
         University university = universityRepository.findOne(universityId);
@@ -60,8 +59,7 @@ public class UniSubjectController {
                                                  @RequestParam int pageSize,
                                                  @RequestParam String sortDirection,
                                                  @RequestParam String sortProperties){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         UTUser UTUser = userRepository.findByUsername(username);
 
         if(!UTUser.getUniversityId().equals(universityId)&&!UTUser.getRole().equals(Roles.Admin))
@@ -76,8 +74,7 @@ public class UniSubjectController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{uniSubjectId}")
     ResponseEntity<UniSubject> getSubject(@PathVariable Long uniSubjectId){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         UTUser UTUser = userRepository.findByUsername(username);
 
         UniSubject uniSubject = uniSubjectRepository.findOne(uniSubjectId);

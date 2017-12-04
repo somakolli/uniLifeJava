@@ -43,8 +43,7 @@ public class CommentController {
 
     @RequestMapping(method = RequestMethod.POST)
     ResponseEntity<?> add(@RequestBody Comment comment){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         UTUser UTUser = userRepository.findByUsername(username);
         if(!postRepository.exists(comment.getParentId()))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("parent not found");
@@ -62,8 +61,7 @@ public class CommentController {
     }
     @RequestMapping(method = RequestMethod.GET, value = "/{commentId}")
     ResponseEntity<Comment> get(@PathVariable Long commentId){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         UTUser UTUser = userRepository.findByUsername(username);
         if(!commentRepository.exists(commentId))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -80,8 +78,7 @@ public class CommentController {
                                                 @RequestParam int pageSize,
                                                 @RequestParam String sortDirection,
                                                 @RequestParam String sortProperties){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         UTUser UTUser = userRepository.findByUsername(username);
         if(!UTUser.getRole().equals(Roles.Admin)
                 &&!UTUser.getUniversityId().equals(postRepository.findOne(parentId).getUniversityId()))
@@ -95,8 +92,7 @@ public class CommentController {
     @RequestMapping(method = RequestMethod.PUT)
     ResponseEntity<?> update(@RequestParam Long commentId,
                              @RequestParam String content){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         if(!commentRepository.exists(commentId))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("comment not found");
@@ -113,8 +109,7 @@ public class CommentController {
     ResponseEntity<?> delete(@PathVariable Long commentId){
         if(!commentRepository.exists(commentId))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("comment not found");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         if(!commentRepository.getOne(commentId).getCreator().getUsername().equals(username)
                 &&userRepository.findByUsername(username).getRole()!=Roles.Admin)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
