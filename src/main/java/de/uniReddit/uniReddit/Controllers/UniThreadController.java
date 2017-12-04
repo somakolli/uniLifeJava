@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
  * Created by Sokol on 14.11.2017.
  */
 @RestController
-@RequestMapping("api/unithreads")
+@RequestMapping("api/uniThreads")
 public class UniThreadController {
     private final UserRepository userRepository;
     private final UniSubjectRepository uniSubjectRepository;
