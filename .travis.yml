@@ -8,6 +8,7 @@ install:
 - ./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script:
 - ./mvnw test
+- node_modules/.bin/newman run uniTalq.postman_collection.json -e local.postman_environment.json
 language:
   java
 node_js:
@@ -19,5 +20,3 @@ before_script:
   - npm --version
   - node_modules/.bin/newman --version
 
-script:
-  - node_modules/.bin/newman run uniTalq.postman_collection.json -e local.postman_environment.json
