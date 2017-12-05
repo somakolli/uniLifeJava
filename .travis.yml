@@ -1,3 +1,5 @@
+before_install:
+  - chmod +x mvnw
 jdk:
 - oraclejdk8
 # would just use default install/script but the ./mvnw script errors on travis
