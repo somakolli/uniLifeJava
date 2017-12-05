@@ -29,18 +29,4 @@ public class PostTest {
         Assert.assertEquals(post.getCreator(), UTUser);
         Assert.assertTrue(UTUser.getCreatedPosts().contains(post));
     }
-
-    @Test
-    public void upvotePostTest()
-    {
-        long karma = UTUser.getKarma();
-        long upvotes = post.getUpvotes();
-        post.upvote(UTUser);
-        Assert.assertEquals(upvotes+1, post.getUpvotes());
-        Assert.assertEquals(karma + 1, UTUser.getKarma());
-        post.upvote(UTUser);
-        Assert.assertEquals(upvotes,post.getUpvotes());
-        Assert.assertEquals(karma, UTUser.getKarma());
-
-    }
 }
