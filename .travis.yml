@@ -11,7 +11,7 @@ language: java
 deploy:
   provider: heroku
   api_key: 44ffbade-ed54-4e0c-b9dc-683ae6f25165
-  app: unitalq-developmnet
+  app: unitalq-development
   on:
     repo: p4ch1n0/uniLifeJava
     branch: development
