@@ -7,8 +7,7 @@ install:
 language: java
 deploy:
   provider: heroku
-  api_key:
-    secure: Sf0+ghDVk8YBCBFMxrNkS03fU85FpcT73D13S4GXM5Flcwc1O91VZ6eB4ieXI0Src1ZpMD9zPxFU5/0T+OhrskA/4uv1aLOwrc4loWx3PUslJ89rmwTDZyf/FiWQsfu6pKyGn/WICM/wpJ48/8+RQvmeDgfhIJUTEkGnk/HfFCW5Ekjzd/uZCYS6eRdKcFFtKcTLTUWyPEvJZJffTvwRCVQ1JYauE4f1Pk3dw9lfJGSXCC+GajoFXVsbMwuq8nKJZoB+J8OlmCBmnlleSqj1eJk2nucT6x9Y7TDi4HyaWmAng7hBA2AIhmUPTQB2Z3susg6wA7HuQJT+gCYSfmOJIIBM0hZQ9Y/jLOIdThDfJ5aiX20hOcWn7dW8/z0FS/qDS2qEGZI87HydC/0/unoIpIS0yFho+jg9mDcdtJy0qpWQccXxaeIEIipk8hslyCLItyfNS9BIpTIxNgLN2an1AFby4m8JKcRP/FTReFieltWwWyYTpI4llgprmmucqrFtqUNUKEN/OBTGNTdGiOLpvwZiDCpTWd9CDueVucnyq0DoIcdunS+kvBsHxt8mDyJK6tf8DJGkGfUh7gsLgkGDSKiU0vb0xgdlWf6vv1WRxx6WviuGmqN9j7d+OJ6CtVwbmviQ8zU+Tji5gR9LK7gGNkGHgwObmVYM0DCWOesWzdk=
+  api_key: 44ffbade-ed54-4e0c-b9dc-683ae6f25165
   app: unitalq
   on:
     repo: p4ch1n0/uniLifeJava
