@@ -20,8 +20,9 @@ before_script:
   - node --version
   - npm --version
   - node_modules/.bin/newman --version
-  - chmod -x changeDB.sh
-script: ./changeDB.sh
+script:
+  - mv src/main/resources/application.properties src/main/resources/application.properties.h2
+  - mv src/main/resources/application.properties.post src/main/resources/application.properties
 after_deploy:
   - node_modules/.bin/newman run uniTalq.postman_collection.json -e heroku.postman_environment.json
 
