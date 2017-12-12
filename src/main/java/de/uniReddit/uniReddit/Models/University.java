@@ -30,14 +30,15 @@ public class University {
     @Column
     private String location;
 
-    public University() {
-        //JPA
-    }
     @JsonIgnore
     @OneToMany(mappedBy = "university")
     private Set<UTUser> UTUsers = new HashSet<>();
 
-    University(String name, String location) {
+    public University() {
+        //JPA
+    }
+
+    public University(String name, String location) {
         this.name = name;
         this.location = location;
     }
@@ -74,29 +75,4 @@ public class University {
         return ids;
     }
 
-    public static final class UniversityBuilder {
-        private University university;
-
-        public UniversityBuilder() {
-            university = new University();
-        }
-
-        public static UniversityBuilder anUniversity() {
-            return new UniversityBuilder();
-        }
-
-        public UniversityBuilder name(String name) {
-            university.setName(name);
-            return this;
-        }
-
-        public UniversityBuilder location(String location) {
-            university.setLocation(location);
-            return this;
-        }
-
-        public University build() {
-            return university;
-        }
-    }
 }

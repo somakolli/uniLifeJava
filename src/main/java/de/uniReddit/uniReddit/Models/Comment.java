@@ -46,34 +46,4 @@ public class Comment extends Post{
             parent.addChild(this);
     }
 
-    public static final class CommentBuilder {
-        private Comment comment;
-
-        private CommentBuilder() {
-            comment = new Comment();
-        }
-
-        public static CommentBuilder aComment() {
-            return new CommentBuilder();
-        }
-
-        public CommentBuilder parent(Post parent) {
-            comment.setParent(parent);
-            return this;
-        }
-
-        public CommentBuilder content(String content) {
-            comment.setContent(content);
-            return this;
-        }
-
-        public CommentBuilder creator(UTUser creator) {
-            comment.setCreator(creator);
-            return this;
-        }
-
-        public Comment build() {
-            return comment;
-        }
-    }
 }

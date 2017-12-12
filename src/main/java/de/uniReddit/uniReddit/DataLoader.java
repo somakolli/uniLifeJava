@@ -39,14 +39,13 @@ public class DataLoader implements ApplicationRunner {
 
     public void run(ApplicationArguments args){
         if(!userRepository.existsByUsername("admin")) {
-            University university = new University.UniversityBuilder()
-                    .name("Universität Stuttgart").location("Stuttgart").build();
+            University university = new University("Universität Stuttgart", "Stuttgart");
             universityRepository.save(university);
             String password = bCryptPasswordEncoder.encode("password");
-            UTUser UTUser = new UTUser.UserBuilder()
-                    .username("admin").email("info@unitalq.com").password(password).university(university).build();
-            UTUser.setRole(Roles.Admin);
-            userRepository.save(UTUser);
+            UTUser user = new UTUser("Sokol", "Makolli", "info@unitalq.com", "admin", password, university);
+
+            user.setRole(Roles.Admin);
+            userRepository.save(user);
         }
     }
 

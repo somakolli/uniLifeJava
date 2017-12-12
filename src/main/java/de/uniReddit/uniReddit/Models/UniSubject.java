@@ -36,6 +36,11 @@ public class UniSubject {
     UniSubject() {
     }
 
+    public UniSubject(String name, University university) {
+        this.name = name;
+        this.university = university;
+    }
+
     public Long getUniversityId() {
         if(university!=null)
             return university.getId();
@@ -44,10 +49,6 @@ public class UniSubject {
 
     public void setUniversityId(Long universityId) {
         this.universityId = universityId;
-    }
-
-    public UniSubject(University university) {
-        this.university = university;
     }
 
     public long getId() {

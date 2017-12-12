@@ -53,39 +53,4 @@ public class UniThread extends Post{
         this.uniSubject = uniSubject;
     }
 
-    public static final class UniThreadBuilder {
-        private UniThread uniThread;
-
-        public UniThreadBuilder() {
-            uniThread = new UniThread();
-        }
-
-        public static UniThreadBuilder anUniThread() {
-            return new UniThreadBuilder();
-        }
-
-        public UniThreadBuilder title(String title) {
-            uniThread.setTitle(title);
-            return this;
-        }
-
-        public UniThreadBuilder uniSubject(UniSubject uniSubject) {
-            uniThread.setUniSubject(uniSubject);
-            return this;
-        }
-
-        public UniThreadBuilder content(String content) {
-            uniThread.setContent(content);
-            return this;
-        }
-
-        public UniThreadBuilder creator(UTUser creator) {
-            uniThread.setCreator(creator);
-            return this;
-        }
-
-        public UniThread build() {
-            return uniThread;
-        }
-    }
 }

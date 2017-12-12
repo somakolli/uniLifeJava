@@ -5,18 +5,9 @@ jdk:
 # would just use default install/script but the ./mvnw script errors on travis
 # obviously this only works for maven builds right now...
 install:
-- ./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-script:
-- ./mvnw test
-- node_modules/.bin/newman run uniTalq.postman_collection.json -e local.postman_environment.json
+- ./mvnw install -DskipTests=false -Dmaven.javadoc.skip=true -B -V
 language:
   java
-node_js:
-  - "8.2.1"
-install:
-  - npm install newman
-before_script:
-  - node --version
-  - npm --version
-  - node_modules/.bin/newman --version
+
+
 

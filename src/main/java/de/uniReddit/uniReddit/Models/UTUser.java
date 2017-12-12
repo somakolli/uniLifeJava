@@ -21,6 +21,15 @@ public class UTUser {
     @JsonView(View.Authorized.class)
     private Long id;
 
+    @Column
+    @JsonView(View.Everyone.class)
+    private String firstName;
+
+    @Column
+    @JsonView(View.Everyone.class)
+    private String surName;
+
+
     @NotNull
     @NotEmpty
     @Column(unique = true)
@@ -70,6 +79,22 @@ public class UTUser {
 
     public UTUser() {
         // JPA
+    }
+
+    public UTUser(String firstName, String surName, String email, String username, String password, University university) {
+        this.firstName = firstName;
+        this.surName = surName;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.university = university;
+    }
+
+    public UTUser(String email, String username, String password, University university) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.university = university;
     }
 
     public Long getId() {
@@ -170,39 +195,21 @@ public class UTUser {
         this.karma.set(karma);
     }
 
-    public static final class UserBuilder {
-        private UTUser UTUser;
-
-        public UserBuilder() {
-            UTUser = new UTUser();
-        }
-
-        public static UserBuilder anUser() {
-            return new UserBuilder();
-        }
-
-        public UserBuilder email(String email) {
-            UTUser.setEmail(email);
-            return this;
-        }
-
-        public UserBuilder username(String username) {
-            UTUser.setUsername(username);
-            return this;
-        }
-
-        public UserBuilder university(University university) {
-            UTUser.setUniversity(university);
-            return this;
-        }
-
-        public UserBuilder password(String password) {
-            UTUser.setPassword(password);
-            return this;
-        }
-
-        public UTUser build() {
-            return UTUser;
-        }
+    public String getFirstName() {
+        return firstName;
     }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getSurName() {
+        return surName;
+    }
+
+    public void setSurName(String surName) {
+        this.surName = surName;
+    }
+
+
 }

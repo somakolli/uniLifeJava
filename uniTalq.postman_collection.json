@@ -90,7 +90,7 @@
 			},
 			"response": [
 				{
-					"id": "7db929a0-30e4-4a7a-b2a5-39e8dd0359e3",
+					"id": "ef0cbd7f-3eee-434b-9939-339bf2b0d58b",
 					"name": "get Universities",
 					"originalRequest": {
 						"method": "GET",
@@ -236,7 +236,7 @@
 			},
 			"response": [
 				{
-					"id": "bc643ff9-c020-4f80-bd67-1669fb8326db",
+					"id": "c4feed81-a697-41f3-8fd5-89670a4c2e6c",
 					"name": "get me",
 					"originalRequest": {
 						"method": "GET",
@@ -381,7 +381,7 @@
 			},
 			"response": [
 				{
-					"id": "46aeb88b-c697-4137-a7b6-240c66919794",
+					"id": "29d00a6a-f05c-420b-9524-779e9c0b800a",
 					"name": "postUnisubject",
 					"originalRequest": {
 						"method": "POST",
@@ -541,7 +541,7 @@
 			},
 			"response": [
 				{
-					"id": "b2aa32e3-4850-4ac9-8761-a267b0757cd7",
+					"id": "4bfd1414-82b6-4971-99c3-81ed8ae0dcc8",
 					"name": "getUnisubjects",
 					"originalRequest": {
 						"method": "GET",
@@ -778,7 +778,7 @@
 			},
 			"response": [
 				{
-					"id": "cfffcfb6-c966-4fcf-995d-eebc01e483c7",
+					"id": "2988d578-a57b-48e7-850f-8b93f8849de1",
 					"name": "get UniThreads",
 					"originalRequest": {
 						"method": "GET",
@@ -939,7 +939,7 @@
 			},
 			"response": [
 				{
-					"id": "0d9361ff-fcda-4323-8456-c6637ea73a00",
+					"id": "e4810a08-8329-4c56-a608-c5799aaa809a",
 					"name": "post comment",
 					"originalRequest": {
 						"method": "POST",
@@ -1099,7 +1099,7 @@
 			},
 			"response": [
 				{
-					"id": "a4cfd20c-46c3-49bb-942f-7132cbb8667b",
+					"id": "075e24c4-b547-4b01-8e28-c14c38502e83",
 					"name": "get Comments",
 					"originalRequest": {
 						"method": "GET",
@@ -1232,7 +1232,7 @@
 			},
 			"response": [
 				{
-					"id": "2c436a39-962c-4fdd-955d-600773ce4e36",
+					"id": "f18a4ff3-4d9e-4713-97c2-1d8f5744ed07",
 					"name": "validate admin",
 					"originalRequest": {
 						"method": "GET",

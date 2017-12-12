@@ -20,10 +20,9 @@ public class UTUserTest {
 
     @Before
     public void setup(){
-        UTUser = new UTUser.UserBuilder().username(username).email(email).build();
         uni = new University("Uni Stuttgart", "Stuttgart");
-        uniSubject = new UniSubject(uni);
-
+        UTUser = new UTUser(email, username, "", uni);
+        uniSubject = new UniSubject("dsa", uni);
 
     }
 
