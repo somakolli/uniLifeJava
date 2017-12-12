@@ -9,7 +9,7 @@ deploy:
   provider: heroku
   api_key:
     secure: r9tgB07SJCFkw48moFPsiR27UjXrd4UIPWG29smaJ4ECDF/oi7KSk9QToLaomlED18nTunY5IMKlU3aEUP9O0KKX88iJmnbM/FVsSje5KG4qIrlLYE1GaLVPMFleLghZfu8pGkG/Lq2+CuQTC7WHnQLj6oDHQqROm/VJqpLFGSl1pyi211s7TDuBOys3R2URDjWUVuN6XttyJN/FUb8fxU0iAFFBxRnq6TAuqaMmRz7G8gd7HaeBfZkdXWMYOC9jmeCKvS94xzzLs096jCWBV92SEE2bG/x0gjbj/dKVTwctTtawHg8qNrJnYCrucKv6aETBXkod4cULcnMt0z5U+DcyCZxVL8swrQhy+hi8S08uVEoow/T5MddY/B7y/3VURcqW7OX3aQ23+w2RrwoGVAANs9VNjW/p/wWLOAl4TkuIEdlEJUTbPD6mThV59MjHmjC7vFN6Zlhe0za9UiFm3VZjkRGpbQq0/E8u0qM9OzDw/3Ciwjl45G5/MdgUxeeUvemB33+WbIGRV6w5+2i3p7S1ne/VfDqg0wTCDFjq2qYMEE54E38LWPyt+D7szu5Jr1lr8Fl3yBqpukKDdQ9L719lTlgnYzzL6WXubg4fxlYj3v11Ypby63cJcnfVTpw56EB0ZFC9+8PvFhVg9DYm+PfTinI/0sLCyenVD9J7SMQ=
-  app: uniLifeJava
+  app: unitalq
   on:
     repo: p4ch1n0/uniLifeJava
     branch: development
