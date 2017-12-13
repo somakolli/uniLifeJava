@@ -45,7 +45,13 @@ public class UTUser {
     @NotNull
     @NotEmpty
     @Column
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
+
+    @Column
+    @JsonView(View.Everyone.class)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String profilePictureUrl;
 
     @NotNull
     @Column
@@ -55,22 +61,27 @@ public class UTUser {
 
     @Column
     @JsonView(View.Everyone.class)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private AtomicLong karma = new AtomicLong(0);
 
     @Column
     @JsonView(View.Authorized.class)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date registeredDate = new Date();
 
     @JsonIgnore
     @OneToMany(mappedBy = "creator")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Set<Post> createdPosts = new HashSet<>();
 
     @JsonIgnore
     @ManyToMany
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Set<UniSubject> subscribedSubjects = new HashSet<>();
 
     @JsonIgnore
     @ManyToOne
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private University university;
 
     @Transient
@@ -81,20 +92,30 @@ public class UTUser {
         // JPA
     }
 
-    public UTUser(String firstName, String surName, String email, String username, String password, University university) {
+    public UTUser(String firstName, String surName, String email, String username, String password, String profilePictureUrl, long universityId) {
         this.firstName = firstName;
         this.surName = surName;
         this.email = email;
         this.username = username;
         this.password = password;
-        this.university = university;
+        this.profilePictureUrl = profilePictureUrl;
+        this.universityId = universityId;
+        profilePictureUrl = "";
     }
 
-    public UTUser(String email, String username, String password, University university) {
+    public UTUser(String email, String username, String password, long universityId) {
         this.email = email;
         this.username = username;
         this.password = password;
-        this.university = university;
+        this.universityId = universityId;
+    }
+
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
+    }
+
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
     }
 
     public Long getId() {
@@ -191,6 +212,7 @@ public class UTUser {
         subscribedSubjects.remove(uniSubject);
     }
 
+    @JsonIgnore
     public void setKarma(long karma) {
         this.karma.set(karma);
     }

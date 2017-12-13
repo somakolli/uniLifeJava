@@ -9,7 +9,7 @@ public class PostTest {
 
     private static final String username = "sokol";
 
-    private UTUser UTUser = new UTUser(email, username, "", null);
+    private UTUser UTUser = new UTUser(email, username, "", 1);
 
     private PostMock post = new PostMock("test", UTUser);
 

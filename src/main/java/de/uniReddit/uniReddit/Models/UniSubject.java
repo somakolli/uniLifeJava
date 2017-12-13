@@ -1,6 +1,7 @@
 package de.uniReddit.uniReddit.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -20,10 +21,12 @@ public class UniSubject {
 
     @JsonIgnore
     @ManyToOne
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private University university;
 
     @JsonIgnore
     @ManyToMany
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Set<UTUser> subscribedUTUsers = new HashSet<>();
 
     @JsonIgnore

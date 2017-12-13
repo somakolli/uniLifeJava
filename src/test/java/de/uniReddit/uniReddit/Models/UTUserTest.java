@@ -21,7 +21,8 @@ public class UTUserTest {
     @Before
     public void setup(){
         uni = new University("Uni Stuttgart", "Stuttgart");
-        UTUser = new UTUser(email, username, "", uni);
+        UTUser = new UTUser(email, username, "", 1);
+        UTUser.setUniversity(uni);
         uniSubject = new UniSubject("dsa", uni);
 
     }

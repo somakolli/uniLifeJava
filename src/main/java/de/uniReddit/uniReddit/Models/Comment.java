@@ -1,5 +1,7 @@
 package de.uniReddit.uniReddit.Models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 

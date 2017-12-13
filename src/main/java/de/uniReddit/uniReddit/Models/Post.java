@@ -2,6 +2,7 @@ package de.uniReddit.uniReddit.Models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.core.annotation.Order;
 
 import javax.persistence.*;
@@ -21,18 +22,22 @@ public abstract class Post {
     private Long id;
 
     @Column
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private final Date created = new Date();
 
     @Column
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date updated = new Date();
 
     @JsonIgnore
     @ManyToMany
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Set<UTUser> upvoters = new HashSet<>();
 
     @Column
     @NotNull
     @Order
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private long upvotes = 0;
 
     @Column
@@ -40,10 +45,12 @@ public abstract class Post {
 
     @JsonIgnore
     @OneToMany(mappedBy = "parent")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Set<Comment> children = new HashSet<>();
 
     @JsonBackReference
     @ManyToOne
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UTUser creator;
 
     Post(String content, UTUser creator)

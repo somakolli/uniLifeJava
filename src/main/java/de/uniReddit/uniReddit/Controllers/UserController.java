@@ -59,8 +59,10 @@ public class UserController {
 
         String passwordEnc = bCryptPasswordEncoder.encode(UTUser.getPassword());
 
-        UTUser.setPassword(passwordEnc);
+        UTUser.setUniversity(university);
 
+        UTUser.setPassword(passwordEnc);
+        System.out.println(UTUser.getUniversity());
         this.userRepository.save(UTUser);
 
         URI uri = new URI("/api/users/" + UTUser.getUsername());
