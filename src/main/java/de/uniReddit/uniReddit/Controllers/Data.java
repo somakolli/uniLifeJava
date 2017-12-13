@@ -1,5 +1,7 @@
 package de.uniReddit.uniReddit.Controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.uniReddit.uniReddit.Models.UTUser;
 import de.uniReddit.uniReddit.Repositories.UserRepository;
 import de.uniReddit.uniReddit.security.CloudJWT;
@@ -53,10 +55,14 @@ public class Data {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             UTUser UTUser = userRepository.findByUsername(username);
             UTUser.setProfilePictureUrl("https://www.googleapis.com/storage/v1/b/uni-talq-datastore/o/." + UTUser.getId() + "." + name);
-        return ResponseEntity.status(200).body(responseEntity.getHeaders().get("Location").get(0));
+            ObjectMapper objectMapper = new ObjectMapper();
+        return ResponseEntity.status(200).body(objectMapper.writeValueAsString(responseEntity.getHeaders().get("Location").get(0)));
 
         }catch (HttpClientErrorException e){
            return ResponseEntity.status(e.getRawStatusCode()).body(e.getResponseBodyAsString());
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }
