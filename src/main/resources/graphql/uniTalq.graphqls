@@ -1,0 +1,14 @@
+type University{
+    id: Int!
+    name: String!
+    location: String!
+}
+
+
+type Query{
+    universities : [University]!
+}
+
+type Mutation{
+    writeUniversity(name: String!, location: String!):University!
+}

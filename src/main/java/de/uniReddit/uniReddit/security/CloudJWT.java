@@ -13,12 +13,12 @@ public class CloudJWT {
 
     public static String getGoogleAuthToken() throws IOException {
 
-    ArrayList<String> scopes = new ArrayList<>();
-    scopes.add("https://www.googleapis.com/auth/cloud-platform");
-    scopes.add("https://www.googleapis.com/auth/datastore");
-    GoogleCredential credential = GoogleCredential.fromStream(new FileInputStream("unitalq-eb669dde3312.json")).createScoped(scopes);
-    credential.refreshToken();
+        ArrayList<String> scopes = new ArrayList<>();
+        scopes.add("https://www.googleapis.com/auth/cloud-platform");
+        scopes.add("https://www.googleapis.com/auth/datastore");
+        GoogleCredential credential = GoogleCredential.fromStream(new FileInputStream("unitalq-eb669dde3312.json")).createScoped(scopes);
+        credential.refreshToken();
 
-    return credential.getAccessToken();
+        return credential.getAccessToken();
     }
 }
