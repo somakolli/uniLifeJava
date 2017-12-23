@@ -14,7 +14,7 @@ public class UniThread extends Post{
     @Column
     private String title;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private UniSubject uniSubject;
 
     @Transient

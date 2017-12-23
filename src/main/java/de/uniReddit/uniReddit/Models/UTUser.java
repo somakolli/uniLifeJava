@@ -1,12 +1,14 @@
 package de.uniReddit.uniReddit.Models;
 
 import com.fasterxml.jackson.annotation.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.data.repository.cdi.Eager;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -69,15 +71,14 @@ public class UTUser {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date registeredDate = new Date();
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "creator")
+    @OneToMany(mappedBy = "creator", fetch = FetchType.EAGER)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Set<Post> createdPosts = new HashSet<>();
+    private List<Post> createdPosts = new ArrayList<>();
 
     @JsonIgnore
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Set<UniSubject> subscribedSubjects = new HashSet<>();
+    private List<UniSubject> subscribedSubjects = new ArrayList<>();
 
     @JsonIgnore
     @ManyToOne
@@ -122,7 +123,7 @@ public class UTUser {
         return id;
     }
 
-    public Set<Post> getCreatedPosts(){
+    public List<Post> getCreatedPosts(){
         return createdPosts;
     }
 
@@ -193,7 +194,7 @@ public class UTUser {
         return subscribedSubjects.add(uniSubject);
     }
 
-    public Set<UniSubject> getSubscribedSubjects() {
+    public List<UniSubject> getSubscribedSubjects() {
         return subscribedSubjects;
     }
 
@@ -232,6 +233,8 @@ public class UTUser {
     public void setSurName(String surName) {
         this.surName = surName;
     }
+
+
 
 
 }

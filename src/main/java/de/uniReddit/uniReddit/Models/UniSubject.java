@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -25,13 +27,13 @@ public class UniSubject {
     private University university;
 
     @JsonIgnore
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Set<UTUser> subscribedUTUsers = new HashSet<>();
+    private List<UTUser> subscribedUTUsers = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "uniSubject")
-    private Set<UniThread> uniThreads = new HashSet<>();
+    @OneToMany(mappedBy = "uniSubject", fetch = FetchType.EAGER)
+    private List<UniThread> uniThreads = new ArrayList<>();
 
     @Transient
     private Long universityId;
@@ -66,19 +68,19 @@ public class UniSubject {
         this.university = university;
     }
 
-    public Set<UTUser> getSubscribedUTUsers() {
+    public List<UTUser> getSubscribedUTUsers() {
         return subscribedUTUsers;
     }
 
-    public void setSubscribedUTUsers(Set<UTUser> subscribedUTUsers) {
+    public void setSubscribedUTUsers(List<UTUser> subscribedUTUsers) {
         this.subscribedUTUsers = subscribedUTUsers;
     }
 
-    public Set<UniThread> getUniThreads() {
+    public List<UniThread> getUniThreads() {
         return uniThreads;
     }
 
-    public void setUniThreads(Set<UniThread> uniThreads) {
+    public void setUniThreads(List<UniThread> uniThreads) {
         this.uniThreads = uniThreads;
     }
 

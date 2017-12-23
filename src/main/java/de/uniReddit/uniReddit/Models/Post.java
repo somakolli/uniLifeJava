@@ -30,9 +30,9 @@ public abstract class Post {
     private Date updated = new Date();
 
     @JsonIgnore
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Set<UTUser> upvoters = new HashSet<>();
+    private List<UTUser> upvoters = new ArrayList<>();
 
     @Column
     @NotNull
@@ -44,9 +44,9 @@ public abstract class Post {
     private String content;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "parent")
+    @OneToMany(mappedBy = "parent", fetch = FetchType.EAGER)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Set<Comment> children = new HashSet<>();
+    private List<Comment> children = new ArrayList<>();
 
     @JsonBackReference
     @ManyToOne

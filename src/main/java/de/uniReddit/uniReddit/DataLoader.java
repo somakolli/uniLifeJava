@@ -51,6 +51,7 @@ public class DataLoader implements ApplicationRunner {
                     university.getId());
             user.setUniversity(university);
             user.setRole(Roles.Admin);
+            user.getCreatedPosts();
             userRepository.save(user);
         }
     }
