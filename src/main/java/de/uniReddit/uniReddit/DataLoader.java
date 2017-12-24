@@ -45,7 +45,8 @@ public class DataLoader implements ApplicationRunner {
             UTUser user = new UTUser("Sokol",
                     "Makolli",
                     "info@unitalq.com",
-                    "admin", password,
+                    "admin",
+                    password,
                     "",
                     university.getId());
             user.setUniversity(university);

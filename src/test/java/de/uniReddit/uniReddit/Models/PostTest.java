@@ -11,7 +11,9 @@ public class PostTest {
 
     private UTUser UTUser = new UTUser(email, username, "", 1);
 
-    private PostMock post = new PostMock("test", UTUser);
+    private University university = new University("Uni Suttgart", "Stuttgart");
+
+    private PostMock post = new PostMock("test", UTUser, university);
 
 
     @Test

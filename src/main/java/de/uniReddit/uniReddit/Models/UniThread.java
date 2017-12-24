@@ -14,7 +14,7 @@ public class UniThread extends Post{
     @Column
     private String title;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private UniSubject uniSubject;
 
     @Transient
@@ -44,15 +44,14 @@ public class UniThread extends Post{
         this.uniSubject = uniSubject;
     }
 
-    UniThread(){
+    public UniThread(){
         super();
         //JPA
     }
 
     public UniThread(String content, UTUser creator, String title, UniSubject uniSubject) {
-        super(content, creator);
+        super(content, creator, uniSubject.getUniversity());
         this.title = title;
         this.uniSubject = uniSubject;
     }
-
 }

@@ -37,8 +37,10 @@ public class Data {
     ResponseEntity<String> uploadProfilePicture(@RequestParam String contentType,
                                            @RequestParam String contentLength,
                                            @RequestParam String name){
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            UTUser UTUser = userRepository.findByUsername(username);
+        name = UUID.randomUUID()+"_"+ UTUser.getId() + "_" + name;
         final String uri = "https://www.googleapis.com/upload/storage/v1/b/uni-talq-datastore/o?uploadType=resumable&name="+name;
-        name = UUID.randomUUID() + name;
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         try {
@@ -52,9 +54,7 @@ public class Data {
         HttpEntity<String> entity = new HttpEntity<>("", headers);
         try{
         ResponseEntity responseEntity =    restTemplate.exchange(uri, HttpMethod.POST, entity, String.class);
-            String username = SecurityContextHolder.getContext().getAuthentication().getName();
-            UTUser UTUser = userRepository.findByUsername(username);
-            UTUser.setProfilePictureUrl("https://www.googleapis.com/storage/v1/b/uni-talq-datastore/o/." + UTUser.getId() + "." + name);
+            UTUser.setProfilePictureUrl("https://www.googleapis.com/storage/v1/b/uni-talq-datastore/o/" +  name);
             ObjectMapper objectMapper = new ObjectMapper();
         return ResponseEntity.status(200).body(objectMapper.writeValueAsString(responseEntity.getHeaders().get("Location").get(0)));
 

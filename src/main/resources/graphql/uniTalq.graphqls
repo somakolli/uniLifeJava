@@ -1,0 +1,74 @@
+type University{
+    id: Int!
+    name: String!
+    location: String!
+}
+#no inheritance in graphql :(
+type Comment{
+    id: Int!
+    created: Int!
+    updated: Int!
+    upvoters: [UTUser]!
+    upvotes: Int!
+    content: String!
+    children: [Comment]!
+    creator: UTUser!
+    parent: Post!
+}
+type UniSubject{
+    id: Int!
+    name: String!
+    university: University!
+    subscribedUTUsers: [UTUser]
+    uniThreads: [UniThread]
+}
+type UniThread{
+    id: Int!
+    created: Int!
+    updated: Int!
+    upvoters: [UTUser]!
+    upvotes: Int!
+    content: String!
+    children: [Comment]!
+    creator: UTUser!
+    title: String!
+    uniSubject: UniSubject!
+}
+type Post{
+    id: Int!
+    created: Int!
+    updated: Int!
+    upvoters: [UTUser]!
+    upvotes: Int!
+    content: String!
+    children: [Comment]!
+    creator: UTUser!
+}
+
+type UTUser{
+    id: Int!
+    firstName: String!
+    surName: String!
+    email: String!
+    username: String!
+    profilePictureUrl: String
+    karma: Int!
+    createdPosts: [Post]
+    subscribedSubjects: [UniSubject]
+    university: University
+}
+
+type Query{
+    uniSubjects(universityId: Int!, page: Int!, pageSize: Int!, sortDirection: String!, sortProperties: String!):[UniSubject]!
+    uniThreads(uniSubjectId: Int!, page: Int!, pageSize: Int!, sortDirection: String!, sortProperties: String!):[UniThread]!
+    uniComments(postId: Int!, page: Int!, pageSize: Int!, sortDirection: String!, sortProperties: String!):[Comment]!
+    universities : [University]!
+    me: UTUser!
+}
+
+type Mutation{
+    writeUniversity(name: String!, location: String!):University!
+    writeUniSubject(name: String!, universityId: Int!):UniSubject!
+    writeUniThread(title: String!, uniSubjectId: Int!, content: String!): UniThread!
+    writeUniComment(postId: Int!, content: String!): Comment!
+}
