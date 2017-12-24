@@ -13,18 +13,12 @@ import java.util.Set;
  * Created by sokol on 06.08.17.
  */
 @Entity
-public class UniSubject {
-    @Id
-    @GeneratedValue
-    private long id;
+@Inheritance
+@DiscriminatorValue("U")
+public class UniSubject extends UniItem {
 
     @Column
     private String name;
-
-    @JsonIgnore
-    @ManyToOne
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private University university;
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
@@ -33,39 +27,16 @@ public class UniSubject {
 
     @JsonIgnore
     @OneToMany(mappedBy = "uniSubject", fetch = FetchType.EAGER)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<UniThread> uniThreads = new ArrayList<>();
 
-    @Transient
-    private Long universityId;
 
     public UniSubject() {
     }
 
     public UniSubject(String name, University university) {
+        super(university);
         this.name = name;
-        this.university = university;
-    }
-
-    public Long getUniversityId() {
-        if(university!=null)
-            return university.getId();
-        return universityId;
-    }
-
-    public void setUniversityId(Long universityId) {
-        this.universityId = universityId;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public University getUniversity() {
-        return university;
-    }
-
-    public void setUniversity(University university) {
-        this.university = university;
     }
 
     public List<UTUser> getSubscribedUTUsers() {
@@ -82,10 +53,6 @@ public class UniSubject {
 
     public void setUniThreads(List<UniThread> uniThreads) {
         this.uniThreads = uniThreads;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getName() {

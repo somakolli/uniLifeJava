@@ -33,49 +33,67 @@ public class Mutation implements GraphQLMutationResolver {
 
 
     public University writeUniversity(String name, String location){
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        UTUser UTUser = userRepository.findByUsername(username);
-        if(UTUser==null&!UTUser.getRole().equals(Roles.Admin))
+        UTUser user = authenticateUser();
+        if(user==null)
             return new University();
         University university = new University(name, location);
         universityRepository.save(university);
         return university;
     }
 
-    public UniSubject writeUniSubject(Long universityId, String name){
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        UTUser UTUser = userRepository.findByUsername(username);
-        if(UTUser==null&&(UTUser.getUniversity().getId().equals(universityId)&&!UTUser.getRole().equals(Roles.Admin)))
-            return new UniSubject();
+    public UniSubject writeUniSubject( String name, Long universityId){
         University university = universityRepository.findOne(universityId);
-        if(university==null)
-            return new UniSubject();
+        UTUser user = authenticateUser(university);
+        if(user==null)return new UniSubject();
         UniSubject uniSubject = new UniSubject(name, university);
         uniSubjectRepository.save(uniSubject);
         return uniSubject;
     }
     public UniThread writeUniThread(String title, Long uniSubjectId, String content){
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        UTUser UTUser = userRepository.findByUsername(username);
         UniSubject uniSubject = uniSubjectRepository.findOne(uniSubjectId);
-        if(uniSubject==null&&UTUser==null&&
-                (UTUser.getUniversity().getId().equals(uniSubject.getUniversityId())&&!UTUser.getRole().equals(Roles.Admin)))
-            return new UniThread();
-        UniThread uniThread = new UniThread(content, UTUser, title, uniSubject);
+        University university = uniSubject.getUniversity();
+        UTUser user = authenticateUser(university, uniSubject);
+        if(user==null)return new UniThread();
+        UniThread uniThread = new UniThread(content, user, title, uniSubject);
         threadRepository.save(uniThread);
         return uniThread;
     }
 
-    public Comment writeUniComment(Long postId, String content){
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        UTUser UTUser = userRepository.findByUsername(username);
-        Post post = postRepository.findOne(postId);
-        if(post==null&&UTUser==null&&
-                (UTUser.getUniversity().getId().equals(post.getUniversityId())&&!UTUser.getRole().equals(Roles.Admin)))
-            return new Comment();
-        Comment comment = new Comment(content, UTUser, post);
+    public Comment writeUniComment(Long parentId, String content){
+        Post post = postRepository.findOne(parentId);
+        University university = post.getUniversity();
+        UTUser user = authenticateUser(university, post);
+        if(user==null)return new Comment();
+        Comment comment = new Comment(content, user, post);
         commentRepository.save(comment);
         return comment;
     }
+
+    private UTUser authenticateUser(University university, UniItem uniItem){
+        UTUser user = authenticateUser(university);
+        if(uniItem==null||user==null
+                        && !user.getUniversity().getId().equals(uniItem.getUniversityId())
+                        && !user.getRole().equals(Roles.Admin))
+            return null;
+        return user;
+    }
+
+    private UTUser authenticateUser(University university){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        UTUser UTUser = userRepository.findByUsername(username);
+        if(university==null||UTUser==null
+                && !UTUser.getUniversity().getId().equals(university.getId())
+                && !UTUser.getRole().equals(Roles.Admin))
+            return null;
+        return UTUser;
+    }
+    private UTUser authenticateUser(){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        UTUser UTUser = userRepository.findByUsername(username);
+        if(UTUser==null||!UTUser.getRole().equals(Roles.Admin))
+            return null;
+        return UTUser;
+    }
+
 
 }

@@ -14,13 +14,10 @@ import java.util.*;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorValue("P")
 @DiscriminatorColumn(name = "POST_TYPE")
 @Table(name = "POST")
-public abstract class Post {
-    @Id
-    @GeneratedValue
-    private Long id;
-
+public abstract class Post extends UniItem{
     @Column
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private final Date created = new Date();
@@ -53,22 +50,15 @@ public abstract class Post {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UTUser creator;
 
-    Post(String content, UTUser creator)
+    Post(String content, UTUser creator, University university)
     {
+        super(university);
         this.content = content;
         setCreator(creator);
     }
 
     Post(){
         // JPA
-    }
-
-    public Long getUniversityId() {
-        return creator.getUniversityId();
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public Date getCreated() {

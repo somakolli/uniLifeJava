@@ -19,9 +19,8 @@ public class Comment extends Post{
     private Long parentId;
 
     public Comment(String content, UTUser creator, Post parent){
-        super(content, creator);
+        super(content, creator, parent.getUniversity());
         setParent(parent);
-
     }
 
     public Comment() {
