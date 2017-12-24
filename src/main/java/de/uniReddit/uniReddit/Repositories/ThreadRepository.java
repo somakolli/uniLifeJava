@@ -15,5 +15,5 @@ import java.util.List;
  */
 @Repository
 public interface ThreadRepository extends JpaRepository<UniThread, Long> {
-    Page<UniThread> findAllByUniSubject(UniSubject uniSubject, Pageable pageable);
+    List<UniThread> findAllByUniSubject(UniSubject uniSubject, Pageable pageable);
 }

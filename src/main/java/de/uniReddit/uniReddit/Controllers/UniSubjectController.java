@@ -54,7 +54,7 @@ public class UniSubjectController {
 
 
     @RequestMapping(method = RequestMethod.GET)
-    ResponseEntity<Page<UniSubject>> getSubjects(@RequestParam Long universityId,
+    ResponseEntity<List<UniSubject>> getSubjects(@RequestParam Long universityId,
                                                  @RequestParam int page,
                                                  @RequestParam int pageSize,
                                                  @RequestParam String sortDirection,

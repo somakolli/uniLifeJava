@@ -44,7 +44,7 @@ public class UniThread extends Post{
         this.uniSubject = uniSubject;
     }
 
-    UniThread(){
+    public UniThread(){
         super();
         //JPA
     }

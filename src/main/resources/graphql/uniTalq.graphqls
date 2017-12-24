@@ -59,10 +59,16 @@ type UTUser{
 }
 
 type Query{
+    uniSubjects(universityId: Int!, page: Int!, pageSize: Int!, sortDirection: String!, sortProperties: String!):[UniSubject]!
+    uniThreads(uniSubjectId: Int!, page: Int!, pageSize: Int!, sortDirection: String!, sortProperties: String!):[UniThread]!
+    uniComments(postId: Int!, page: Int!, pageSize: Int!, sortDirection: String!, sortProperties: String!):[Comment]!
     universities : [University]!
     me: UTUser!
 }
 
 type Mutation{
     writeUniversity(name: String!, location: String!):University!
+    writeUniSubject(name: String!, universityId: Int!):UniSubject!
+    writeUniThread(title: String!, uniSubjectId: Int!, content: String!): UniThread!
+    writeUniComment(postId: Int!, content: String!): Comment!
 }

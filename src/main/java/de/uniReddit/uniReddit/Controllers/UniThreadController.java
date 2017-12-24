@@ -12,6 +12,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * Created by Sokol on 14.11.2017.
  */
@@ -61,7 +63,7 @@ public class UniThreadController {
         return ResponseEntity.ok(uniThread);
     }
     @RequestMapping(method = RequestMethod.GET)
-    ResponseEntity<Page<UniThread>> getAll(@RequestParam Long uniSubjectId,
+    ResponseEntity<List<UniThread>> getAll(@RequestParam Long uniSubjectId,
                                            @RequestParam int page,
                                            @RequestParam int pageSize,
                                            @RequestParam String sortDirection,

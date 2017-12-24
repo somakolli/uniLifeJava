@@ -38,7 +38,7 @@ public class UniSubject {
     @Transient
     private Long universityId;
 
-    UniSubject() {
+    public UniSubject() {
     }
 
     public UniSubject(String name, University university) {

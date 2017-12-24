@@ -12,6 +12,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * Created by Sokol on 23.11.2017.
  */
@@ -73,7 +75,7 @@ public class CommentController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    ResponseEntity<Page<Comment>> getByParentId(@RequestParam Long parentId,
+    ResponseEntity<List<Comment>> getByParentId(@RequestParam Long parentId,
                                                 @RequestParam int page,
                                                 @RequestParam int pageSize,
                                                 @RequestParam String sortDirection,

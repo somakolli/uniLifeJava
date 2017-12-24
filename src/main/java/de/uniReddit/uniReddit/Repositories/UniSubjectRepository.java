@@ -11,5 +11,5 @@ import java.util.List;
 
 @Repository
 public interface UniSubjectRepository extends JpaRepository<UniSubject, Long> {
-    Page<UniSubject> findAllByUniversity(University university, Pageable pageable);
+    List<UniSubject> findAllByUniversity(University university, Pageable pageable);
 }

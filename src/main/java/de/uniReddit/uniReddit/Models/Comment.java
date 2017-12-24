@@ -24,7 +24,7 @@ public class Comment extends Post{
 
     }
 
-    Comment() {
+    public Comment() {
         // JPA
     }
 
