@@ -9,9 +9,9 @@ public class PostTest {
 
     private static final String username = "sokol";
 
-    private UTUser UTUser = new UTUser(email, username, "", 1);
-
     private University university = new University("Uni Suttgart", "Stuttgart");
+
+    private UTUser UTUser = new UTUser(email, username, "", university);
 
     private PostMock post = new PostMock("test", UTUser, university);
 

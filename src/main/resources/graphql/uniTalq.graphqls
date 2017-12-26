@@ -1,11 +1,21 @@
-type University{
-    id: Int!
+interface Node{
+    id: String!
+}
+
+interface UniItem {
+    id: String!
+    university: University!
+}
+
+type University implements Node{
+    id: String!
     name: String!
     location: String!
 }
 #no inheritance in graphql :(
-type Comment{
-    id: Int!
+type Comment implements Post{
+    id: String!
+    university: University!
     created: Int!
     updated: Int!
     upvoters: [UTUser]!
@@ -15,15 +25,16 @@ type Comment{
     creator: UTUser!
     parent: Post!
 }
-type UniSubject{
-    id: Int!
+type UniSubject implements UniItem{
+    id: String!
     name: String!
     university: University!
     subscribedUTUsers: [UTUser]
     uniThreads: [UniThread]
 }
-type UniThread{
-    id: Int!
+type UniThread implements Post{
+    id: String!
+    university: University!
     created: Int!
     updated: Int!
     upvoters: [UTUser]!
@@ -34,8 +45,9 @@ type UniThread{
     title: String!
     uniSubject: UniSubject!
 }
-type Post{
-    id: Int!
+interface Post{
+    id: String!
+    university: University!
     created: Int!
     updated: Int!
     upvoters: [UTUser]!
@@ -45,8 +57,8 @@ type Post{
     creator: UTUser!
 }
 
-type UTUser{
-    id: Int!
+type UTUser implements UniItem{
+    id: String!
     firstName: String!
     surName: String!
     email: String!
@@ -55,20 +67,21 @@ type UTUser{
     karma: Int!
     createdPosts: [Post]
     subscribedSubjects: [UniSubject]
-    university: University
+    university: University!
 }
 
 type Query{
-    uniSubjects(universityId: Int!, page: Int!, pageSize: Int!, sortDirection: String!, sortProperties: String!):[UniSubject]!
-    uniThreads(uniSubjectId: Int!, page: Int!, pageSize: Int!, sortDirection: String!, sortProperties: String!):[UniThread]!
-    uniComments(postId: Int!, page: Int!, pageSize: Int!, sortDirection: String!, sortProperties: String!):[Comment]!
+    uniSubjects(universityId: String!, page: Int!, pageSize: Int!, sortDirection: String!, sortProperties: String!):[UniSubject]!
+    uniThreads(uniSubjectId: String!, page: Int!, pageSize: Int!, sortDirection: String!, sortProperties: String!):[UniThread]!
+    uniComments(postId: String!, page: Int!, pageSize: Int!, sortDirection: String!, sortProperties: String!):[Comment]!
     universities : [University]!
     me: UTUser!
 }
 
 type Mutation{
     writeUniversity(name: String!, location: String!):University!
-    writeUniSubject(name: String!, universityId: Int!):UniSubject!
-    writeUniThread(title: String!, uniSubjectId: Int!, content: String!): UniThread!
-    writeUniComment(postId: Int!, content: String!): Comment!
+    writeUniSubject(name: String!, universityId: String!):UniSubject!
+    writeUniThread(title: String!, uniSubjectId: String!, content: String!): UniThread!
+    writeUniComment(postId: String!, content: String!): Comment!
+    writeUser(firstName: String!, surName: String!, username: String!, email: String!, universityId: String!): UTUser!
 }

@@ -1,6 +1,7 @@
 package de.uniReddit.uniReddit.Models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sun.xml.internal.bind.v2.model.core.ID;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -15,8 +16,6 @@ public class Comment extends Post{
     @NotNull
     private Post parent;
 
-    @Transient
-    private Long parentId;
 
     public Comment(String content, UTUser creator, Post parent){
         super(content, creator, parent.getUniversity());
@@ -25,16 +24,6 @@ public class Comment extends Post{
 
     public Comment() {
         // JPA
-    }
-
-    public Long getParentId() {
-        if(parent != null)
-        return parent.getId();
-        return parentId;
-    }
-
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
     }
 
     Post getParent() {

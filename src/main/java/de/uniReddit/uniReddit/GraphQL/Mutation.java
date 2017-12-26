@@ -1,11 +1,14 @@
 package de.uniReddit.uniReddit.GraphQL;
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
+import com.sun.xml.internal.bind.v2.model.core.ID;
 import de.uniReddit.uniReddit.Models.*;
 import de.uniReddit.uniReddit.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+
+import java.util.UUID;
 
 @Component
 public class Mutation implements GraphQLMutationResolver {
@@ -41,7 +44,7 @@ public class Mutation implements GraphQLMutationResolver {
         return university;
     }
 
-    public UniSubject writeUniSubject( String name, Long universityId){
+    public UniSubject writeUniSubject( String name, UUID universityId){
         University university = universityRepository.findOne(universityId);
         UTUser user = authenticateUser(university);
         if(user==null)return new UniSubject();
@@ -49,7 +52,7 @@ public class Mutation implements GraphQLMutationResolver {
         uniSubjectRepository.save(uniSubject);
         return uniSubject;
     }
-    public UniThread writeUniThread(String title, Long uniSubjectId, String content){
+    public UniThread writeUniThread(String title, UUID uniSubjectId, String content){
         UniSubject uniSubject = uniSubjectRepository.findOne(uniSubjectId);
         University university = uniSubject.getUniversity();
         UTUser user = authenticateUser(university, uniSubject);
@@ -59,7 +62,7 @@ public class Mutation implements GraphQLMutationResolver {
         return uniThread;
     }
 
-    public Comment writeUniComment(Long parentId, String content){
+    public Comment writeUniComment(UUID parentId, String content){
         Post post = postRepository.findOne(parentId);
         University university = post.getUniversity();
         UTUser user = authenticateUser(university, post);

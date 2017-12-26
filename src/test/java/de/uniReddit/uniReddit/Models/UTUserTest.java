@@ -21,7 +21,7 @@ public class UTUserTest {
     @Before
     public void setup(){
         uni = new University("Uni Stuttgart", "Stuttgart");
-        UTUser = new UTUser(email, username, "", 1);
+        UTUser = new UTUser(email, username, "", uni);
         UTUser.setUniversity(uni);
         uniSubject = new UniSubject("dsa", uni);
 
@@ -52,7 +52,6 @@ public class UTUserTest {
     public void enrollmentTest(){
         UTUser.setUniversity(uni);
         Assert.assertTrue(UTUser.getUniversity().equals(uni));
-        Assert.assertTrue(uni.getUTUsers().contains(UTUser));
     }
 
 

@@ -12,14 +12,8 @@ import java.util.Set;
  * @author Sokol Makolli
  */
 @Entity
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
-public class University {
-    @Id
-    @GeneratedValue
-    private Long id;
-
+@DiscriminatorValue("UNI")
+public class University extends Node {
     @NotEmpty
     @NotNull
     @Column
@@ -29,10 +23,6 @@ public class University {
     @NotNull
     @Column
     private String location;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "university")
-    private Set<UTUser> UTUsers = new HashSet<>();
 
     public University() {
         //JPA
@@ -47,17 +37,9 @@ public class University {
         this.name = name;
     }
 
-    @JsonIgnore
-    public Set<UTUser> getUTUsers() {
-        return UTUsers;
-    }
 
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getName() {
@@ -66,13 +48,6 @@ public class University {
 
     public String getLocation() {
         return location;
-    }
-
-    @JsonIgnore
-    public HashSet<Long> getUserIds(){
-        HashSet<Long> ids = new HashSet<>();
-        getUTUsers().forEach(user -> ids.add(user.getId()));
-        return ids;
     }
 
 }
