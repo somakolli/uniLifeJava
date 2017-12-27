@@ -83,5 +83,4 @@ type Mutation{
     writeUniSubject(name: String!, universityId: String!):UniSubject!
     writeUniThread(title: String!, uniSubjectId: String!, content: String!): UniThread!
     writeUniComment(postId: String!, content: String!): Comment!
-    writeUser(firstName: String!, surName: String!, username: String!, email: String!, universityId: String!): UTUser!
 }
