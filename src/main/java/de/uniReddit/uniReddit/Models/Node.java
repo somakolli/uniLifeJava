@@ -1,8 +1,6 @@
 package de.uniReddit.uniReddit.Models;
 
 
-import com.sun.xml.internal.bind.v2.model.core.ID;
-
 import javax.persistence.*;
 import java.util.UUID;
 

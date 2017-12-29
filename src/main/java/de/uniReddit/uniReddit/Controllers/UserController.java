@@ -1,8 +1,10 @@
 package de.uniReddit.uniReddit.Controllers;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.sun.xml.internal.bind.v2.model.core.ID;
-import de.uniReddit.uniReddit.Models.*;
+import de.uniReddit.uniReddit.Models.Roles;
+import de.uniReddit.uniReddit.Models.UTUser;
+import de.uniReddit.uniReddit.Models.UniSubject;
+import de.uniReddit.uniReddit.Models.View;
 import de.uniReddit.uniReddit.Repositories.UniSubjectRepository;
 import de.uniReddit.uniReddit.Repositories.UniversityRepository;
 import de.uniReddit.uniReddit.Repositories.UserRepository;
@@ -14,8 +16,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.UUID;
 
 /**

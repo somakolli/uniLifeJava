@@ -1,7 +1,5 @@
 package de.uniReddit.uniReddit.security;
 
-import org.apache.commons.lang3.RandomStringUtils;
-
 /**
  * Created by Sokol on 26.11.2017.
  */

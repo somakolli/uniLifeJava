@@ -1,6 +1,5 @@
 package de.uniReddit.uniReddit.Repositories;
 
-import com.sun.xml.internal.bind.v2.model.core.ID;
 import de.uniReddit.uniReddit.Models.UTUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
