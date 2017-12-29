@@ -1,6 +1,7 @@
 package de.uniReddit.uniReddit.Controllers;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.sun.xml.internal.bind.v2.model.core.ID;
 import de.uniReddit.uniReddit.Models.*;
 import de.uniReddit.uniReddit.Repositories.UniSubjectRepository;
 import de.uniReddit.uniReddit.Repositories.UniversityRepository;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.UUID;
 
 /**
  * Created by Sokol on 25.09.2017.
@@ -39,38 +41,6 @@ public class UserController {
     }
 
     /*
-    creates a user given the user encoded in json
-     */
-    @RequestMapping(method = RequestMethod.POST, value = "/sign-up")
-    ResponseEntity<?> add(@RequestBody UTUser UTUser) throws URISyntaxException {
-
-        UTUser.setUniversity(universityRepository.findOne(UTUser.getUniversityId()));
-
-        if(userRepository.existsByUsername(UTUser.getUsername()))
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("username exists");
-
-        if(userRepository.existsByEmail(UTUser.getEmail()))
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("email exists");
-
-        if(!universityRepository.exists(UTUser.getUniversity().getId())){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("university not found");
-        }
-        University university = this.universityRepository.findOne(UTUser.getUniversityId());
-
-        String passwordEnc = bCryptPasswordEncoder.encode(UTUser.getPassword());
-
-        UTUser.setUniversity(university);
-
-        UTUser.setPassword(passwordEnc);
-        System.out.println(UTUser.getUniversity());
-        this.userRepository.save(UTUser);
-
-        URI uri = new URI("/api/users/" + UTUser.getUsername());
-        return ResponseEntity.created(uri).build();
-
-    }
-
-    /*
     returns the given user given the pathvariable username
      */
     @RequestMapping(method = RequestMethod.GET, value = "/{username}")
@@ -83,7 +53,7 @@ public class UserController {
     subscribes the current user to the given subject
      */
     @RequestMapping(method = RequestMethod.GET, value = "/subscribe")
-    ResponseEntity<?> subscribe(@RequestParam Long uniSubjectId){
+    ResponseEntity<?> subscribe(@RequestParam UUID uniSubjectId){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         if(!uniSubjectRepository.exists(uniSubjectId))
@@ -100,7 +70,7 @@ public class UserController {
     @promise unbscribes the current user to the given subject
      */
     @RequestMapping(method = RequestMethod.GET, value = "/unsubscribe")
-    ResponseEntity<?> unsubscribe( @RequestParam Long uniSubjectId){
+    ResponseEntity<?> unsubscribe( @RequestParam UUID uniSubjectId){
         if(!uniSubjectRepository.exists(uniSubjectId))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("uniSubject not found");
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -116,7 +86,7 @@ public class UserController {
     @RequestMapping(method = RequestMethod.PUT)
     ResponseEntity<?> update(@RequestParam String username,
                              @RequestParam String email,
-                             @RequestParam Long universityId){
+                             @RequestParam UUID universityId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
 

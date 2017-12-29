@@ -1,6 +1,7 @@
 package de.uniReddit.uniReddit.GraphQL;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
+import com.sun.xml.internal.bind.v2.model.core.ID;
 import de.uniReddit.uniReddit.Models.*;
 import de.uniReddit.uniReddit.Repositories.*;
 import graphql.GraphQLException;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class Query implements GraphQLQueryResolver{
@@ -51,7 +53,7 @@ public class Query implements GraphQLQueryResolver{
         return user;
     }
 
-    public List<UniSubject> getUniSubjects(long universityId,
+    public List<UniSubject> getUniSubjects(UUID universityId,
                                            int page, int pageSize,
                                            String sortDirection,
                                            String sortProperties) throws GraphQLException{
@@ -66,7 +68,7 @@ public class Query implements GraphQLQueryResolver{
         return uniSubjectRepository.findAllByUniversity(universityRepository.findOne(universityId), new PageRequest(page, pageSize, Sort.Direction.fromString(sortDirection),
                 sortProperties));
     }
-    public List<UniThread> getUniThreads(long uniSubjectId,
+    public List<UniThread> getUniThreads(UUID uniSubjectId,
                                          int page, int pageSize,
                                          String sortDirection,
                                          String sortProperties){
@@ -85,7 +87,7 @@ public class Query implements GraphQLQueryResolver{
                 sortProperties));
     }
 
-    public List<Comment> getUniComments(long postId,
+    public List<Comment> getUniComments(UUID postId,
                                         int page, int pageSize,
                                         String sortDirection,
                                         String sortProperties){

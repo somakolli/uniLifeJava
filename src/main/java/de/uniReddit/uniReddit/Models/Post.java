@@ -118,15 +118,4 @@ public abstract class Post extends UniItem{
         }
         upvotes = upvoters.size();
     }
-
-    public List<Long> getChildrenIds(){
-        List<Long> childrenIds = new ArrayList<>();
-        for (Comment comment :
-                children) {
-            childrenIds.add(comment.getId());
-        }
-        return childrenIds;
-    }
-
-
 }

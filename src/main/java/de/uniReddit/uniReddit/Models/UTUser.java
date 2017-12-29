@@ -16,13 +16,8 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 
 @Entity
-public class UTUser {
-
-    @Id
-    @GeneratedValue
-    @JsonView(View.Authorized.class)
-    private Long id;
-
+@DiscriminatorValue("USER")
+public class UTUser extends UniItem{
     @Column
     @JsonView(View.Everyone.class)
     private String firstName;
@@ -80,35 +75,25 @@ public class UTUser {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<UniSubject> subscribedSubjects = new ArrayList<>();
 
-    @JsonIgnore
-    @ManyToOne
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private University university;
-
-    @Transient
-    @JsonView(View.Everyone.class)
-    private Long universityId;
-
     public UTUser() {
         // JPA
     }
 
-    public UTUser(String firstName, String surName, String email, String username, String password, String profilePictureUrl, long universityId) {
+    public UTUser(String firstName, String surName, String email, String username, String password, String profilePictureUrl, University university) {
+        super(university);
         this.firstName = firstName;
         this.surName = surName;
         this.email = email;
         this.username = username;
         this.password = password;
         this.profilePictureUrl = profilePictureUrl;
-        this.universityId = universityId;
-        profilePictureUrl = "";
     }
 
-    public UTUser(String email, String username, String password, long universityId) {
+    public UTUser(String email, String username, String password, University university) {
+        super(university);
         this.email = email;
         this.username = username;
         this.password = password;
-        this.universityId = universityId;
     }
 
     public String getProfilePictureUrl() {
@@ -119,18 +104,8 @@ public class UTUser {
         this.profilePictureUrl = profilePictureUrl;
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public List<Post> getCreatedPosts(){
         return createdPosts;
-    }
-
-    public Set<Long> getCreatedPostIds(){
-        HashSet<Long> ids = new HashSet<>();
-        getCreatedPosts().forEach(user -> ids.add(user.getId()));
-        return ids;
     }
 
     public Roles getRole() {
@@ -170,25 +145,6 @@ public class UTUser {
         return registeredDate;
     }
 
-    public University getUniversity() {
-        return university;
-    }
-
-    public Long getUniversityId() {
-        if(university!=null)
-            return university.getId();
-        return universityId;
-    }
-
-    public void setUniversityId(Long universityId) {
-        this.universityId = universityId;
-    }
-
-    public void setUniversity(University university) {
-        university.getUTUsers().add(this);
-        this.university = university;
-    }
-
     public boolean subscribe(UniSubject uniSubject){
         uniSubject.getSubscribedUTUsers().add(this);
         return subscribedSubjects.add(uniSubject);
@@ -196,12 +152,6 @@ public class UTUser {
 
     public List<UniSubject> getSubscribedSubjects() {
         return subscribedSubjects;
-    }
-
-    public Set<Long> getSubscribedSubjectsIds(){
-        HashSet<Long> ids = new HashSet<>();
-        getSubscribedSubjects().forEach(user -> ids.add(user.getId()));
-        return ids;
     }
 
     public long getKarma() {
