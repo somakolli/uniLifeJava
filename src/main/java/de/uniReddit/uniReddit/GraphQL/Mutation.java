@@ -1,7 +1,6 @@
 package de.uniReddit.uniReddit.GraphQL;
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
-import com.sun.xml.internal.bind.v2.model.core.ID;
 import de.uniReddit.uniReddit.Models.*;
 import de.uniReddit.uniReddit.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;

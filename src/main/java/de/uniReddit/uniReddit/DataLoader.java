@@ -1,6 +1,8 @@
 package de.uniReddit.uniReddit;
 
-import de.uniReddit.uniReddit.Models.*;
+import de.uniReddit.uniReddit.Models.Roles;
+import de.uniReddit.uniReddit.Models.UTUser;
+import de.uniReddit.uniReddit.Models.University;
 import de.uniReddit.uniReddit.Repositories.ThreadRepository;
 import de.uniReddit.uniReddit.Repositories.UniSubjectRepository;
 import de.uniReddit.uniReddit.Repositories.UniversityRepository;

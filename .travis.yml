@@ -5,7 +5,7 @@ jdk:
 node_js:
   - "8.2.1"
 install:
-- "./mvnw install -DskipTests=false -XDignore.symbol.file=true -Dmaven.javadoc.skip=true -B -V"
+- "./mvnw install -DskipTests=false -Dmaven.javadoc.skip=true -B -V"
 - npm install newman
 language: java
 deploy:

@@ -1,13 +1,10 @@
 package de.uniReddit.uniReddit.security;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.util.store.DataStore;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class CloudJWT {
 

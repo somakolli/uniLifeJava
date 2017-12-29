@@ -1,9 +1,8 @@
 package de.uniReddit.uniReddit.Models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.sun.xml.internal.bind.v2.model.core.ID;
-
-import javax.persistence.*;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 /**
