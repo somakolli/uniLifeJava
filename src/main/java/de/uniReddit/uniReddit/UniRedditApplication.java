@@ -28,12 +28,7 @@ public class UniRedditApplication {
 	@RequestMapping("/_ah/health")
 	public String healthy() {
 		// Message body required though ignored
-		try {
-			return CloudJWT.getGoogleAuthToken();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return "";
-		}
+		return "Still breathing";
 
 	}
 
