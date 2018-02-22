@@ -80,7 +80,7 @@ type Query{
 
 type Mutation{
     writeUniversity(name: String!, location: String!):University!
-    writeUniSubject(name: String!, universityId: String!):UniSubject!
+    writeUniSubject(name: String!, universityId: String!, description: String):UniSubject!
     writeUniThread(title: String!, uniSubjectId: String!, content: String!): UniThread!
     writeUniComment(postId: String!, content: String!): Comment!
 }

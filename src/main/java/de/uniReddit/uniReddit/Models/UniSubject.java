@@ -28,6 +28,8 @@ public class UniSubject extends UniItem {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<UniThread> uniThreads = new ArrayList<>();
 
+    private String description = "";
+
 
     public UniSubject() {
     }
@@ -35,6 +37,14 @@ public class UniSubject extends UniItem {
     public UniSubject(String name, University university) {
         super(university);
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public List<UTUser> getSubscribedUTUsers() {

@@ -43,11 +43,12 @@ public class Mutation implements GraphQLMutationResolver {
         return university;
     }
 
-    public UniSubject writeUniSubject( String name, UUID universityId){
+    public UniSubject writeUniSubject( String name, UUID universityId, String description){
         University university = universityRepository.findOne(universityId);
         UTUser user = authenticateUser(university);
         if(user==null)return new UniSubject();
         UniSubject uniSubject = new UniSubject(name, university);
+        uniSubject.setDescription(description);
         uniSubjectRepository.save(uniSubject);
         return uniSubject;
     }
