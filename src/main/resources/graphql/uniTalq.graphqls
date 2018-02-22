@@ -31,6 +31,7 @@ type UniSubject implements UniItem{
     university: University!
     subscribedUTUsers: [UTUser]
     uniThreads: [UniThread]
+    description: String
 }
 type UniThread implements Post{
     id: String!
