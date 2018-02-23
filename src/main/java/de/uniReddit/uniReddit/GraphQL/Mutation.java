@@ -47,6 +47,9 @@ public class Mutation implements GraphQLMutationResolver {
         University university = universityRepository.findOne(universityId);
         UTUser user = authenticateUser(university);
         if(user==null)return new UniSubject();
+        if(uniSubjectRepository.findByUniversityAndName(university, name)!=null){
+            return new UniSubject();
+        }
         UniSubject uniSubject = new UniSubject(name, university);
         uniSubject.setDescription(description);
         uniSubjectRepository.save(uniSubject);
