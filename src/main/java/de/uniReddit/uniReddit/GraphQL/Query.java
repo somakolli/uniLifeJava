@@ -82,6 +82,28 @@ public class Query implements GraphQLQueryResolver{
         return threadRepository.findAllByUniSubject(uniSubject, new PageRequest(page, pageSize, Sort.Direction.fromString(sortDirection),
                 sortProperties));
     }
+    public List<UniThread> getUniThreadsBySubjectName(String uniSubjectName,
+                                         UUID universityId,
+                                         int page, int pageSize,
+                                         String sortDirection,
+                                         String sortProperties){
+        System.out.println(uniSubjectName);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        UTUser UTUser = userRepository.findByUsername(username);
+        if(UTUser == null){
+            System.out.println("1");
+            return new ArrayList<UniThread>();
+        }
+        University university = universityRepository.findOne(universityId);
+        UniSubject uniSubject = uniSubjectRepository.findByUniversityAndName(university, uniSubjectName);
+        if(uniSubject==null)
+            return new ArrayList<>();
+        if(!UTUser.getUniversityId().equals(uniSubject.getUniversityId())&&!UTUser.getRole().equals(Roles.Admin))
+            return new ArrayList<>();
+
+        return threadRepository.findAllByUniSubject(uniSubject, new PageRequest(page, pageSize, Sort.Direction.fromString(sortDirection),
+                sortProperties));
+    }
 
     public List<Comment> getUniComments(UUID postId,
                                         int page, int pageSize,

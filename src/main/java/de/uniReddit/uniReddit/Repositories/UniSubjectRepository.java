@@ -12,4 +12,5 @@ import java.util.UUID;
 @Repository
 public interface UniSubjectRepository extends JpaRepository<UniSubject, UUID> {
     List<UniSubject> findAllByUniversity(University university, Pageable pageable);
+    UniSubject findByUniversityAndName(University university, String name);
 }

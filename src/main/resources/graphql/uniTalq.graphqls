@@ -74,6 +74,7 @@ type UTUser implements UniItem{
 type Query{
     uniSubjects(universityId: String!, page: Int!, pageSize: Int!, sortDirection: String!, sortProperties: String!):[UniSubject]!
     uniThreads(uniSubjectId: String!, page: Int!, pageSize: Int!, sortDirection: String!, sortProperties: String!):[UniThread]!
+    uniThreadsBySubjectName(uniSubjectName: String!, universityId: String!, page: Int!, pageSize: Int!, sortDirection: String!, sortProperties: String!):[UniThread]!
     uniComments(postId: String!, page: Int!, pageSize: Int!, sortDirection: String!, sortProperties: String!):[Comment]!
     universities : [University]!
     me: UTUser!
