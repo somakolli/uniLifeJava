@@ -13,6 +13,6 @@ import java.util.UUID;
  * @author Sokol Makolli
  */
 @Repository
-public interface ThreadRepository extends JpaRepository<UniThread, UUID> {
+public interface ThreadRepository extends JpaRepository<UniThread, Long> {
     List<UniThread> findAllByUniSubject(UniSubject uniSubject, Pageable pageable);
 }

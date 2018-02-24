@@ -11,9 +11,9 @@ import java.util.UUID;
 public abstract class Node {
     @Id
     @GeneratedValue
-    private UUID id;
+    private Long id;
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 }

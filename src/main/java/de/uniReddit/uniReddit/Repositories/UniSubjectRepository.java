@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface UniSubjectRepository extends JpaRepository<UniSubject, UUID> {
+public interface UniSubjectRepository extends JpaRepository<UniSubject, Long> {
     List<UniSubject> findAllByUniversity(University university, Pageable pageable);
     UniSubject findByUniversityAndName(University university, String name);
 }

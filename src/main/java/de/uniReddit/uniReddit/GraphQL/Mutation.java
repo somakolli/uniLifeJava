@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
-
 @Component
 public class Mutation implements GraphQLMutationResolver {
     private UniversityRepository universityRepository;
@@ -43,7 +41,7 @@ public class Mutation implements GraphQLMutationResolver {
         return university;
     }
 
-    public UniSubject writeUniSubject( String name, UUID universityId, String description){
+    public UniSubject writeUniSubject( String name, Long universityId, String description){
         University university = universityRepository.findOne(universityId);
         UTUser user = authenticateUser(university);
         if(user==null)return new UniSubject();
@@ -55,7 +53,7 @@ public class Mutation implements GraphQLMutationResolver {
         uniSubjectRepository.save(uniSubject);
         return uniSubject;
     }
-    public UniThread writeUniThread(String title, UUID uniSubjectId, String content){
+    public UniThread writeUniThread(String title, Long uniSubjectId, String content){
         UniSubject uniSubject = uniSubjectRepository.findOne(uniSubjectId);
         University university = uniSubject.getUniversity();
         UTUser user = authenticateUser(university, uniSubject);
@@ -65,7 +63,7 @@ public class Mutation implements GraphQLMutationResolver {
         return uniThread;
     }
 
-    public Comment writeUniComment(UUID parentId, String content){
+    public Comment writeUniComment(Long parentId, String content){
         Post post = postRepository.findOne(parentId);
         University university = post.getUniversity();
         UTUser user = authenticateUser(university, post);

@@ -16,7 +16,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
 
 /**
  * Created by Sokol on 25.09.2017.
@@ -53,7 +52,7 @@ public class UserController {
     subscribes the current user to the given subject
      */
     @RequestMapping(method = RequestMethod.GET, value = "/subscribe")
-    ResponseEntity<?> subscribe(@RequestParam UUID uniSubjectId){
+    ResponseEntity<?> subscribe(@RequestParam Long uniSubjectId){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         if(!uniSubjectRepository.exists(uniSubjectId))
@@ -70,7 +69,7 @@ public class UserController {
     @promise unbscribes the current user to the given subject
      */
     @RequestMapping(method = RequestMethod.GET, value = "/unsubscribe")
-    ResponseEntity<?> unsubscribe( @RequestParam UUID uniSubjectId){
+    ResponseEntity<?> unsubscribe( @RequestParam Long uniSubjectId){
         if(!uniSubjectRepository.exists(uniSubjectId))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("uniSubject not found");
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -86,7 +85,7 @@ public class UserController {
     @RequestMapping(method = RequestMethod.PUT)
     ResponseEntity<?> update(@RequestParam String username,
                              @RequestParam String email,
-                             @RequestParam UUID universityId){
+                             @RequestParam Long universityId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
 

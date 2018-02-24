@@ -24,7 +24,7 @@ public abstract class UniItem extends Node{
     public UniItem() {
     }
 
-    public UUID getUniversityId(){
+    public Long getUniversityId(){
         return university.getId();
     }
 

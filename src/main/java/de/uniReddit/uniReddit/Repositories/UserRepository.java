@@ -11,12 +11,12 @@ import java.util.UUID;
  * @author Sokol Makolli
  */
 @Repository
-public interface UserRepository extends JpaRepository<UTUser, UUID> {
+public interface UserRepository extends JpaRepository<UTUser, Long> {
     UTUser findByEmail(String email);
     UTUser findByUsername(String username);
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
     @Query("SELECT sum(upvotes) FROM Post where creator_id = ?1 group by creator_id")
-    long countKarma(UUID userId);
+    long countKarma(Long userId);
 
 }

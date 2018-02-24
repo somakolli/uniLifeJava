@@ -13,6 +13,6 @@ import java.util.UUID;
  * @author Sokol Makolli
  */
 @Repository
-public interface CommentRepository extends JpaRepository<Comment, UUID> {
+public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findAllByParent(Post parent, Pageable pageable);
 }
