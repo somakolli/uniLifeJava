@@ -1,11 +1,17 @@
 package de.uniReddit.uniReddit.GraphQL;
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
+import de.uniReddit.uniReddit.Exceptions.NotAuthorizedException;
+import de.uniReddit.uniReddit.Exceptions.ResourceExistsException;
 import de.uniReddit.uniReddit.Models.*;
 import de.uniReddit.uniReddit.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+
+import static de.uniReddit.uniReddit.GraphQL.HelperFunctions.checkAuthorization;
+import static de.uniReddit.uniReddit.GraphQL.HelperFunctions.checkExistance;
+import static de.uniReddit.uniReddit.GraphQL.HelperFunctions.getUser;
 
 @Component
 public class Mutation implements GraphQLMutationResolver {
@@ -33,20 +39,21 @@ public class Mutation implements GraphQLMutationResolver {
 
 
     public University writeUniversity(String name, String location){
-        UTUser user = authenticateUser();
-        if(user==null)
-            return new University();
+        UTUser user = getUser(userRepository);
+        if(user.getRole()!=Roles.Admin)
+            throw new NotAuthorizedException((long) 0);
         University university = new University(name, location);
         universityRepository.save(university);
         return university;
     }
 
     public UniSubject writeUniSubject( String name, Long universityId, String description){
+        UTUser user = getUser(userRepository);
+        checkAuthorization(universityId, userRepository);
         University university = universityRepository.findOne(universityId);
-        UTUser user = authenticateUser(university);
-        if(user==null)return new UniSubject();
         if(uniSubjectRepository.findByUniversityAndName(university, name)!=null){
-            return new UniSubject();
+            Object[] params = {university, name};
+           throw new ResourceExistsException(params);
         }
         UniSubject uniSubject = new UniSubject(name, university);
         uniSubject.setDescription(description);
@@ -54,50 +61,23 @@ public class Mutation implements GraphQLMutationResolver {
         return uniSubject;
     }
     public UniThread writeUniThread(String title, Long uniSubjectId, String content){
+        UTUser user = getUser(userRepository);
+        checkExistance(uniSubjectRepository, uniSubjectId);
         UniSubject uniSubject = uniSubjectRepository.findOne(uniSubjectId);
         University university = uniSubject.getUniversity();
-        UTUser user = authenticateUser(university, uniSubject);
-        if(user==null)return new UniThread();
+        checkAuthorization(uniSubject.getUniversityId(), userRepository);
         UniThread uniThread = new UniThread(content, user, title, uniSubject);
         threadRepository.save(uniThread);
         return uniThread;
     }
 
     public Comment writeUniComment(Long parentId, String content){
+        UTUser user = getUser(userRepository);
+        checkExistance(postRepository, parentId);
         Post post = postRepository.findOne(parentId);
-        University university = post.getUniversity();
-        UTUser user = authenticateUser(university, post);
-        if(user==null)return new Comment();
+        checkAuthorization(post.getUniversityId(), userRepository);
         Comment comment = new Comment(content, user, post);
         commentRepository.save(comment);
         return comment;
     }
-
-    private UTUser authenticateUser(University university, UniItem uniItem){
-        UTUser user = authenticateUser(university);
-        if(uniItem==null||user==null
-                        && !user.getUniversity().getId().equals(uniItem.getUniversityId())
-                        && !user.getRole().equals(Roles.Admin))
-            return null;
-        return user;
-    }
-
-    private UTUser authenticateUser(University university){
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        UTUser UTUser = userRepository.findByUsername(username);
-        if(university==null||UTUser==null
-                && !UTUser.getUniversity().getId().equals(university.getId())
-                && !UTUser.getRole().equals(Roles.Admin))
-            return null;
-        return UTUser;
-    }
-    private UTUser authenticateUser(){
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        UTUser UTUser = userRepository.findByUsername(username);
-        if(UTUser==null||!UTUser.getRole().equals(Roles.Admin))
-            return null;
-        return UTUser;
-    }
-
-
 }

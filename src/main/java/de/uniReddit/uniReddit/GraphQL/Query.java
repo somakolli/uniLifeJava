@@ -1,17 +1,27 @@
 package de.uniReddit.uniReddit.GraphQL;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
+import de.uniReddit.uniReddit.Exceptions.NotAuthenticatedException;
+import de.uniReddit.uniReddit.Exceptions.NotAuthorizedException;
+import de.uniReddit.uniReddit.Exceptions.ResourceNotFoundException;
 import de.uniReddit.uniReddit.Models.*;
 import de.uniReddit.uniReddit.Repositories.*;
 import graphql.GraphQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import javax.xml.bind.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static de.uniReddit.uniReddit.GraphQL.HelperFunctions.checkAuthorization;
+import static de.uniReddit.uniReddit.GraphQL.HelperFunctions.checkExistance;
+import static de.uniReddit.uniReddit.GraphQL.HelperFunctions.getUser;
+
 @Component
 public class Query implements GraphQLQueryResolver{
     private UniversityRepository universityRepository;
@@ -20,7 +30,6 @@ public class Query implements GraphQLQueryResolver{
     private ThreadRepository threadRepository;
     private PostRepository postRepository;
     private CommentRepository commentRepository;
-    private UTUser user;
 
     @Autowired
     public Query(UniversityRepository universityRepository,
@@ -42,41 +51,28 @@ public class Query implements GraphQLQueryResolver{
     }
 
     public UTUser getMe() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        user = userRepository.findByUsername(username);
-        return user;
+        return getUser(userRepository);
     }
 
     public List<UniSubject> getUniSubjects(Long universityId,
                                            int page, int pageSize,
                                            String sortDirection,
                                            String sortProperties) throws GraphQLException{
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        UTUser UTUser = userRepository.findByUsername(username);
-        if(UTUser == null)
-            return new ArrayList<UniSubject>();
 
-        if(!UTUser.getUniversityId().equals(universityId)&&!UTUser.getRole().equals(Roles.Admin))
-            return new ArrayList<UniSubject>();
-
-        return uniSubjectRepository.findAllByUniversity(universityRepository.findOne(universityId), new PageRequest(page, pageSize, Sort.Direction.fromString(sortDirection),
+        checkExistance(universityRepository,universityId);
+        checkAuthorization(universityId, userRepository);
+        return uniSubjectRepository.findAllByUniversity(universityRepository.findOne(universityId),
+                new PageRequest(page, pageSize, Sort.Direction.fromString(sortDirection),
                 sortProperties));
     }
     public List<UniThread> getUniThreads(Long uniSubjectId,
                                          int page, int pageSize,
                                          String sortDirection,
                                          String sortProperties){
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        UTUser UTUser = userRepository.findByUsername(username);
-        if(UTUser == null)
-            return new ArrayList<UniThread>();
 
+        checkExistance(uniSubjectRepository, uniSubjectId);
         UniSubject uniSubject = uniSubjectRepository.findOne(uniSubjectId);
-        if(uniSubject==null)
-            return new ArrayList<>();
-        if(!UTUser.getUniversityId().equals(uniSubject.getUniversityId())&&!UTUser.getRole().equals(Roles.Admin))
-            return new ArrayList<>();
-
+        checkAuthorization(uniSubject.getUniversityId(), userRepository);
         return threadRepository.findAllByUniSubject(uniSubject, new PageRequest(page, pageSize, Sort.Direction.fromString(sortDirection),
                 sortProperties));
     }
@@ -85,19 +81,13 @@ public class Query implements GraphQLQueryResolver{
                                          int page, int pageSize,
                                          String sortDirection,
                                          String sortProperties){
-        System.out.println(uniSubjectName);
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        UTUser UTUser = userRepository.findByUsername(username);
-        if(UTUser == null){
-            System.out.println("1");
-            return new ArrayList<UniThread>();
-        }
+        checkExistance(universityRepository, universityId);
         University university = universityRepository.findOne(universityId);
         UniSubject uniSubject = uniSubjectRepository.findByUniversityAndName(university, uniSubjectName);
+        Object[] params = {university.getId(), uniSubjectName};
         if(uniSubject==null)
-            return new ArrayList<>();
-        if(!UTUser.getUniversityId().equals(uniSubject.getUniversityId())&&!UTUser.getRole().equals(Roles.Admin))
-            return new ArrayList<>();
+            throw new ResourceNotFoundException(params);
+        checkAuthorization(uniSubject.getUniversityId(), userRepository);
 
         return threadRepository.findAllByUniSubject(uniSubject, new PageRequest(page, pageSize, Sort.Direction.fromString(sortDirection),
                 sortProperties));
@@ -107,17 +97,13 @@ public class Query implements GraphQLQueryResolver{
                                         int page, int pageSize,
                                         String sortDirection,
                                         String sortProperties){
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        UTUser UTUser = userRepository.findByUsername(username);
-        if(UTUser == null)
-            return new ArrayList<>();
+        checkExistance(postRepository, postId);
         Post post = postRepository.findOne(postId);
-        if(post==null)
-            return new ArrayList<>();
-        if(!UTUser.getUniversityId().equals(post.getUniversityId())&&!UTUser.getRole().equals(Roles.Admin))
-            return new ArrayList<>();
-
-        return commentRepository.findAllByParent(post, new PageRequest(page, pageSize, Sort.Direction.fromString(sortDirection),
-                sortProperties));
+        checkAuthorization(post.getUniversityId(), userRepository);
+        return commentRepository.findAllByParent(postRepository.findOne(postId),
+                new PageRequest(page, pageSize, Sort.Direction.fromString(sortDirection),
+                        sortProperties));
     }
+
+
 }

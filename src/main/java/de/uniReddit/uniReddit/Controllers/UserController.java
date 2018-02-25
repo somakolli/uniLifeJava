@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import de.uniReddit.uniReddit.Models.Roles;
 import de.uniReddit.uniReddit.Models.UTUser;
 import de.uniReddit.uniReddit.Models.UniSubject;
-import de.uniReddit.uniReddit.Models.View;
 import de.uniReddit.uniReddit.Repositories.UniSubjectRepository;
 import de.uniReddit.uniReddit.Repositories.UniversityRepository;
 import de.uniReddit.uniReddit.Repositories.UserRepository;
@@ -43,7 +42,6 @@ public class UserController {
     returns the given user given the pathvariable username
      */
     @RequestMapping(method = RequestMethod.GET, value = "/{username}")
-    @JsonView(View.Everyone.class)
     UTUser get(@PathVariable String username){
         return userRepository.findByUsername(username);
     }
@@ -144,17 +142,6 @@ public class UserController {
         return ResponseEntity.ok(UTUser.getRole());
     }
 
-    /*
-    @return the currently authenticated user
-     */
-    @JsonView(View.Authorized.class)
-    @RequestMapping(method = RequestMethod.GET, value = "/me")
-    ResponseEntity<UTUser> getCurrentUser(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        UTUser UTUser = userRepository.findByUsername(username);
-        return ResponseEntity.ok(UTUser);
-    }
 
     /*
     validates the property with the given value
