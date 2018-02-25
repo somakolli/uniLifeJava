@@ -21,35 +21,26 @@ import java.util.List;
 @Table(name = "POST")
 public abstract class Post extends UniItem{
     @Column
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private final Date created = new Date();
+    private final int created = (int) (System.currentTimeMillis() / 1000L);;
 
     @Column
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Date updated = new Date();
+    private int updated = (int) (System.currentTimeMillis() / 1000L);;
 
-    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<UTUser> upvoters = new ArrayList<>();
 
     @Column
     @NotNull
     @Order
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private long upvotes = 0;
 
     @Column
     private String content;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "parent", fetch = FetchType.EAGER)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<Comment> children = new ArrayList<>();
 
-    @JsonBackReference
     @ManyToOne
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UTUser creator;
 
     Post(String content, UTUser creator, University university)
@@ -63,11 +54,11 @@ public abstract class Post extends UniItem{
         // JPA
     }
 
-    public Date getCreated() {
+    public int getCreated() {
         return created;
     }
 
-    public Date getUpdated() {
+    public int getUpdated() {
         return updated;
     }
 
@@ -93,7 +84,7 @@ public abstract class Post extends UniItem{
 
     public void setContent(String content){
         this.content = content;
-        updated = new Date();
+        updated = (int) (System.currentTimeMillis() / 1000L);
     }
 
     public void setCreator(UTUser creator) {

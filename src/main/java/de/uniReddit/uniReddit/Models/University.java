@@ -36,7 +36,6 @@ public class University extends Node {
         this.name = name;
     }
 
-
     public void setLocation(String location) {
         this.location = location;
     }

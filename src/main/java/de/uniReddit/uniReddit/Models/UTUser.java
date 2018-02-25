@@ -20,60 +20,45 @@ import java.util.concurrent.atomic.AtomicLong;
 @DiscriminatorValue("USER")
 public class UTUser extends UniItem{
     @Column
-    @JsonView(View.Everyone.class)
     private String firstName;
 
     @Column
-    @JsonView(View.Everyone.class)
     private String surName;
 
 
     @NotNull
     @NotEmpty
     @Column(unique = true)
-    @JsonView(View.Everyone.class)
     private String email;
 
     @NotNull
     @NotEmpty
     @Column(unique = true)
-    @JsonView(View.Everyone.class)
     private String username;
 
     @NotNull
     @NotEmpty
     @Column
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Column
-    @JsonView(View.Everyone.class)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String profilePictureUrl;
 
     @NotNull
     @Column
     @Enumerated(EnumType.STRING)
-    @JsonView(View.Authorized.class)
     private Roles role = Roles.User;
 
     @Column
-    @JsonView(View.Everyone.class)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private AtomicLong karma = new AtomicLong(0);
 
     @Column
-    @JsonView(View.Authorized.class)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date registeredDate = new Date();
 
     @OneToMany(mappedBy = "creator", fetch = FetchType.EAGER)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<Post> createdPosts = new ArrayList<>();
 
-    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<UniSubject> subscribedSubjects = new ArrayList<>();
 
     public UTUser() {
@@ -164,7 +149,6 @@ public class UTUser extends UniItem{
         subscribedSubjects.remove(uniSubject);
     }
 
-    @JsonIgnore
     public void setKarma(long karma) {
         this.karma.set(karma);
     }

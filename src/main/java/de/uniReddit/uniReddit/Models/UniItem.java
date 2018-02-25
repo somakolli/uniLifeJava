@@ -12,9 +12,7 @@ import java.util.UUID;
 @DiscriminatorColumn(name = "UNI_ITEM_TYPE")
 @Table(name = "UNI_ITEMS")
 public abstract class UniItem extends Node{
-    @JsonIgnore
     @ManyToOne
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private University university;
 
     public UniItem(University university) {

@@ -18,14 +18,10 @@ public class UniSubject extends UniItem {
     @Column
     private String name;
 
-    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<UTUser> subscribedUTUsers = new ArrayList<>();
 
-    @JsonIgnore
     @OneToMany(mappedBy = "uniSubject", fetch = FetchType.EAGER)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<UniThread> uniThreads = new ArrayList<>();
 
     private String description = "";
