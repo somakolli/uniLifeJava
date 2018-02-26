@@ -26,10 +26,6 @@ public class UniSubject extends UniItem {
 
     private String description = "";
 
-
-    public UniSubject() {
-    }
-
     public UniSubject(String name, University university) {
         super(university);
         this.name = name;

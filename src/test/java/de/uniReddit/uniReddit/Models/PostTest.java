@@ -18,9 +18,7 @@ public class PostTest {
 
     @Test
     public void childrenTest(){
-        Comment comment = new Comment();
-        comment.setParent(post);
-        post.addChild(comment);
+        Comment comment = new Comment("",UTUser,post);
         Assert.assertTrue(post.containsChild(comment));
         Assert.assertTrue(comment.getParent().equals(post));
     }

@@ -50,10 +50,6 @@ public abstract class Post extends UniItem{
         setCreator(creator);
     }
 
-    Post(){
-        // JPA
-    }
-
     public int getCreated() {
         return created;
     }

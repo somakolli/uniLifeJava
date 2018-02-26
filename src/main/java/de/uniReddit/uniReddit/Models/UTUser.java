@@ -61,10 +61,6 @@ public class UTUser extends UniItem{
     @ManyToMany(fetch = FetchType.EAGER)
     private List<UniSubject> subscribedSubjects = new ArrayList<>();
 
-    public UTUser() {
-        // JPA
-    }
-
     public UTUser(String firstName, String surName, String email, String username, String password, String profilePictureUrl, University university) {
         super(university);
         this.firstName = firstName;
@@ -168,8 +164,4 @@ public class UTUser extends UniItem{
     public void setSurName(String surName) {
         this.surName = surName;
     }
-
-
-
-
 }

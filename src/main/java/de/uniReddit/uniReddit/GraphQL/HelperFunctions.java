@@ -26,7 +26,7 @@ public class HelperFunctions {
 
     public static void checkAuthorization(Long universityId, UserRepository userRepository){
         UTUser user = getUser(userRepository);
-        if(!user.getUniversityId().equals(universityId)&&!user.getRole().equals(Roles.Admin))
+        if(!(user.getUniversityId()==universityId)&&!user.getRole().equals(Roles.Admin))
             throw new NotAuthorizedException(universityId);
     }
 }

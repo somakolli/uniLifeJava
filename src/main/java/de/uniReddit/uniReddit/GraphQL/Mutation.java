@@ -49,11 +49,13 @@ public class Mutation implements GraphQLMutationResolver {
 
     public UniSubject writeUniSubject( String name, Long universityId, String description){
         UTUser user = getUser(userRepository);
+        checkExistance(universityRepository, universityId);
         checkAuthorization(universityId, userRepository);
+
         University university = universityRepository.findOne(universityId);
         if(uniSubjectRepository.findByUniversityAndName(university, name)!=null){
             Object[] params = {university, name};
-           throw new ResourceExistsException(params);
+            throw new ResourceExistsException(params);
         }
         UniSubject uniSubject = new UniSubject(name, university);
         uniSubject.setDescription(description);

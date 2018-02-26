@@ -42,11 +42,6 @@ public class UniThread extends Post{
         this.uniSubject = uniSubject;
     }
 
-    public UniThread(){
-        super();
-        //JPA
-    }
-
     public UniThread(String content, UTUser creator, String title, UniSubject uniSubject) {
         super(content, creator, uniSubject.getUniversity());
         this.title = title;

@@ -44,7 +44,8 @@ public class DataLoader implements ApplicationRunner {
             University university = new University("Universität Stuttgart", "Stuttgart");
             universityRepository.save(university);
             String password = bCryptPasswordEncoder.encode("password");
-            UTUser user = new UTUser("Sokol",
+            UTUser user = new UTUser(
+                    "Sokol",
                     "Makolli",
                     "info@unitalq.com",
                     "admin",

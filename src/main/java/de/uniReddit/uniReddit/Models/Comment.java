@@ -21,10 +21,6 @@ public class Comment extends Post{
         setParent(parent);
     }
 
-    public Comment() {
-        // JPA
-    }
-
     Post getParent() {
         return parent;
     }
