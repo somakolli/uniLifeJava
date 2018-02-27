@@ -37,7 +37,6 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found");
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-
         Post post = postRepository.findOne(postId);
         post.upvote(userRepository.findByUsername(username));
         postRepository.save(post);

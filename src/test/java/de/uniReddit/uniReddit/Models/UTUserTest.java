@@ -18,42 +18,56 @@ public class UTUserTest {
 
     private University uni;
 
+    private UniThread thread;
+
+    private Comment comment;
+
     @Before
-    public void setup(){
+    public void setup() {
         uni = new University("Uni Stuttgart", "Stuttgart");
         UTUser = new UTUser(email, username, "", uni);
         UTUser.setUniversity(uni);
         uniSubject = new UniSubject("dsa", uni);
-
+        thread = new UniThread("Content", UTUser, "Title", uniSubject);
+        comment = new Comment("Content", UTUser, thread);
     }
 
-
     @Test
-    public void testMinConstructor(){
+    public void testMinConstructor() {
         Assert.assertEquals(email, UTUser.getEmail());
         Assert.assertEquals(username, UTUser.getUsername());
     }
 
     @Test
-    public void testSubscription(){
+    public void testSubscription() {
         Assert.assertTrue(UTUser.subscribe(uniSubject));
         Assert.assertTrue(UTUser.getSubscribedSubjects().contains(uniSubject));
         Assert.assertTrue(uniSubject.getSubscribedUTUsers().contains(UTUser));
     }
 
     @Test
-    public void testUnsubscribe(){
+    public void testUnsubscribe() {
         UTUser.unSubscribe(uniSubject);
         Assert.assertFalse(UTUser.getSubscribedSubjects().contains(uniSubject));
         Assert.assertFalse(uniSubject.getSubscribedUTUsers().contains(UTUser));
     }
 
     @Test
-    public void enrollmentTest(){
+    public void enrollmentTest() {
         UTUser.setUniversity(uni);
         Assert.assertTrue(UTUser.getUniversity().equals(uni));
     }
 
-
-
+    @Test
+    public void testThreadUpvote() {
+        long karma = UTUser.getKarma();
+        thread.upvote(UTUser);
+        Assert.assertEquals(karma+1, thread.getUpvotes());
+    }
+    @Test
+    public void testCommentUpvote() {
+        long karma = UTUser.getKarma();
+        comment.upvote(UTUser);
+        Assert.assertEquals(karma +1 , comment.getUpvotes());
+    }
 }
