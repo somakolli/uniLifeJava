@@ -50,6 +50,12 @@ public class Query implements GraphQLQueryResolver{
         return universityRepository.findAll();
     }
 
+    public UniThread getUniThread(Long threadId){
+        checkExistance(threadRepository, threadId);
+        checkAuthorization(threadId, userRepository);
+        return threadRepository.findOne(threadId);
+    }
+
     public UTUser getMe() {
         return getUser(userRepository);
     }
