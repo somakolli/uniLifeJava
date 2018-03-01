@@ -31,7 +31,7 @@ public class PostController {
         this.userRepository = userRepository;
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/{postId}")
+    @RequestMapping(method = RequestMethod.POST, value = "/{postId}")
     ResponseEntity<?> upvote(@PathVariable Long postId){
         if(!postRepository.exists(postId))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found");
