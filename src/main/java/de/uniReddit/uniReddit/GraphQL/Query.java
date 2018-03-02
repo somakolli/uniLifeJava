@@ -51,9 +51,8 @@ public class Query implements GraphQLQueryResolver{
     }
 
     public UniThread getUniThread(Long threadId){
-        checkExistance(threadRepository, threadId);
         checkAuthorization(threadId, userRepository);
-        return threadRepository.findOne(threadId);
+        return checkExistance(threadRepository, threadId);
     }
 
     public UTUser getMe() {
@@ -65,7 +64,7 @@ public class Query implements GraphQLQueryResolver{
                                            String sortDirection,
                                            String sortProperties) throws GraphQLException{
 
-        checkExistance(universityRepository,universityId);
+        checkExistance(universityRepository, universityId);
         checkAuthorization(universityId, userRepository);
         return uniSubjectRepository.findAllByUniversity(universityRepository.findOne(universityId),
                 new PageRequest(page, pageSize, Sort.Direction.fromString(sortDirection),
@@ -76,8 +75,8 @@ public class Query implements GraphQLQueryResolver{
                                          String sortDirection,
                                          String sortProperties){
 
-        checkExistance(uniSubjectRepository, uniSubjectId);
-        UniSubject uniSubject = uniSubjectRepository.findOne(uniSubjectId);
+
+        UniSubject uniSubject = checkExistance(uniSubjectRepository, uniSubjectId);;
         checkAuthorization(uniSubject.getUniversityId(), userRepository);
         return threadRepository.findAllByUniSubject(uniSubject, new PageRequest(page, pageSize, Sort.Direction.fromString(sortDirection),
                 sortProperties));
@@ -87,8 +86,8 @@ public class Query implements GraphQLQueryResolver{
                                          int page, int pageSize,
                                          String sortDirection,
                                          String sortProperties){
-        checkExistance(universityRepository, universityId);
-        University university = universityRepository.findOne(universityId);
+
+        University university = checkExistance(universityRepository, universityId);
         UniSubject uniSubject = uniSubjectRepository.findByUniversityAndName(university, uniSubjectName);
         Object[] params = {university.getId(), uniSubjectName};
         if(uniSubject==null)
@@ -103,8 +102,7 @@ public class Query implements GraphQLQueryResolver{
                                         int page, int pageSize,
                                         String sortDirection,
                                         String sortProperties){
-        checkExistance(postRepository, postId);
-        Post post = postRepository.findOne(postId);
+        Post post = checkExistance(postRepository, postId);
         checkAuthorization(post.getUniversityId(), userRepository);
         return commentRepository.findAllByParent(postRepository.findOne(postId),
                 new PageRequest(page, pageSize, Sort.Direction.fromString(sortDirection),

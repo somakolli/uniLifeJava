@@ -3,6 +3,7 @@ package de.uniReddit.uniReddit.GraphQL;
 import de.uniReddit.uniReddit.Exceptions.NotAuthenticatedException;
 import de.uniReddit.uniReddit.Exceptions.NotAuthorizedException;
 import de.uniReddit.uniReddit.Exceptions.ResourceNotFoundException;
+import de.uniReddit.uniReddit.Models.Node;
 import de.uniReddit.uniReddit.Models.Roles;
 import de.uniReddit.uniReddit.Models.UTUser;
 import de.uniReddit.uniReddit.Repositories.UserRepository;
@@ -10,9 +11,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class HelperFunctions {
-    public static void checkExistance(JpaRepository<?, Long> repository, Long id){
+    public static <T extends Node> T checkExistance(JpaRepository<T, Long> repository, Long id){
         Object[] params = {id};
-        if(!repository.exists(id)) throw new ResourceNotFoundException(params);
+        T t = repository.findOne(id);
+        if(t == null) throw new ResourceNotFoundException(params);
+        return t;
     }
 
     public static UTUser getUser(UserRepository userRepository){

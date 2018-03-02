@@ -62,8 +62,7 @@ public class Mutation implements GraphQLMutationResolver {
     }
     public UniThread writeUniThread(String title, Long uniSubjectId, String content){
         UTUser user = getUser(userRepository);
-        checkExistance(uniSubjectRepository, uniSubjectId);
-        UniSubject uniSubject = uniSubjectRepository.findOne(uniSubjectId);
+        UniSubject uniSubject =checkExistance(uniSubjectRepository, uniSubjectId);
         University university = uniSubject.getUniversity();
         checkAuthorization(uniSubject.getUniversityId(), userRepository);
         UniThread uniThread = new UniThread(content, user, title, uniSubject);
