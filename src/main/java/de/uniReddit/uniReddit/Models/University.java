@@ -23,7 +23,7 @@ public class University extends Node {
     @Column
     private String location;
 
-    public University() {
+    private University() {
         //JPA
     }
 

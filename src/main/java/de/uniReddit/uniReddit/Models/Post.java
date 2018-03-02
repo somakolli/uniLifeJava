@@ -34,7 +34,7 @@ public abstract class Post extends UniItem{
     @Order
     private long upvotes = 0;
 
-    @Column
+    @Column(columnDefinition="TEXT")
     private String content;
 
     @OneToMany(mappedBy = "parent", fetch = FetchType.EAGER)

@@ -25,11 +25,11 @@ public class UTUserTest {
     @Before
     public void setup() {
         uni = new University("Uni Stuttgart", "Stuttgart");
-        UTUser = new UTUser(email, username, "", uni);
+        UTUser = new UTUserBuilder().setEmail(email).setUsername(username).setPassword("").setUniversity(uni).createUTUser();
         UTUser.setUniversity(uni);
-        uniSubject = new UniSubject("dsa", uni);
-        thread = new UniThread("Content", UTUser, "Title", uniSubject);
-        comment = new Comment("Content", UTUser, thread);
+        uniSubject = new UniSubjectBuilder().setName("dsa").setUniversity(uni).createUniSubject();
+        thread = new UniThreadBuilder().setContent("Content").setCreator(UTUser).setTitle("Title").setUniSubject(uniSubject).createUniThread();
+        comment = new CommentBuilder().setContent("Content").setCreator(UTUser).setParent(thread).createComment();
     }
 
     @Test

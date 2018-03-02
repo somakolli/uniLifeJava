@@ -133,7 +133,12 @@
 			<artifactId>jaxb-impl</artifactId>
 			<version>2.1</version>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>com.thedeanda</groupId>
+            <artifactId>lorem</artifactId>
+            <version>2.1</version>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<plugins>
