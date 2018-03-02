@@ -75,6 +75,10 @@ public abstract class Post extends UniItem{
         return this.creator.getUsername();
     }
 
+    public String getShortContent(){
+        return content.length() > 100 ? content.substring(0, 100) : content;
+    }
+
     public void setContent(String content){
         this.content = content;
         updated = (int) (System.currentTimeMillis() / 1000L);

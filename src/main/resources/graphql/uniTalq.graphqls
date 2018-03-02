@@ -23,6 +23,7 @@ type Comment implements Post{
     content: String
     creator: UTUser
     parent: Post
+    shortContent: String
 }
 type UniSubject implements UniItem{
     id: String
@@ -41,6 +42,7 @@ type UniThread implements Post{
     creator: UTUser
     title: String
     uniSubject: UniSubject
+    shortContent: String
 }
 interface Post{
     id: String
@@ -51,6 +53,7 @@ interface Post{
     upvotes: Int
     content: String
     creator: UTUser
+    shortContent: String
 }
 
 type UTUser implements UniItem{
