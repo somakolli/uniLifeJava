@@ -26,7 +26,7 @@ public abstract class Post extends UniItem{
     @Column
     private int updated = (int) (System.currentTimeMillis() / 1000L);;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<UTUser> upvoters = new ArrayList<>();
 
     @Column

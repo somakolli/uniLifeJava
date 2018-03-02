@@ -55,7 +55,7 @@ public class UTUser extends UniItem{
     @Column
     private Date registeredDate = new Date();
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<UniSubject> subscribedSubjects = new ArrayList<>();
 
     public UTUser() {
