@@ -67,5 +67,7 @@ public class UTUserTest {
         long karma = UTUser.getKarma();
         comment.upvote(UTUser);
         Assert.assertEquals(karma +1 , comment.getUpvotes());
+        comment.upvote(UTUser);
+        Assert.assertEquals(karma, comment.getUpvotes());
     }
 }

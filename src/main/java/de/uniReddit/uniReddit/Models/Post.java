@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author Sokol Makolli
@@ -23,13 +24,10 @@ public abstract class Post extends UniItem{
     @Column
     private int updated = (int) (System.currentTimeMillis() / 1000L);;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<UTUser> upvoters = new ArrayList<>();
-
     @Column
     @NotNull
     @Order
-    private long upvotes = 0;
+    private AtomicLong upvotes = new AtomicLong(0);
 
     @Column(columnDefinition="TEXT")
     private String content;
@@ -60,7 +58,7 @@ public abstract class Post extends UniItem{
     }
 
     public long getUpvotes(){
-        return this.upvotes;
+        return this.upvotes.get();
     }
 
     public UTUser getCreator(){
@@ -87,14 +85,15 @@ public abstract class Post extends UniItem{
     public void addChild(Comment comment){
         if(!comment.getParent().equals(this))
             comment.setParent(this);
-    };
+    }
 
     public void upvote(UTUser UTUser) {
-        if(upvoters.contains(UTUser)){
-            upvoters.remove(UTUser);
-        }else{
-            upvoters.add(UTUser);
+        if (UTUser.getUpvotedPosts().contains(this)) {
+            upvotes.decrementAndGet();
+            UTUser.getUpvotedPosts().remove(this);
+        } else {
+            upvotes.incrementAndGet();
+            UTUser.getUpvotedPosts().add(this);
         }
-        upvotes = upvoters.size();
     }
 }

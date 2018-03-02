@@ -58,6 +58,9 @@ public class UTUser extends UniItem{
     @ManyToMany(fetch = FetchType.EAGER)
     private List<UniSubject> subscribedSubjects = new ArrayList<>();
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Post> upvotedPosts = new ArrayList<>();
+
     public UTUser() {
         // JPA
     }
@@ -160,7 +163,7 @@ public class UTUser extends UniItem{
         this.surName = surName;
     }
 
-
-
-
+    public List<Post> getUpvotedPosts() {
+        return upvotedPosts;
+    }
 }
