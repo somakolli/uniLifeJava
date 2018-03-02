@@ -15,7 +15,6 @@ public class Comment extends Post{
     @NotNull
     private Post parent;
 
-
     public Comment(String content, UTUser creator, Post parent){
         super(content, creator, parent.getUniversity());
         setParent(parent);

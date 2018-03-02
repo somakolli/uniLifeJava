@@ -15,10 +15,7 @@ import java.util.List;
  * @author Sokol Makolli
  */
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "POST_TYPE")
-@DiscriminatorValue("P")
-@Table(name = "POST")
+@DiscriminatorValue("POST")
 public abstract class Post extends UniItem{
     @Column
     private final int created = (int) (System.currentTimeMillis() / 1000L);;
@@ -40,8 +37,7 @@ public abstract class Post extends UniItem{
     @ManyToOne
     private UTUser creator;
 
-    Post(String content, UTUser creator, University university)
-    {
+    Post(String content, UTUser creator, University university) {
         super(university);
         this.content = content;
         setCreator(creator);

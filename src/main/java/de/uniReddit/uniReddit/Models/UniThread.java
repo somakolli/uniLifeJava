@@ -7,7 +7,7 @@ import javax.persistence.*;
  */
 @Entity
 @Inheritance
-@DiscriminatorValue("T")
+@DiscriminatorValue("THREAD")
 public class UniThread extends Post{
     @Column
     private String title;

@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
  * @author Sokol Makolli
  */
 @Entity
-@DiscriminatorValue("UNI")
+@DiscriminatorValue("UNIVERSITY")
 public class University extends Node {
     @NotEmpty
     @NotNull

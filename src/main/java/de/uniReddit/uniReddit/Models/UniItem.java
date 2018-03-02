@@ -7,9 +7,8 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorValue("I")
-@DiscriminatorColumn(name = "UNI_ITEM_TYPE")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@DiscriminatorValue("ITEM")
 @Table(name = "UNI_ITEMS")
 public abstract class UniItem extends Node{
     @ManyToOne

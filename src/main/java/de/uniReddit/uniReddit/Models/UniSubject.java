@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Entity
 @Inheritance
-@DiscriminatorValue("U")
+@DiscriminatorValue("SUBJECT")
 public class UniSubject extends UniItem {
 
     @Column
