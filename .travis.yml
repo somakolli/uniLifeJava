@@ -2,11 +2,8 @@ before_install:
 - chmod +x mvnw
 jdk:
 - oraclejdk8
-node_js:
-  - "8.2.1"
 install:
 - "./mvnw install -DskipTests=false -Dmaven.javadoc.skip=true -B -V"
-- npm install newman
 language: java
 deploy:
   provider: heroku
@@ -17,12 +14,7 @@ deploy:
     branch: development
   skip_cleanup: true
 before_script:
-  - node --version
-  - npm --version
-  - node_modules/.bin/newman --version
 script:
   - mv src/main/resources/application.properties src/main/resources/application.properties.h2
   - mv src/main/resources/application.properties.post src/main/resources/application.properties
-after_deploy:
-  - node_modules/.bin/newman run uniTalq.postman_collection.json -e heroku.postman_environment.json
 
