@@ -18,12 +18,6 @@ public class UniSubject extends UniItem {
     @Column
     private String name;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<UTUser> subscribedUTUsers = new ArrayList<>();
-
-    @OneToMany(mappedBy = "uniSubject", fetch = FetchType.EAGER)
-    private List<UniThread> uniThreads = new ArrayList<>();
-
     private String description = "";
 
 
@@ -41,22 +35,6 @@ public class UniSubject extends UniItem {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public List<UTUser> getSubscribedUTUsers() {
-        return subscribedUTUsers;
-    }
-
-    public void setSubscribedUTUsers(List<UTUser> subscribedUTUsers) {
-        this.subscribedUTUsers = subscribedUTUsers;
-    }
-
-    public List<UniThread> getUniThreads() {
-        return uniThreads;
-    }
-
-    public void setUniThreads(List<UniThread> uniThreads) {
-        this.uniThreads = uniThreads;
     }
 
     public String getName() {

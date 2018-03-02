@@ -31,8 +31,6 @@ public class Comment extends Post{
 
     public void setParent(Post parent) {
         this.parent = parent;
-        if(!parent.containsChild(this))
-            parent.addChild(this);
     }
 
 }

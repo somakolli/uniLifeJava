@@ -18,10 +18,9 @@ type Comment implements Post{
     university: University
     created: Int
     updated: Int
-    upvoters: [UTUser]
     upvotes: Int
+    upvoters: [UTUser]
     content: String
-    children: [Comment]
     creator: UTUser
     parent: Post
 }
@@ -29,8 +28,6 @@ type UniSubject implements UniItem{
     id: String
     name: String
     university: University
-    subscribedUTUsers: [UTUser]
-    uniThreads: [UniThread]
     description: String
 }
 type UniThread implements Post{
@@ -38,10 +35,9 @@ type UniThread implements Post{
     university: University
     created: Int
     updated: Int
-    upvoters: [UTUser]
     upvotes: Int
+    upvoters: [UTUser]
     content: String
-    children: [Comment]
     creator: UTUser
     title: String
     uniSubject: UniSubject
@@ -54,7 +50,6 @@ interface Post{
     upvoters: [UTUser]
     upvotes: Int
     content: String
-    children: [Comment]
     creator: UTUser
 }
 
@@ -66,7 +61,6 @@ type UTUser implements UniItem{
     username: String
     profilePictureUrl: String
     karma: Int
-    createdPosts: [Post]
     subscribedSubjects: [UniSubject]
     university: University
 }

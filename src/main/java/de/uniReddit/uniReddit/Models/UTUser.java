@@ -55,10 +55,7 @@ public class UTUser extends UniItem{
     @Column
     private Date registeredDate = new Date();
 
-    @OneToMany(mappedBy = "creator", fetch = FetchType.EAGER)
-    private List<Post> createdPosts = new ArrayList<>();
-
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<UniSubject> subscribedSubjects = new ArrayList<>();
 
     public UTUser() {
@@ -88,10 +85,6 @@ public class UTUser extends UniItem{
 
     public void setProfilePictureUrl(String profilePictureUrl) {
         this.profilePictureUrl = profilePictureUrl;
-    }
-
-    public List<Post> getCreatedPosts(){
-        return createdPosts;
     }
 
     public Roles getRole() {
@@ -132,7 +125,6 @@ public class UTUser extends UniItem{
     }
 
     public boolean subscribe(UniSubject uniSubject){
-        uniSubject.getSubscribedUTUsers().add(this);
         return subscribedSubjects.add(uniSubject);
     }
 
@@ -145,7 +137,6 @@ public class UTUser extends UniItem{
     }
 
     public void unSubscribe(UniSubject uniSubject) {
-        uniSubject.getSubscribedUTUsers().remove(this);
         subscribedSubjects.remove(uniSubject);
     }
 

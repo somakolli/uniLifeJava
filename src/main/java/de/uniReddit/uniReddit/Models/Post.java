@@ -16,8 +16,8 @@ import java.util.List;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorValue("P")
 @DiscriminatorColumn(name = "POST_TYPE")
+@DiscriminatorValue("P")
 @Table(name = "POST")
 public abstract class Post extends UniItem{
     @Column
@@ -36,9 +36,6 @@ public abstract class Post extends UniItem{
 
     @Column(columnDefinition="TEXT")
     private String content;
-
-    @OneToMany(mappedBy = "parent", fetch = FetchType.EAGER)
-    private List<Comment> children = new ArrayList<>();
 
     @ManyToOne
     private UTUser creator;
@@ -70,10 +67,6 @@ public abstract class Post extends UniItem{
         return this.upvotes;
     }
 
-    public long getChildrenCount(){
-        return children.size();
-    }
-
     public UTUser getCreator(){
         return this.creator;
     }
@@ -88,20 +81,13 @@ public abstract class Post extends UniItem{
     }
 
     public void setCreator(UTUser creator) {
-        creator.getCreatedPosts().add(this);
         this.creator = creator;
     }
 
     public void addChild(Comment comment){
         if(!comment.getParent().equals(this))
             comment.setParent(this);
-        if(!children.contains(comment))
-            children.add(comment);
     };
-
-    boolean containsChild(Comment comment){
-        return children.contains(comment);
-    }
 
     public void upvote(UTUser UTUser) {
         if(upvoters.contains(UTUser)){

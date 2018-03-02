@@ -42,14 +42,12 @@ public class UTUserTest {
     public void testSubscription() {
         Assert.assertTrue(UTUser.subscribe(uniSubject));
         Assert.assertTrue(UTUser.getSubscribedSubjects().contains(uniSubject));
-        Assert.assertTrue(uniSubject.getSubscribedUTUsers().contains(UTUser));
     }
 
     @Test
     public void testUnsubscribe() {
         UTUser.unSubscribe(uniSubject);
         Assert.assertFalse(UTUser.getSubscribedSubjects().contains(uniSubject));
-        Assert.assertFalse(uniSubject.getSubscribedUTUsers().contains(UTUser));
     }
 
     @Test
