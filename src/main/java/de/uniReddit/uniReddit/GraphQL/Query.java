@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import javax.xml.bind.ValidationException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -53,8 +54,10 @@ public class Query implements GraphQLQueryResolver{
     }
 
     public UniThread getUniThread(Long threadId){
-        checkAuthorization(threadId, userRepository);
-        return checkExistance(threadRepository, threadId);
+        UTUser user = checkAuthorization(threadId, userRepository);
+        UniThread thread = checkExistance(threadRepository, threadId);
+        if(user.getUpvotedPosts().contains(thread)) thread.setUpvoted(true);
+        return thread;
     }
 
     public UTUser getMe() {
@@ -79,9 +82,14 @@ public class Query implements GraphQLQueryResolver{
 
 
         UniSubject uniSubject = checkExistance(uniSubjectRepository, uniSubjectId);;
-        checkAuthorization(uniSubject.getUniversityId(), userRepository);
-        return threadRepository.findAllByUniSubject(uniSubject, new PageRequest(page, pageSize, Sort.Direction.fromString(sortDirection),
+        UTUser user = checkAuthorization(uniSubject.getUniversityId(), userRepository);
+        List<UniThread> threads = threadRepository.findAllByUniSubject(uniSubject, new PageRequest(page, pageSize, Sort.Direction.fromString(sortDirection),
                 sortProperties));
+        for (UniThread thread:
+             threads) {
+            if(user.getUpvotedPosts().contains(thread)) thread.setUpvoted(true);
+        }
+        return threads;
     }
     public List<UniThread> getUniThreadsBySubjectName(String uniSubjectName,
                                          Long universityId,
@@ -105,11 +113,14 @@ public class Query implements GraphQLQueryResolver{
                                         String sortDirection,
                                         String sortProperties){
         Post post = checkExistance(postRepository, postId);
-        checkAuthorization(post.getUniversityId(), userRepository);
-        return commentRepository.findAllByParent(postRepository.findOne(postId),
+        UTUser user = checkAuthorization(post.getUniversityId(), userRepository);
+        List<Comment> comments = commentRepository.findAllByParent(postRepository.findOne(postId),
                 new PageRequest(page, pageSize, Sort.Direction.fromString(sortDirection),
                         sortProperties));
+        for (Comment comment:
+                comments) {
+            if(user.getUpvotedPosts().contains(comment)) comment.setUpvoted(true);
+        }
+        return comments;
     }
-
-
 }

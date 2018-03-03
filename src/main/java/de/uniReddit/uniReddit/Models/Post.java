@@ -35,6 +35,9 @@ public abstract class Post extends UniItem{
     @ManyToOne
     private UTUser creator;
 
+    @Transient
+    private boolean upvoted = false;
+
     Post(String content, UTUser creator, University university) {
         super(university);
         this.content = content;
@@ -85,5 +88,24 @@ public abstract class Post extends UniItem{
     public void addChild(Comment comment){
         if(!comment.getParent().equals(this))
             comment.setParent(this);
+    }
+
+    public boolean isUpvoted() {
+        return upvoted;
+    }
+
+    public void setUpvoted(boolean upvoted) {
+        this.upvoted = upvoted;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(getClass()!=obj.getClass()) return false;
+        return this.getId().equals(((Node)obj).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
     }
 }

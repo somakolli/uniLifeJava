@@ -29,9 +29,10 @@ public class HelperFunctions {
         return user;
     }
 
-    public static void checkAuthorization(Long universityId, UserRepository userRepository){
+    public static UTUser checkAuthorization(Long universityId, UserRepository userRepository){
         UTUser user = getUser(userRepository);
         if(!user.getUniversityId().equals(universityId)&&!user.getRole().equals(Roles.Admin))
             throw new NotAuthorizedException(universityId);
+        return user;
     }
 }

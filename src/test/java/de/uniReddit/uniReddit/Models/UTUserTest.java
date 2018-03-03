@@ -55,4 +55,5 @@ public class UTUserTest {
         UTUser.setUniversity(uni);
         Assert.assertTrue(UTUser.getUniversity().equals(uni));
     }
+
 }
