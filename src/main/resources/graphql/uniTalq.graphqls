@@ -19,7 +19,6 @@ type Comment implements Post{
     created: Int
     updated: Int
     upvotes: Int
-    upvoters: [UTUser]
     content: String
     creator: UTUser
     parent: Post
@@ -37,7 +36,6 @@ type UniThread implements Post{
     created: Int
     updated: Int
     upvotes: Int
-    upvoters: [UTUser]
     content: String
     creator: UTUser
     title: String
@@ -49,7 +47,6 @@ interface Post{
     university: University
     created: Int
     updated: Int
-    upvoters: [UTUser]
     upvotes: Int
     content: String
     creator: UTUser

@@ -35,6 +35,7 @@ public class Data {
                                            @RequestParam String name){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         UTUser UTUser = userRepository.findByUsername(username);
+        if(UTUser==null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         name = UUID.randomUUID()+"_"+ UTUser.getId() + "_" + name;
         final String uri = "https://www.googleapis.com/upload/storage/v1/b/uni-talq-datastore/o?uploadType=resumable&name="+name;
         RestTemplate restTemplate = new RestTemplate();

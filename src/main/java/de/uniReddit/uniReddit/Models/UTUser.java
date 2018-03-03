@@ -7,9 +7,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -50,7 +48,7 @@ public class UTUser extends UniItem{
     private Roles role = Roles.User;
 
     @Column
-    private AtomicLong karma = new AtomicLong(0);
+    private long karma = 0;
 
     @Column
     private Date registeredDate = new Date();
@@ -59,7 +57,7 @@ public class UTUser extends UniItem{
     private List<UniSubject> subscribedSubjects = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<Post> upvotedPosts = new ArrayList<>();
+    private Set<Post> upvotedPosts = new HashSet<>();
 
     public UTUser() {
         // JPA
@@ -136,7 +134,7 @@ public class UTUser extends UniItem{
     }
 
     public long getKarma() {
-        return karma.get();
+        return karma;
     }
 
     public void unSubscribe(UniSubject uniSubject) {
@@ -144,7 +142,7 @@ public class UTUser extends UniItem{
     }
 
     public void setKarma(long karma) {
-        this.karma.set(karma);
+        this.karma=karma;
     }
 
     public String getFirstName() {
@@ -163,7 +161,7 @@ public class UTUser extends UniItem{
         this.surName = surName;
     }
 
-    public List<Post> getUpvotedPosts() {
+    public Set<Post> getUpvotedPosts() {
         return upvotedPosts;
     }
 }

@@ -25,17 +25,14 @@ public class UserController {
     private final UserRepository userRepository;
     private final UniSubjectRepository uniSubjectRepository;
     private final UniversityRepository universityRepository;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     UserController(UserRepository userRepository,
                    UniSubjectRepository uniSubjectRepository,
-                   UniversityRepository universityRepository,
-                   BCryptPasswordEncoder bCryptPasswordEncoder){
+                   UniversityRepository universityRepository){
         this.userRepository = userRepository;
         this.uniSubjectRepository = uniSubjectRepository;
         this.universityRepository = universityRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     /*
@@ -52,7 +49,7 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET, value = "/subscribe")
     ResponseEntity<?> subscribe(@RequestParam Long uniSubjectId){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-
+        if(username==null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         if(!uniSubjectRepository.exists(uniSubjectId))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("uniSubject not found");
         UTUser UTUser = userRepository.findByUsername(username);
@@ -71,7 +68,7 @@ public class UserController {
         if(!uniSubjectRepository.exists(uniSubjectId))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("uniSubject not found");
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-
+        if(username==null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         UTUser UTUser = userRepository.findByUsername(username);
         UniSubject uniSubject = uniSubjectRepository.findOne(uniSubjectId);
         UTUser.unSubscribe(uniSubject);
@@ -108,7 +105,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("username not found");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
-
+        if(username==null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         if(!currentUsername.equals(username))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
@@ -123,6 +120,7 @@ public class UserController {
     ResponseEntity elevate(@RequestParam String username){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
+        if(currentUsername==null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         if(!userRepository.findByUsername(currentUsername).getRole().equals(Roles.Admin))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         UTUser UTUser = userRepository.findByUsername(username);
@@ -138,6 +136,7 @@ public class UserController {
     ResponseEntity<?> getRole(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
+        if(username==null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         UTUser UTUser = userRepository.findByUsername(username);
         return ResponseEntity.ok(UTUser.getRole());
     }

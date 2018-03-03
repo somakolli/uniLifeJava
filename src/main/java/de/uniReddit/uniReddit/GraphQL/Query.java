@@ -7,6 +7,7 @@ import de.uniReddit.uniReddit.Exceptions.ResourceNotFoundException;
 import de.uniReddit.uniReddit.Models.*;
 import de.uniReddit.uniReddit.Repositories.*;
 import graphql.GraphQLException;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component;
 import javax.xml.bind.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static de.uniReddit.uniReddit.GraphQL.HelperFunctions.checkAuthorization;
 import static de.uniReddit.uniReddit.GraphQL.HelperFunctions.checkExistance;
@@ -60,9 +62,9 @@ public class Query implements GraphQLQueryResolver{
     }
 
     public List<UniSubject> getUniSubjects(Long universityId,
-                                           int page, int pageSize,
-                                           String sortDirection,
-                                           String sortProperties) throws GraphQLException{
+                                          int page, int pageSize,
+                                          String sortDirection,
+                                          String sortProperties) throws GraphQLException{
 
         checkExistance(universityRepository, universityId);
         checkAuthorization(universityId, userRepository);

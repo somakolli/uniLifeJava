@@ -7,6 +7,7 @@ import de.uniReddit.uniReddit.Models.Node;
 import de.uniReddit.uniReddit.Models.Roles;
 import de.uniReddit.uniReddit.Models.UTUser;
 import de.uniReddit.uniReddit.Repositories.UserRepository;
+import org.hibernate.Hibernate;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -21,6 +22,7 @@ public class HelperFunctions {
     public static UTUser getUser(UserRepository userRepository){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         UTUser user = userRepository.findByUsername(username);
+
         if(user == null){
             throw new NotAuthenticatedException();
         }

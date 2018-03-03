@@ -27,7 +27,7 @@ public abstract class Post extends UniItem{
     @Column
     @NotNull
     @Order
-    private AtomicLong upvotes = new AtomicLong(0);
+    private long upvotes = 0;
 
     @Column(columnDefinition="TEXT")
     private String content;
@@ -58,7 +58,7 @@ public abstract class Post extends UniItem{
     }
 
     public long getUpvotes(){
-        return this.upvotes.get();
+        return this.upvotes;
     }
 
     public UTUser getCreator(){
@@ -85,15 +85,5 @@ public abstract class Post extends UniItem{
     public void addChild(Comment comment){
         if(!comment.getParent().equals(this))
             comment.setParent(this);
-    }
-
-    public void upvote(UTUser UTUser) {
-        if (UTUser.getUpvotedPosts().contains(this)) {
-            upvotes.decrementAndGet();
-            UTUser.getUpvotedPosts().remove(this);
-        } else {
-            upvotes.incrementAndGet();
-            UTUser.getUpvotedPosts().add(this);
-        }
     }
 }

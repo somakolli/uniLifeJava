@@ -55,19 +55,4 @@ public class UTUserTest {
         UTUser.setUniversity(uni);
         Assert.assertTrue(UTUser.getUniversity().equals(uni));
     }
-
-    @Test
-    public void testThreadUpvote() {
-        long karma = UTUser.getKarma();
-        thread.upvote(UTUser);
-        Assert.assertEquals(karma+1, thread.getUpvotes());
-    }
-    @Test
-    public void testCommentUpvote() {
-        long karma = UTUser.getKarma();
-        comment.upvote(UTUser);
-        Assert.assertEquals(karma +1 , comment.getUpvotes());
-        comment.upvote(UTUser);
-        Assert.assertEquals(karma, comment.getUpvotes());
-    }
 }
