@@ -51,7 +51,8 @@ public class DataLoader implements ApplicationRunner {
 
             //create dummy users
             UTUser sokol = new UTUserBuilder().setEmail("info@unitalq.com").setFirstName("Sokol").setUsername("admin")
-                    .setSurName("Makolli").setPassword(bCryptPasswordEncoder.encode("password")).createUTUser();
+                    .setSurName("Makolli").setProfilePictureUrl("https://assets.vg247.com/current//2016/07/metal_gear_solid_3.jpg")
+                    .setPassword(bCryptPasswordEncoder.encode("password")).createUTUser();
             sokol.setUniversity(university);
             sokol.setRole(Roles.Admin);
             userRepository.save(sokol);
