@@ -39,18 +39,6 @@ public class UTUserTest {
     }
 
     @Test
-    public void testSubscription() {
-        Assert.assertTrue(UTUser.subscribe(uniSubject));
-        Assert.assertTrue(UTUser.getSubscribedSubjects().contains(uniSubject));
-    }
-
-    @Test
-    public void testUnsubscribe() {
-        UTUser.unSubscribe(uniSubject);
-        Assert.assertFalse(UTUser.getSubscribedSubjects().contains(uniSubject));
-    }
-
-    @Test
     public void enrollmentTest() {
         UTUser.setUniversity(uni);
         Assert.assertTrue(UTUser.getUniversity().equals(uni));
