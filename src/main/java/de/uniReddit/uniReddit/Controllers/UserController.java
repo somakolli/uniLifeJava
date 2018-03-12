@@ -46,10 +46,10 @@ public class UserController {
     /*
     subscribes the current user to the given subject
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/subscribe")
+    @RequestMapping(method = RequestMethod.POST, value = "/subscribe")
     ResponseEntity<?> subscribe(@RequestParam Long uniSubjectId){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        if(username==null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if(username=="anonymousUser") return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         if(!uniSubjectRepository.exists(uniSubjectId))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("uniSubject not found");
         UTUser UTUser = userRepository.findByUsername(username);
@@ -61,9 +61,9 @@ public class UserController {
     }
 
     /*
-    @promise unbscribes the current user to the given subject
+    @promise unsubcribes the current user to the given subject
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/unsubscribe")
+    @RequestMapping(method = RequestMethod.POST, value = "/unsubscribe")
     ResponseEntity<?> unsubscribe( @RequestParam Long uniSubjectId){
         if(!uniSubjectRepository.exists(uniSubjectId))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("uniSubject not found");

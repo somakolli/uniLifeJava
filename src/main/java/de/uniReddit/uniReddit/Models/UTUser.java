@@ -54,7 +54,7 @@ public class UTUser extends UniItem{
     private Date registeredDate = new Date();
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<UniSubject> subscribedSubjects = new ArrayList<>();
+    private Set<UniSubject> subscribedSubjects = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Post> upvotedPosts = new HashSet<>();
@@ -130,7 +130,7 @@ public class UTUser extends UniItem{
     }
 
     public List<UniSubject> getSubscribedSubjects() {
-        return subscribedSubjects;
+        return new ArrayList<>(subscribedSubjects);
     }
 
     public long getKarma() {

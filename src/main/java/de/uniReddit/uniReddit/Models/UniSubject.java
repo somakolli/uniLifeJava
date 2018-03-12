@@ -2,6 +2,7 @@ package de.uniReddit.uniReddit.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -18,8 +19,11 @@ public class UniSubject extends UniItem {
     @Column
     private String name;
 
+    @Column
     private String description = "";
 
+    @Transient
+    private boolean subscribed = false;
 
     public UniSubject() {
     }
@@ -45,4 +49,15 @@ public class UniSubject extends UniItem {
         this.name = name;
     }
 
+    public boolean getSubscribed(){
+        return subscribed;
+    }
+
+    public void setSubscribed(boolean subscribed){
+        this.subscribed = subscribed;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        return ((UniSubject) obj).getId().equals(getId());
+    }
 }

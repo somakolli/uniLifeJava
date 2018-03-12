@@ -70,10 +70,15 @@ public class Query implements GraphQLQueryResolver{
                                           String sortProperties) throws GraphQLException{
 
         checkExistance(universityRepository, universityId);
-        checkAuthorization(universityId, userRepository);
-        return uniSubjectRepository.findAllByUniversity(universityRepository.findOne(universityId),
+        UTUser user = checkAuthorization(universityId, userRepository);
+        List<UniSubject> uniSubjects = uniSubjectRepository.findAllByUniversity(universityRepository.findOne(universityId),
                 new PageRequest(page, pageSize, Sort.Direction.fromString(sortDirection),
-                sortProperties));
+                        sortProperties));
+        for (UniSubject unisubject:
+             uniSubjects) {
+            if(user.getSubscribedSubjects().contains(unisubject)) unisubject.setSubscribed(true);
+        }
+        return uniSubjects;
     }
     public List<UniThread> getUniThreads(Long uniSubjectId,
                                          int page, int pageSize,
@@ -96,14 +101,8 @@ public class Query implements GraphQLQueryResolver{
                                          int page, int pageSize,
                                          String sortDirection,
                                          String sortProperties){
-
-        University university = checkExistance(universityRepository, universityId);
-        UniSubject uniSubject = uniSubjectRepository.findByUniversityAndName(university, uniSubjectName);
-        Object[] params = {university.getId(), uniSubjectName};
-        if(uniSubject==null)
-            throw new ResourceNotFoundException(params);
+        UniSubject uniSubject = checkExistance(uniSubjectRepository, universityRepository, uniSubjectName, universityId);
         checkAuthorization(uniSubject.getUniversityId(), userRepository);
-
         return threadRepository.findAllByUniSubject(uniSubject, new PageRequest(page, pageSize, Sort.Direction.fromString(sortDirection),
                 sortProperties));
     }

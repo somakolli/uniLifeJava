@@ -3,9 +3,9 @@ package de.uniReddit.uniReddit.GraphQL;
 import de.uniReddit.uniReddit.Exceptions.NotAuthenticatedException;
 import de.uniReddit.uniReddit.Exceptions.NotAuthorizedException;
 import de.uniReddit.uniReddit.Exceptions.ResourceNotFoundException;
-import de.uniReddit.uniReddit.Models.Node;
-import de.uniReddit.uniReddit.Models.Roles;
-import de.uniReddit.uniReddit.Models.UTUser;
+import de.uniReddit.uniReddit.Models.*;
+import de.uniReddit.uniReddit.Repositories.UniSubjectRepository;
+import de.uniReddit.uniReddit.Repositories.UniversityRepository;
 import de.uniReddit.uniReddit.Repositories.UserRepository;
 import org.hibernate.Hibernate;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,6 +17,17 @@ public class HelperFunctions {
         T t = repository.findOne(id);
         if(t == null) throw new ResourceNotFoundException(params);
         return t;
+    }
+
+    public static UniSubject checkExistance(UniSubjectRepository uniSubjectRepository,
+                                            UniversityRepository universityRepository,
+                                            String uniSubjectName, Long universityId){
+        University university = checkExistance(universityRepository, universityId);
+        UniSubject uniSubject = uniSubjectRepository.findByUniversityAndName(university, uniSubjectName);
+        Object[] params = {university.getId(), uniSubjectName};
+        if(uniSubject==null)
+            throw new ResourceNotFoundException(params);
+        return uniSubject;
     }
 
     public static UTUser getUser(UserRepository userRepository){

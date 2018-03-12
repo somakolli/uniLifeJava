@@ -30,6 +30,7 @@ type UniSubject implements UniItem{
     name: String
     university: University
     description: String
+    subscribed: Boolean
 }
 type UniThread implements Post{
     id: String
@@ -44,7 +45,7 @@ type UniThread implements Post{
     shortContent: String
     upvoted: Boolean
 }
-interface Post{
+interface Post {
     id: String
     university: University
     created: Int
@@ -81,6 +82,6 @@ type Query{
 type Mutation{
     writeUniversity(name: String!, location: String!):University
     writeUniSubject(name: String!, universityId: String!, description: String):UniSubject
-    writeUniThread(title: String!, uniSubjectId: String!, content: String!): UniThread
+    writeUniThread(title: String!, uniSubjectName: String!, content: String!, universityId: String!): UniThread
     writeUniComment(postId: String!, content: String!): Comment
 }
