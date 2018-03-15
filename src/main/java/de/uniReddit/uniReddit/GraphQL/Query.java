@@ -48,18 +48,15 @@ public class Query implements GraphQLQueryResolver{
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
     }
-
     public List<University> getUniversities(){
         return universityRepository.findAll();
     }
-
     public UniThread getUniThread(Long threadId){
         UTUser user = checkAuthorization(threadId, userRepository);
         UniThread thread = checkExistance(threadRepository, threadId);
         if(user.getUpvotedPosts().contains(thread)) thread.setUpvoted(true);
         return thread;
     }
-
     public UTUser getMe() {
         return getUser(userRepository);
     }
@@ -106,7 +103,6 @@ public class Query implements GraphQLQueryResolver{
         return threadRepository.findAllByUniSubject(uniSubject, new PageRequest(page, pageSize, Sort.Direction.fromString(sortDirection),
                 sortProperties));
     }
-
     public List<Comment> getUniComments(Long postId,
                                         int page, int pageSize,
                                         String sortDirection,
@@ -121,5 +117,11 @@ public class Query implements GraphQLQueryResolver{
             if(user.getUpvotedPosts().contains(comment)) comment.setUpvoted(true);
         }
         return comments;
+    }
+    public UniSubject getUniSubject(Long uniSubjectId){
+        UniSubject uniSubject = checkExistance(uniSubjectRepository, uniSubjectId);
+        UTUser user = checkAuthorization(uniSubject.getUniversityId(), userRepository);
+        uniSubject.setSubscribed(user.getSubscribedSubjects().contains(uniSubject));
+        return uniSubject;
     }
 }

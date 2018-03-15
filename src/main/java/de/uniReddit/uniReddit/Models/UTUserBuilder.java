@@ -45,6 +45,6 @@ public class UTUserBuilder {
     }
 
     public UTUser createUTUser() {
-        return new UTUser(firstName, surName, email, username, password, profilePictureUrl, university);
+        return new UTUser(firstName, surName, email, profilePictureUrl, university);
     }
 }

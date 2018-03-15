@@ -31,9 +31,8 @@ public class HelperFunctions {
     }
 
     public static UTUser getUser(UserRepository userRepository){
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        UTUser user = userRepository.findByUsername(username);
-
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        UTUser user = userRepository.findByEmail(email);
         if(user == null){
             throw new NotAuthenticatedException();
         }

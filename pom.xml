@@ -121,6 +121,11 @@
             <artifactId>graphql-spring-boot-starter</artifactId>
             <version>3.10.0</version>
         </dependency>
+		<dependency>
+			<groupId>com.google.firebase</groupId>
+			<artifactId>firebase-admin</artifactId>
+			<version>5.9.0</version>
+		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/com.sun.xml.bind/jaxb-impl -->
 		<dependency>

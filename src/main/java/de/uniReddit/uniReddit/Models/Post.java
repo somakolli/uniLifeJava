@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @DiscriminatorValue("POST")
 public abstract class Post extends UniItem{
     @Column
-    private final int created = (int) (System.currentTimeMillis() / 1000L);;
+    private int created = (int) (System.currentTimeMillis() / 1000L);;
 
     @Column
     private int updated = (int) (System.currentTimeMillis() / 1000L);;
@@ -68,10 +68,6 @@ public abstract class Post extends UniItem{
         return this.creator;
     }
 
-    public String getCreatorUsername(){
-        return this.creator.getUsername();
-    }
-
     public String getShortContent(){
         return content.length() > 100 ? content.substring(0, 100) : content;
     }
@@ -90,6 +86,18 @@ public abstract class Post extends UniItem{
             comment.setParent(this);
     }
 
+    public void setUpdated(int updated) {
+        this.updated = updated;
+    }
+
+    public void setUpvotes(long upvotes) {
+        this.upvotes = upvotes;
+    }
+
+    public void setCreated(int created) {
+        this.created = created;
+    }
+
     public boolean isUpvoted() {
         return upvoted;
     }
@@ -102,10 +110,5 @@ public abstract class Post extends UniItem{
     public boolean equals(Object obj) {
         if(getClass()!=obj.getClass()) return false;
         return this.getId().equals(((Node)obj).getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return getId().hashCode();
     }
 }

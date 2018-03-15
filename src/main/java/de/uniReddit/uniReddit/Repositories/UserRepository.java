@@ -13,10 +13,10 @@ import java.util.UUID;
 @Repository
 public interface UserRepository extends JpaRepository<UTUser, Long> {
     UTUser findByEmail(String email);
-    UTUser findByUsername(String username);
-    boolean existsByUsername(String username);
     boolean existsByEmail(String email);
     @Query("SELECT sum(upvotes) FROM Post where creator_id = ?1 group by creator_id")
     long countKarma(Long userId);
+    UTUser findByUid(String uid);
+    boolean existsByUid(String uid);
 
 }

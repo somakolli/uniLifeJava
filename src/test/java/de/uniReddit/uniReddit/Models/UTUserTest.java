@@ -10,7 +10,6 @@ import org.junit.Test;
 public class UTUserTest {
     private static final String email = "s.makolli@aol.de";
 
-    private static final String username = "sokol";
 
     private UTUser UTUser;
 
@@ -25,17 +24,21 @@ public class UTUserTest {
     @Before
     public void setup() {
         uni = new University("Uni Stuttgart", "Stuttgart");
-        UTUser = new UTUserBuilder().setEmail(email).setUsername(username).setPassword("").setUniversity(uni).createUTUser();
+        uni.setId((long)1);
+        UTUser = new UTUserBuilder().setEmail(email).setPassword("").setUniversity(uni).createUTUser();
+        UTUser.setId((long)2);
         UTUser.setUniversity(uni);
         uniSubject = new UniSubjectBuilder().setName("dsa").setUniversity(uni).createUniSubject();
+        uniSubject.setId((long)3);
         thread = new UniThreadBuilder().setContent("Content").setCreator(UTUser).setTitle("Title").setUniSubject(uniSubject).createUniThread();
+        thread.setId((long)4);
         comment = new CommentBuilder().setContent("Content").setCreator(UTUser).setParent(thread).createComment();
+        comment.setId((long)5);
     }
 
     @Test
     public void testMinConstructor() {
         Assert.assertEquals(email, UTUser.getEmail());
-        Assert.assertEquals(username, UTUser.getUsername());
     }
 
     @Test
@@ -43,5 +46,11 @@ public class UTUserTest {
         UTUser.setUniversity(uni);
         Assert.assertTrue(UTUser.getUniversity().equals(uni));
     }
-
+    @Test
+    public void subscribeTest() {
+        UTUser.subscribe(uniSubject);
+        Assert.assertTrue(UTUser.getSubscribedSubjects().contains(uniSubject));
+        UTUser.subscribe(uniSubject);
+        Assert.assertTrue(!UTUser.getSubscribedSubjects().contains(uniSubject));
+    }
 }

@@ -17,27 +17,20 @@ import java.util.concurrent.atomic.AtomicLong;
 @Entity
 @DiscriminatorValue("USER")
 public class UTUser extends UniItem{
+    //Firebase ID
+    @Column(unique = true)
+    private String uid;
+
     @Column
     private String firstName;
 
     @Column
     private String surName;
 
-
     @NotNull
     @NotEmpty
     @Column(unique = true)
     private String email;
-
-    @NotNull
-    @NotEmpty
-    @Column(unique = true)
-    private String username;
-
-    @NotNull
-    @NotEmpty
-    @Column
-    private String password;
 
     @Column
     private String profilePictureUrl;
@@ -63,21 +56,17 @@ public class UTUser extends UniItem{
         // JPA
     }
 
-    public UTUser(String firstName, String surName, String email, String username, String password, String profilePictureUrl, University university) {
+    public UTUser(String firstName, String surName, String email, String profilePictureUrl, University university) {
         super(university);
         this.firstName = firstName;
         this.surName = surName;
         this.email = email;
-        this.username = username;
-        this.password = password;
         this.profilePictureUrl = profilePictureUrl;
     }
 
-    public UTUser(String email, String username, String password, University university) {
+    public UTUser(String email, String username, University university) {
         super(university);
         this.email = email;
-        this.username = username;
-        this.password = password;
     }
 
     public String getProfilePictureUrl() {
@@ -96,22 +85,6 @@ public class UTUser extends UniItem{
         this.role = role;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -126,7 +99,12 @@ public class UTUser extends UniItem{
     }
 
     public boolean subscribe(UniSubject uniSubject){
-        return subscribedSubjects.add(uniSubject);
+        if(subscribedSubjects.contains(uniSubject)){
+            return subscribedSubjects.remove(uniSubject);
+        }
+        else {
+            return subscribedSubjects.add(uniSubject);
+        }
     }
 
     public List<UniSubject> getSubscribedSubjects() {
@@ -135,10 +113,6 @@ public class UTUser extends UniItem{
 
     public long getKarma() {
         return karma;
-    }
-
-    public void unSubscribe(UniSubject uniSubject) {
-        subscribedSubjects.remove(uniSubject);
     }
 
     public void setKarma(long karma) {
@@ -163,5 +137,13 @@ public class UTUser extends UniItem{
 
     public Set<Post> getUpvotedPosts() {
         return upvotedPosts;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 }

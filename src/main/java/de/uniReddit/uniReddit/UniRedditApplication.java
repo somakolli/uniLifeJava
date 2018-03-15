@@ -1,5 +1,8 @@
 package de.uniReddit.uniReddit;
 
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import de.uniReddit.uniReddit.security.CloudJWT;
 import graphql.ExceptionWhileDataFetching;
 import graphql.GraphQLError;
@@ -12,6 +15,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +27,14 @@ import java.util.stream.Collectors;
 public class UniRedditApplication {
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         SpringApplication.run(UniRedditApplication.class, args);
-
+        FileInputStream serviceAccount = new FileInputStream("src/unitalq-f77ad-firebase-adminsdk-u7nf7-b00cd4fc93.json");
+        FirebaseOptions options = new FirebaseOptions.Builder()
+                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                .setDatabaseUrl("https://unitalq-f77ad.firebaseio.com")
+                .build();
+        FirebaseApp.initializeApp(options);
     }
 
     @Bean

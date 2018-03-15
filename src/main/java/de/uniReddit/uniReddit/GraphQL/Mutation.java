@@ -74,4 +74,36 @@ public class Mutation implements GraphQLMutationResolver {
         commentRepository.save(comment);
         return comment;
     }
+    public Post upvote(Long postId){
+        Post post = checkExistance(postRepository, postId);
+        UTUser user = checkAuthorization(post.getUniversityId(), userRepository);
+        UTUser creator = post.getCreator();
+        if (user.getUpvotedPosts().contains(post)) {
+            postRepository.decrementVotesById(postId);
+            user.getUpvotedPosts().remove(post);
+
+        } else {
+            postRepository.incrementVotesById(postId);
+            user.getUpvotedPosts().add(post);
+        }
+        creator.setKarma(userRepository.countKarma(creator.getId()));
+        userRepository.save(creator);
+        postRepository.flush();
+        return postRepository.findOne(postId);
+    }
+    public UTUser setUniversity(Long universityId){
+        UTUser user = HelperFunctions.getUser(userRepository);
+        University university = HelperFunctions.checkExistance(universityRepository, universityId);
+        user.setUniversity(university);
+        userRepository.save(user);
+        return user;
+    }
+
+    public UTUser subscribe(Long unisubjectId) {
+        UniSubject uniSubject = checkExistance(uniSubjectRepository, unisubjectId);
+        UTUser user = HelperFunctions.checkAuthorization(uniSubject.getUniversityId(), userRepository);
+        user.subscribe(uniSubject);
+        userRepository.save(user);
+        return user;
+    }
 }

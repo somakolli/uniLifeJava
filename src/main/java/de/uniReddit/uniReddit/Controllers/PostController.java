@@ -39,8 +39,8 @@ public class PostController {
         if(!postRepository.exists(postId))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found");
 
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        UTUser user = userRepository.findByUsername(username);
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        UTUser user = userRepository.findByEmail(email);
         if(user==null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         Post post = postRepository.findOne(postId);

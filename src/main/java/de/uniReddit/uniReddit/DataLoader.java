@@ -44,7 +44,7 @@ public class DataLoader implements ApplicationRunner {
     }
 
     public void run(ApplicationArguments args){
-        if(!userRepository.existsByUsername("admin")) {
+        if(!userRepository.existsByEmail("admin")) {
             //create dummy universities
             University university = new University("Universität Stuttgart", "Stuttgart");
             universityRepository.save(university);
