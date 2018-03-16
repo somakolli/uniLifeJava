@@ -52,8 +52,8 @@ public class Query implements GraphQLQueryResolver{
         return universityRepository.findAll();
     }
     public UniThread getUniThread(Long threadId){
-        UTUser user = checkAuthorization(threadId, userRepository);
         UniThread thread = checkExistance(threadRepository, threadId);
+        UTUser user = checkAuthorization(thread.getUniversityId(), userRepository);
         if(user.getUpvotedPosts().contains(thread)) thread.setUpvoted(true);
         return thread;
     }
