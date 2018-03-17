@@ -33,6 +33,12 @@ public class UniSubject extends UniItem {
         this.name = name;
     }
 
+    public UniSubject(University university, String name, String description) {
+        super(university);
+        this.name = name;
+        this.description = description;
+    }
+
     public String getDescription() {
         return description;
     }

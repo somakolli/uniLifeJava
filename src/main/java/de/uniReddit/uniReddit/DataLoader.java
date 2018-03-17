@@ -88,7 +88,11 @@ public class DataLoader implements ApplicationRunner {
     public List<UniSubject> createDummySubjects(int number, University university){
         Lorem lorem = LoremIpsum.getInstance();
         for (int i = 0; i < number; i++){
-            UniSubject uniSubject = new UniSubjectBuilder().setUniversity(university).setName(lorem.getWords(1, 3)).createUniSubject();
+            UniSubject uniSubject = new UniSubjectBuilder()
+                    .setUniversity(university)
+                    .setName(lorem.getWords(1, 3))
+                    .setDescription(lorem.getWords(5,20))
+                    .createUniSubject();
             uniSubjectRepository.save(uniSubject);
         }
         return uniSubjectRepository.findAll();
