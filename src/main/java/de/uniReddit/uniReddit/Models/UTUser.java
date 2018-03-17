@@ -98,14 +98,17 @@ public class UTUser extends UniItem{
         return registeredDate;
     }
 
+    // @return true if subscribe false if unsubscribe
     public boolean subscribe(UniSubject uniSubject){
         if(subscribedSubjects.contains(uniSubject)){
             uniSubject.setSubscribed(false);
-            return subscribedSubjects.remove(uniSubject);
+            subscribedSubjects.remove(uniSubject);
+            return false;
         }
         else {
             uniSubject.setSubscribed(true);
-            return subscribedSubjects.add(uniSubject);
+            subscribedSubjects.add(uniSubject);
+            return true;
         }
     }
 

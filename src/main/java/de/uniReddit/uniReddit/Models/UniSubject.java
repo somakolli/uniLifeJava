@@ -22,6 +22,9 @@ public class UniSubject extends UniItem {
     @Column
     private String description = "";
 
+    @Column
+    private Long numberOfSubscribers = (long)0;
+
     @Transient
     private boolean subscribed = false;
 
@@ -65,5 +68,17 @@ public class UniSubject extends UniItem {
     @Override
     public boolean equals(Object obj) {
         return ((UniSubject) obj).getId().equals(getId());
+    }
+
+    public Long getNumberOfSubscribers() {
+        return numberOfSubscribers;
+    }
+
+    public void setNumberOfSubscribers(Long numberOfSubscribers) {
+        this.numberOfSubscribers = numberOfSubscribers;
+    }
+
+    public boolean isSubscribed() {
+        return subscribed;
     }
 }

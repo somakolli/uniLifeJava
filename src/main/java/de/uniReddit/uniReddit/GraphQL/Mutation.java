@@ -102,7 +102,13 @@ public class Mutation implements GraphQLMutationResolver {
     public UniSubject subscribe(Long unisubjectId) {
         UniSubject uniSubject = checkExistance(uniSubjectRepository, unisubjectId);
         UTUser user = HelperFunctions.checkAuthorization(uniSubject.getUniversityId(), userRepository);
-        user.subscribe(uniSubject);
+        if(user.subscribe(uniSubject)){
+            uniSubjectRepository.incrementVotesById(unisubjectId);
+            uniSubject.setNumberOfSubscribers(uniSubject.getNumberOfSubscribers()+1);
+        } else {
+            uniSubjectRepository.decrementVotesById(unisubjectId);
+            uniSubject.setNumberOfSubscribers(uniSubject.getNumberOfSubscribers()-1);
+        }
         userRepository.save(user);
         return uniSubject;
     }
