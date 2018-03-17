@@ -99,11 +99,11 @@ public class Mutation implements GraphQLMutationResolver {
         return user;
     }
 
-    public UTUser subscribe(Long unisubjectId) {
+    public UniSubject subscribe(Long unisubjectId) {
         UniSubject uniSubject = checkExistance(uniSubjectRepository, unisubjectId);
         UTUser user = HelperFunctions.checkAuthorization(uniSubject.getUniversityId(), userRepository);
         user.subscribe(uniSubject);
         userRepository.save(user);
-        return user;
+        return uniSubject;
     }
 }

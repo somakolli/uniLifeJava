@@ -87,5 +87,5 @@ type Mutation{
     writeUniComment(postId: String!, content: String!): Comment
     upvote(postId: String!): Post
     setUniversity(universityId: String!): UTUser
-    subscribe(subjectId: String!): UTUser
+    subscribe(subjectId: String!): UniSubject
 }
