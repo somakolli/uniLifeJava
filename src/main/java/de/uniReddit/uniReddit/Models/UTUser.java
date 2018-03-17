@@ -100,9 +100,11 @@ public class UTUser extends UniItem{
 
     public boolean subscribe(UniSubject uniSubject){
         if(subscribedSubjects.contains(uniSubject)){
+            uniSubject.setSubscribed(false);
             return subscribedSubjects.remove(uniSubject);
         }
         else {
+            uniSubject.setSubscribed(true);
             return subscribedSubjects.add(uniSubject);
         }
     }
