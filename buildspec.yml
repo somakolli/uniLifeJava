@@ -1,0 +1,19 @@
+version: 0.2
+
+env:
+  variables:
+  parameter-store:
+
+phases:
+  pre_build:
+    commands:
+      - mv src/main/resources/application.properties src/main/resources/application.properties.h2
+      - mv src/main/resources/application.properties.post src/main/resources/application.properties
+  build:
+    commands:
+      - ./mvnw install -DskipTests=false -B -V
+artifacts:
+  files:
+    - target/uniReddit-0.0.1-SNAPSHOT.jar
+  discard-paths: yes
+  base-directory: location

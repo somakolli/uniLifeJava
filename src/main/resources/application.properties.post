@@ -1,6 +1,6 @@
 # Datasource
 spring.datasource.url=jdbc:postgresql://aavqgnd831076p.cjn86prde6jl.eu-central-1.rds.amazonaws.com:5432/ebdb
-spring.datasource.username=root
+spring.datasource.username=postgres
 spring.datasource.password=QxprcWXB7yzKDXLX
 spring.datasource.driverClassName=org.postgresql.Driver
 spring.jpa.hibernate.ddl-auto=create-drop
