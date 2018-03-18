@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,9 +30,10 @@ import java.util.stream.Collectors;
 public class UniRedditApplication {
 
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, URISyntaxException {
         SpringApplication.run(UniRedditApplication.class, args);
-        FileInputStream serviceAccount = new FileInputStream("unitalq-f77ad-firebase-adminsdk-u7nf7-b00cd4fc93.json");
+        ResourceManager rm = new ResourceManager();
+        InputStream serviceAccount = rm.getInputStreamFromResource("/unitalq-f77ad-firebase-adminsdk-u7nf7-b00cd4fc93.json");
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                 .setDatabaseUrl("https://unitalq-f77ad.firebaseio.com")
