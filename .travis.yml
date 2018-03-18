@@ -6,15 +6,17 @@ install:
 - "./mvnw install -DskipTests=false -Dmaven.javadoc.skip=true -B -V"
 language: java
 deploy:
-  provider: heroku
-  api_key: 44ffbade-ed54-4e0c-b9dc-683ae6f25165
-  app: unitalq
+  provider: elasticbeanstalk
+  access_key_id: AKIAJTVKQ3EIFAS24OPA
+  secret_access_key:
+    secure: Vm6KOuqif0joPtDMi8KzlZpDNlRtcQWrf7IkCRYdqIpW4z20ZkbYUL1ibqGORnzRZmuiUDofvvcVb0Rw3a/LuXeoNatTu8K8ozE7DTWn41lqTOFMJeNwqMCb6Sd6RHw0QSjzv2A54y1NuFZF912TbQBBu+S+ZKlJSCHgDbes0KhdvdiOOdd95HGSZaxnJVplvSz3zZcEtlMaJzXjHDbTqGHBE/Ok+hhiqoZx1OFdpnvMcjANBFr2rtZ1b6DsEnqkH40rhiGTios6ggDXNpUAjnlKs8WRtJnv/z5OXCeboEDUEW2Vmtz8d0miY6UY43LRKPJ1cuLmRfezrDRoJMEHkCsdWE4mysmSEvjN5q1VoSeCK6bpBMBgd2XUWMeHiDGeJj+Hzz3cj7unFZTwJ+F/Bf00F4B8VmMNoGv2SxfIj7pL3+ihe/0Tu3XEhScfYz63Upa9hB74hUTZiJpNoCBYrjY5lYr7smLzQEYV372uBUNTq2G8OEV6NYKdlEjjFV9QveFQf7IsaiuG1w6W0SnYAEF4+lImubp+rI4qMjWTRA2/NlAvJRNBuTNfhM4lsnMbcQqJcBfHxXQzt/siuSOQL488xS+lSMQglwDcIJIkwtNxyi35ubtysv08gGLySNvX4KPDJvbQDPSDF+gv0wZdVgKwReHKfejdS7iTdPHIxdE=
+  region: eu-central-1
+  app: unitalq-backend
+  env: UnitalqBackend-env
   on:
     repo: p4ch1n0/uniLifeJava
-    branch: development
-  skip_cleanup: true
-before_script:
-script:
-  - mv src/main/resources/application.properties src/main/resources/application.properties.h2
-  - mv src/main/resources/application.properties.post src/main/resources/application.properties
-
+    branch: aws
+  before_script:
+  script:
+    - mv src/main/resources/application.properties src/main/resources/application.properties.h2
+    - mv src/main/resources/application.properties.post src/main/resources/application.properties
