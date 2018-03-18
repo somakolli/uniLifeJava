@@ -2,10 +2,12 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - chmod +x mvnw
+      - mvn test
   build:
     commands:
-      - mvn package
+      - mv src/main/resources/application.properties src/main/resources/application.properties.h2
+      - mv src/main/resources/application.properties.post src/main/resources/application.properties
+      - mvn install -DskipTests=true
 artifacts:
   files:
     - target/uniReddit-0.0.1-SNAPSHOT.jar
