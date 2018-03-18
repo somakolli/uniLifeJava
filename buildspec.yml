@@ -7,7 +7,7 @@ phases:
       - mv src/main/resources/application.properties.post src/main/resources/application.properties
   build:
     commands:
-      - ./mvn install -DskipTests=true
+      - mvn package
 artifacts:
   files:
     - target/uniReddit-0.0.1-SNAPSHOT.jar
