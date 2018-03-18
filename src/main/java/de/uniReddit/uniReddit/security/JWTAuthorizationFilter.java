@@ -6,7 +6,6 @@ import com.google.firebase.auth.FirebaseToken;
 import de.uniReddit.uniReddit.Models.Roles;
 import de.uniReddit.uniReddit.Models.UTUser;
 import de.uniReddit.uniReddit.Repositories.UserRepository;
-import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

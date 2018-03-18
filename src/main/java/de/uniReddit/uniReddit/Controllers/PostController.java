@@ -7,7 +7,6 @@ import de.uniReddit.uniReddit.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,13 +24,11 @@ public class PostController {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-    private final SimpMessagingTemplate template;
 
     @Autowired
-    PostController(PostRepository postRepository, UserRepository userRepository, SimpMessagingTemplate template){
+    PostController(PostRepository postRepository, UserRepository userRepository){
         this.postRepository = postRepository;
         this.userRepository = userRepository;
-        this.template = template;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/{postId}")
@@ -48,13 +45,9 @@ public class PostController {
         if (user.getUpvotedPosts().contains(post)) {
             postRepository.decrementVotesById(postId);
             user.getUpvotedPosts().remove(post);
-            template.convertAndSend("/topic/upvotes/"+ postId, post.getUpvotes()-1);
-            template.convertAndSend("/topic/upvotes/" + creator.getId(), creator.getKarma()-1);
         } else {
             postRepository.incrementVotesById(postId);
             user.getUpvotedPosts().add(post);
-            template.convertAndSend("/topic/upvotes/"+ postId, post.getUpvotes()+1);
-            template.convertAndSend("/topic/upvotes/" + creator.getId(), creator.getKarma()+1);
         }
         creator.setKarma(userRepository.countKarma(creator.getId()));
         userRepository.save(creator);
