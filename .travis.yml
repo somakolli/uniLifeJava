@@ -1,4 +1,7 @@
 before_install:
+- openssl aes-256-cbc -K $encrypted_74f4b4028820_key -iv $encrypted_74f4b4028820_iv
+  -in unitalq-backend-fbdc27bb53db.json.enc -out unitalq-backend-fbdc27bb53db.json
+  -d
 - chmod +x mvnw
 jdk:
 - oraclejdk8
