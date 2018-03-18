@@ -5,8 +5,6 @@ phases:
       - mvn test
   build:
     commands:
-      - mv src/main/resources/application.properties src/main/resources/application.properties.h2
-      - mv src/main/resources/application.properties.post src/main/resources/application.properties
       - mvn install -DskipTests=true
 artifacts:
   files:
