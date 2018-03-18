@@ -1,9 +1,4 @@
 version: 0.2
-
-env:
-  variables:
-  parameter-store:
-
 phases:
   pre_build:
     commands:
