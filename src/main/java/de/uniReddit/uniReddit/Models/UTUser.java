@@ -52,9 +52,6 @@ public class UTUser extends UniItem{
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Post> upvotedPosts = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.EAGER)
-    private List<Notification> notifications = new ArrayList<>();
-
     public UTUser() {
         // JPA
     }
@@ -153,13 +150,5 @@ public class UTUser extends UniItem{
 
     public void setUid(String uid) {
         this.uid = uid;
-    }
-
-    public void addNotification(Notification notification){
-        notifications.add(notification);
-    }
-
-    public List<Notification> getNotifications(){
-        return notifications;
     }
 }

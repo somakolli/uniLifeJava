@@ -6,9 +6,9 @@ install:
 - "./mvnw install -DskipTests=false -Dmaven.javadoc.skip=true -B -V"
 language: java
 deploy:
-  provider: gae
-  keyfile: unitalq-backend-f466c3776df7.json
-  app: unitalq-backend
+  provider: heroku
+  api_key: 44ffbade-ed54-4e0c-b9dc-683ae6f25165
+  app: unitalq
   on:
     repo: p4ch1n0/uniLifeJava
     branch: development
@@ -17,3 +17,4 @@ before_script:
 script:
   - mv src/main/resources/application.properties src/main/resources/application.properties.h2
   - mv src/main/resources/application.properties.post src/main/resources/application.properties
+

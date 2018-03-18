@@ -58,14 +58,6 @@ interface Post {
     upvoted: Boolean
 }
 
-type Notification implements Node{
-    id: String
-    seen: Boolean
-    read: Boolean
-    link: String
-    message: String
-}
-
 type UTUser implements UniItem{
     id: String
     firstName: String
@@ -76,7 +68,6 @@ type UTUser implements UniItem{
     subscribedSubjects: [UniSubject]
     university: University
     uid: String
-    notifications: [Notification]
 }
 
 type Query{
