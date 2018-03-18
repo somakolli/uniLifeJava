@@ -10,4 +10,3 @@ artifacts:
   files:
     - target/uniReddit-0.0.1-SNAPSHOT.jar
   discard-paths: yes
-  base-directory: location
