@@ -54,12 +54,19 @@ public class UniRedditApplication {
         return new GraphQLErrorHandler() {
             @Override
             public List<GraphQLError> processErrors(List<GraphQLError> errors) {
-                List<GraphQLError> clientErrors = errors.stream()
-                        .filter(this::isClientError)
-                        .collect(Collectors.toList());
-                List<GraphQLError> serverErrors = errors.stream()
-                        .filter(e -> !isClientError(e))
-                        .map(GraphQLErrorAdapter::new).collect(Collectors.toList());
+                List<GraphQLError> clientErrors = new ArrayList<>();
+                for (GraphQLError error : errors) {
+                    if (isClientError(error)) {
+                        clientErrors.add(error);
+                    }
+                }
+                List<GraphQLError> serverErrors = new ArrayList<>();
+                for (GraphQLError error : errors) {
+                    if (!isClientError(error)) {
+                        GraphQLErrorAdapter graphQLErrorAdapter = new GraphQLErrorAdapter(error);
+                        serverErrors.add(graphQLErrorAdapter);
+                    }
+                }
                 List<GraphQLError> e = new ArrayList<>();
                 e.addAll(clientErrors);
                 e.addAll(serverErrors);
