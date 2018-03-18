@@ -7,7 +7,7 @@ install:
 language: java
 deploy:
   provider: gae
-  keyfile: unitalq-backend-c648f9bbacb4.json
+  keyfile: unitalq-backend-f466c3776df7.json
   app: unitalq-backend
   on:
     repo: p4ch1n0/uniLifeJava
