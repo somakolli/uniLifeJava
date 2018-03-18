@@ -13,10 +13,11 @@ deploy:
   region: eu-central-1
   app: unitalq-backend
   env: UnitalqBackend-env
+  bucket_name: elasticbeanstalk-eu-central-1-038698050407
   on:
     repo: p4ch1n0/uniLifeJava
     branch: aws
-  before_script:
-  script:
-    - mv src/main/resources/application.properties src/main/resources/application.properties.h2
-    - mv src/main/resources/application.properties.post src/main/resources/application.properties
+before_script:
+script:
+  - mv src/main/resources/application.properties src/main/resources/application.properties.h2
+  - mv src/main/resources/application.properties.post src/main/resources/application.properties
