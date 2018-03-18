@@ -7,7 +7,7 @@ phases:
       - mv src/main/resources/application.properties.post src/main/resources/application.properties
   build:
     commands:
-      - ./mvnw install -DskipTests=false -B -V
+      - ./mvnw install -DskipTests=true
 artifacts:
   files:
     - target/uniReddit-0.0.1-SNAPSHOT.jar
