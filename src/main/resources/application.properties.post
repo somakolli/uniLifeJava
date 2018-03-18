@@ -1,6 +1,6 @@
 # Datasource
 spring.cloud.gcp.projectId=unitalq-backend
-spring.cloud.gcp.sql.instanceName=unitalq-backend:europe-west3:unitalq-backend-mysql-m
-spring.cloud.gcp.sql.databaseName=unitalq-backend-mysql
+spring.cloud.gcp.sql.instanceName=unitalq-backend-mysql-m
+spring.cloud.gcp.sql.databaseName=unitalq
 spring.cloud.gcp.sql.userName=root
 spring.cloud.gcp.sql.password=AuuD36luvJ2MLByb
