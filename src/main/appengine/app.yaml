@@ -19,10 +19,6 @@
 runtime: java
 env: flex
 
-resources:
-  memory_gb: 2.3
-
-
 runtime_config:  # Optional
   jdk: openjdk8
 
