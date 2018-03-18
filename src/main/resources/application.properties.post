@@ -1,5 +1,6 @@
-database=mysql
-spring.datasource.driverClassName=com.mysql.jdbc.Driver
-spring.datasource.url=jdbc:mysql://google/unitalq?cloudSqlInstance=unitalq-backend:europe-west3:unitalq-backend-mysql=com.google.cloud.sql.mysql.SocketFactory
-spring.datasource.username=root
-spring.datasource.password=AuuD36luvJ2MLByb
+# Datasource
+spring.cloud.gcp.projectId=unitalq-backend
+spring.cloud.gcp.sql.instanceName=unitalq-backend-mysql-m
+spring.cloud.gcp.sql.databaseName=unitalq
+spring.cloud.gcp.sql.userName=root
+spring.cloud.gcp.sql.password=AuuD36luvJ2MLByb
