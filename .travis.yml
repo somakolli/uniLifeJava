@@ -1,4 +1,7 @@
 before_install:
+- openssl aes-256-cbc -K $encrypted_74f4b4028820_key -iv $encrypted_74f4b4028820_iv
+  -in unitalq-backend-291af0291671.json.enc -out unitalq-backend-291af0291671.json
+  -d
 - chmod +x mvnw
 jdk:
 - oraclejdk8
@@ -7,13 +10,13 @@ install:
 language: java
 deploy:
   provider: gae
-  keyfile: unitalq-backend-f605ad450426.json
+  keyfile: unitalq-backend-291af0291671.json
   app: unitalq-backend
   on:
     repo: p4ch1n0/uniLifeJava
     branch: development
   skip_cleanup: true
-before_script:
+before_script: 
 script:
-  - mv src/main/resources/application.properties src/main/resources/application.properties.h2
-  - mv src/main/resources/application.properties.post src/main/resources/application.properties
+- mv src/main/resources/application.properties src/main/resources/application.properties.h2
+- mv src/main/resources/application.properties.post src/main/resources/application.properties
