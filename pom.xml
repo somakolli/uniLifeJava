@@ -164,6 +164,7 @@
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-gcp-starter-sql</artifactId>
+			<version>1.0.0.BUILD-SNAPSHOT</version>
 		</dependency>
     </dependencies>
 
