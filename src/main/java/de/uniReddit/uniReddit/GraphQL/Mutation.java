@@ -71,6 +71,10 @@ public class Mutation implements GraphQLMutationResolver {
         Post post = checkExistance(postRepository, parentId);
         UTUser user = checkAuthorization(post.getUniversityId(), userRepository);
         Comment comment = new Comment(content, user, post);
+        if(!post.hasComments()){
+            post.setHasComments(true);
+            postRepository.save(post);
+        }
         commentRepository.save(comment);
         return comment;
     }

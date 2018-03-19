@@ -35,6 +35,9 @@ public abstract class Post extends UniItem{
     @ManyToOne
     private UTUser creator;
 
+    @Column
+    private boolean hasComments;
+
     @Transient
     private boolean upvoted = false;
 
@@ -104,6 +107,14 @@ public abstract class Post extends UniItem{
 
     public void setUpvoted(boolean upvoted) {
         this.upvoted = upvoted;
+    }
+
+    public boolean hasComments() {
+        return hasComments;
+    }
+
+    public void setHasComments(boolean hasComments) {
+        this.hasComments = hasComments;
     }
 
     @Override

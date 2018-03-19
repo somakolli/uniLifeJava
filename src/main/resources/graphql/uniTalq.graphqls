@@ -24,6 +24,7 @@ type Comment implements Post{
     parent: Post
     shortContent: String
     upvoted: Boolean
+    hasComments: Boolean
 }
 type UniSubject implements UniItem{
     id: String
@@ -45,6 +46,7 @@ type UniThread implements Post{
     uniSubject: UniSubject
     shortContent: String
     upvoted: Boolean
+    hasComments: Boolean
 }
 interface Post {
     id: String
@@ -56,6 +58,7 @@ interface Post {
     creator: UTUser
     shortContent: String
     upvoted: Boolean
+    hasComments: Boolean
 }
 
 type UTUser implements UniItem{
