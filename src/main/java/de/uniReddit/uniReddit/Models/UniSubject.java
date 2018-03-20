@@ -25,8 +25,8 @@ public class UniSubject extends UniItem {
     @Column
     private Long numberOfSubscribers = (long)0;
 
-    @OneToMany
-    private List<String> tags = new ArrayList<>();
+    @Column
+    private String tags = "";
 
     @Transient
     private boolean subscribed = false;
@@ -85,8 +85,14 @@ public class UniSubject extends UniItem {
         return subscribed;
     }
 
-    public List<String> getTags() {
+    public String getTags() {
         return tags;
     }
-
+    public void addTag(String tag){
+        if(tags.equals("")){
+            tags = tag;
+        } else {
+            tags += "," + tag;
+        }
+    }
 }
