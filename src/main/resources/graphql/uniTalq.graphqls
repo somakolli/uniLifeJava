@@ -32,6 +32,7 @@ type UniSubject implements UniItem{
     university: University
     description: String
     subscribed: Boolean
+    tags: [String]
     numberOfSubscribers: Int
 }
 type UniThread implements Post{
