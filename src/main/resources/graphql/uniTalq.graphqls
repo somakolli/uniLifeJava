@@ -82,6 +82,7 @@ type Query{
     universities : [University]
     me: UTUser
     uniSubject(uniSubjectId: String!): UniSubject
+    getMyTimeLine(page: Int!, pageSize: Int!, sortDirection: String!, sortProperties: String!): [UniThread]
 }
 
 type Mutation{

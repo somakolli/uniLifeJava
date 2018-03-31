@@ -20,4 +20,9 @@ public interface ThreadRepository extends JpaRepository<UniThread, Long> {
     List<UniThread> findAllByUniSubject(UniSubject uniSubject, Pageable pageable);
     @Query("SELECT u from UniThread u WHERE u.uniSubject = ?1 ORDER BY (?2-u.created)*u.upvotes ASC")
     List<UniThread> findAndSortByTrending(UniSubject uniSubject,int currentTime, Pageable pageable);
+
+    List<UniThread> findAllByUniSubjectIn(List<UniSubject> uniSubjects, Pageable pageable);
+
+    @Query("SELECT u from UniThread u where u.uniSubject IN ?1 ORDER BY ?2 - u.created + upvotes ASC")
+    List<UniThread> findMultipleAndSortByTrending(List<UniSubject> subjects, Long currentTime);
 }

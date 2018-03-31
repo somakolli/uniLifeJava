@@ -124,4 +124,11 @@ public class Query implements GraphQLQueryResolver{
         uniSubject.setSubscribed(user.getSubscribedSubjects().contains(uniSubject));
         return uniSubject;
     }
+
+    public List<UniThread> getMyTimeLine(int page, int pageSize, String sortDirection, String sortProperties){
+        UTUser user = getUser(userRepository);
+        return threadRepository.findAllByUniSubjectIn(user.getSubscribedSubjects(),
+                new PageRequest(page, pageSize, Sort.Direction.fromString(sortDirection),
+                        sortProperties));
+    }
 }
