@@ -25,6 +25,9 @@ public class UniSubject extends UniItem {
     @Column
     private Long numberOfSubscribers = (long)0;
 
+    @Column
+    private String tags = "";
+
     @Transient
     private boolean subscribed = false;
 
@@ -80,5 +83,16 @@ public class UniSubject extends UniItem {
 
     public boolean isSubscribed() {
         return subscribed;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+    public void addTag(String tag){
+        if(tags.equals("")){
+            tags = tag;
+        } else {
+            tags += "," + tag;
+        }
     }
 }
