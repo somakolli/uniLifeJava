@@ -82,18 +82,20 @@ public class Mutation implements GraphQLMutationResolver {
         Post post = checkExistance(postRepository, postId);
         UTUser user = checkAuthorization(post.getUniversityId(), userRepository);
         UTUser creator = post.getCreator();
+        System.out.println(user.getUpvotedPosts().contains(post));
         if (user.getUpvotedPosts().contains(post)) {
             postRepository.decrementVotesById(postId);
             user.getUpvotedPosts().remove(post);
-
+            post.setUpvotes(post.getUpvotes()-1);
         } else {
             postRepository.incrementVotesById(postId);
             user.getUpvotedPosts().add(post);
+            post.setUpvotes(post.getUpvotes()+1);
         }
         creator.setKarma(userRepository.countKarma(creator.getId()));
+        userRepository.save(user);
         userRepository.save(creator);
-        postRepository.flush();
-        return postRepository.findOne(postId);
+        return post;
     }
     public UTUser setUniversity(Long universityId){
         UTUser user = HelperFunctions.getUser(userRepository);

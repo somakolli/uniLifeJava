@@ -21,6 +21,8 @@ public class ThreadRepositoryTest {
     private ThreadRepository threadRepository;
     @Autowired
     private UniSubjectRepository uniSubjectRepository;
+    @Autowired
+    private PostRepository postRepository;
 
     @Test
     public void findMultiple(){
@@ -48,6 +50,7 @@ public class ThreadRepositoryTest {
         List<UniThread> threads = threadRepository.findAndSortByTrending(uniSubject,(int)(System.currentTimeMillis()/1000), new PageRequest(0,100));
 
     }
+
 
     public void createThreads(int[] created, int[] upvotes, UniSubject uniSubject){
         for (int i = 0; i < upvotes.length; i++) {
