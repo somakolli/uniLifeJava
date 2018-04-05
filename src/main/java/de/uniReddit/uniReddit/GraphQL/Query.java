@@ -21,9 +21,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
-import static de.uniReddit.uniReddit.GraphQL.HelperFunctions.checkAuthorization;
-import static de.uniReddit.uniReddit.GraphQL.HelperFunctions.checkExistance;
-import static de.uniReddit.uniReddit.GraphQL.HelperFunctions.getUser;
+import static de.uniReddit.uniReddit.GraphQL.HelperFunctions.*;
 
 @Component
 public class Query implements GraphQLQueryResolver{
@@ -87,10 +85,7 @@ public class Query implements GraphQLQueryResolver{
         UTUser user = checkAuthorization(uniSubject.getUniversityId(), userRepository);
         List<UniThread> threads = threadRepository.findAllByUniSubject(uniSubject, new PageRequest(page, pageSize, Sort.Direction.fromString(sortDirection),
                 sortProperties));
-        for (UniThread thread:
-             threads) {
-            if(user.getUpvotedPosts().contains(thread)) thread.setUpvoted(true);
-        }
+        checkUpvoted(threads, user, userRepository, postRepository);
         return threads;
     }
     public List<UniThread> getUniThreadsBySubjectName(String uniSubjectName,
@@ -99,9 +94,11 @@ public class Query implements GraphQLQueryResolver{
                                          String sortDirection,
                                          String sortProperties){
         UniSubject uniSubject = checkExistance(uniSubjectRepository, universityRepository, uniSubjectName, universityId);
-        checkAuthorization(uniSubject.getUniversityId(), userRepository);
-        return threadRepository.findAllByUniSubject(uniSubject, new PageRequest(page, pageSize, Sort.Direction.fromString(sortDirection),
+        UTUser user = checkAuthorization(uniSubject.getUniversityId(), userRepository);
+        List<UniThread> threads = threadRepository.findAllByUniSubject(uniSubject, new PageRequest(page, pageSize, Sort.Direction.fromString(sortDirection),
                 sortProperties));
+        checkUpvoted(threads, user, userRepository, postRepository);
+        return threads;
     }
     public List<Comment> getUniComments(Long postId,
                                         int page, int pageSize,
@@ -112,10 +109,7 @@ public class Query implements GraphQLQueryResolver{
         List<Comment> comments = commentRepository.findAllByParent(postRepository.findOne(postId),
                 new PageRequest(page, pageSize, Sort.Direction.fromString(sortDirection),
                         sortProperties));
-        for (Comment comment:
-                comments) {
-            if(user.getUpvotedPosts().contains(comment)) comment.setUpvoted(true);
-        }
+        checkUpvoted(comments, user, userRepository, postRepository);
         return comments;
     }
     public UniSubject getUniSubject(Long uniSubjectId){

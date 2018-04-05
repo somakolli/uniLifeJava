@@ -4,12 +4,15 @@ import de.uniReddit.uniReddit.Exceptions.NotAuthenticatedException;
 import de.uniReddit.uniReddit.Exceptions.NotAuthorizedException;
 import de.uniReddit.uniReddit.Exceptions.ResourceNotFoundException;
 import de.uniReddit.uniReddit.Models.*;
+import de.uniReddit.uniReddit.Repositories.PostRepository;
 import de.uniReddit.uniReddit.Repositories.UniSubjectRepository;
 import de.uniReddit.uniReddit.Repositories.UniversityRepository;
 import de.uniReddit.uniReddit.Repositories.UserRepository;
 import org.hibernate.Hibernate;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.util.List;
 
 public class HelperFunctions {
     public static <T extends Node> T checkExistance(JpaRepository<T, Long> repository, Long id){
@@ -44,5 +47,14 @@ public class HelperFunctions {
         if(!user.getUniversityId().equals(universityId)&&!user.getRole().equals(Roles.Admin))
             throw new NotAuthorizedException(universityId);
         return user;
+    }
+
+    public static List<? extends Post> checkUpvoted(List<? extends Post> posts, UTUser user, UserRepository userRepository, PostRepository postRepository){
+        for (Post post: posts){
+            if(user.getUpvotedPosts().contains(post)){
+                post.setUpvoted(true);
+            }
+        }
+        return posts;
     }
 }
