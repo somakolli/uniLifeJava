@@ -2,8 +2,8 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - mv src/main/resources/application.properties src/main/resources/application.properties.h2
-      - mv src/main/resources/application.properties.post src/main/resources/application.properties
+      - mv src/main/resources/application.properties.h2 src/main/resources/application.properties.h2.h2
+      - mv src/main/resources/application.properties.h2.post src/main/resources/application.properties.h2
       - mvn test
   build:
     commands:
