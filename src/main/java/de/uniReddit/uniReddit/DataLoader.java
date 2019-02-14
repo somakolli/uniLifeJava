@@ -57,14 +57,14 @@ public class DataLoader implements ApplicationRunner {
             userRepository.save(sokol);
 
             List<UtUser> users =  createDummyUsers(5, university);
-            List<UniSubject> subjects = createDummySubjects(100, university);
+            List<UniSubject> subjects = createDummySubjects(10, university);
             for (UniSubject subject: subjects) {
                 sokol.subscribe(subject);
                 uniSubjectRepository.save(subject);
             }
             userRepository.save(sokol);
-            List<UniThread> threads = createDummyThreads(1000, users, subjects);
-            List<Comment> comments = createDummyComments(1000, users, threads);
+            List<UniThread> threads = createDummyThreads(100, users, subjects);
+            List<Comment> comments = createDummyComments(100, users, threads);
             System.out.println("Dummy data created.");
         }
     }
