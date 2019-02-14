@@ -10,7 +10,6 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -50,14 +49,14 @@ public class DataLoader implements ApplicationRunner {
             universityRepository.save(university);
 
             //create dummy users
-            UTUser sokol = new UTUserBuilder().setEmail("info@unitalq.com").setFirstName("Sokol").setUsername("admin")
+            UtUser sokol = new UtUserBuilder().setEmail("info@unitalq.com").setFirstName("Sokol").setUsername("admin")
                     .setSurName("Makolli").setProfilePictureUrl("https://assets.vg247.com/current//2016/07/metal_gear_solid_3.jpg")
                     .setPassword(bCryptPasswordEncoder.encode("password")).createUTUser();
             sokol.setUniversity(university);
             sokol.setRole(Roles.Admin);
             userRepository.save(sokol);
 
-            List<UTUser> users =  createDummyUsers(5, university);
+            List<UtUser> users =  createDummyUsers(5, university);
             List<UniSubject> subjects = createDummySubjects(100, university);
             for (UniSubject subject: subjects) {
                 sokol.subscribe(subject);
@@ -70,10 +69,10 @@ public class DataLoader implements ApplicationRunner {
         }
     }
 
-    public List<UTUser> createDummyUsers(int number, University university){
+    public List<UtUser> createDummyUsers(int number, University university){
         Lorem lorem = LoremIpsum.getInstance();
         for(int i= 0; i<number; i++){
-            UTUser user = new UTUserBuilder()
+            UtUser user = new UtUserBuilder()
                     .setUsername(lorem.getName())
                     .setFirstName(lorem.getFirstName())
                     .setSurName(lorem.getLastName())
@@ -99,7 +98,7 @@ public class DataLoader implements ApplicationRunner {
         return uniSubjectRepository.findAll();
     }
 
-    public List<UniThread> createDummyThreads(int number, List<UTUser> users, List<UniSubject> uniSubjects){
+    public List<UniThread> createDummyThreads(int number, List<UtUser> users, List<UniSubject> uniSubjects){
         Lorem lorem = LoremIpsum.getInstance();
         Random random = new Random();
         for (int i = 0; i < number; i++){
@@ -116,7 +115,7 @@ public class DataLoader implements ApplicationRunner {
         return threadRepository.findAll();
     }
 
-    public List<Comment> createDummyComments(int number, List<UTUser> users, List<UniThread> uniThreads){
+    public List<Comment> createDummyComments(int number, List<UtUser> users, List<UniThread> uniThreads){
         Lorem lorem = LoremIpsum.getInstance();
         Random random = new Random();
         for (int i = 0; i < number; i++){

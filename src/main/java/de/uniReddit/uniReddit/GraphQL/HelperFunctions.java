@@ -8,7 +8,6 @@ import de.uniReddit.uniReddit.Repositories.PostRepository;
 import de.uniReddit.uniReddit.Repositories.UniSubjectRepository;
 import de.uniReddit.uniReddit.Repositories.UniversityRepository;
 import de.uniReddit.uniReddit.Repositories.UserRepository;
-import org.hibernate.Hibernate;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -33,23 +32,23 @@ public class HelperFunctions {
         return uniSubject;
     }
 
-    public static UTUser getUser(UserRepository userRepository){
+    public static UtUser getUser(UserRepository userRepository){
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        UTUser user = userRepository.findByEmail(email);
+        UtUser user = userRepository.findByEmail(email);
         if(user == null){
             throw new NotAuthenticatedException();
         }
         return user;
     }
 
-    public static UTUser checkAuthorization(Long universityId, UserRepository userRepository){
-        UTUser user = getUser(userRepository);
+    public static UtUser checkAuthorization(Long universityId, UserRepository userRepository){
+        UtUser user = getUser(userRepository);
         if(!user.getUniversityId().equals(universityId)&&!user.getRole().equals(Roles.Admin))
             throw new NotAuthorizedException(universityId);
         return user;
     }
 
-    public static List<? extends Post> checkUpvoted(List<? extends Post> posts, UTUser user, UserRepository userRepository, PostRepository postRepository){
+    public static List<? extends Post> checkUpvoted(List<? extends Post> posts, UtUser user, UserRepository userRepository, PostRepository postRepository){
         for (Post post: posts){
             if(user.getUpvotedPosts().contains(post)){
                 post.setUpvoted(true);

@@ -2,7 +2,7 @@ package de.uniReddit.uniReddit.Models;
 
 public class CommentBuilder {
     private String content;
-    private UTUser creator;
+    private UtUser creator;
     private Post parent;
 
     public CommentBuilder setContent(String content) {
@@ -10,7 +10,7 @@ public class CommentBuilder {
         return this;
     }
 
-    public CommentBuilder setCreator(UTUser creator) {
+    public CommentBuilder setCreator(UtUser creator) {
         this.creator = creator;
         return this;
     }

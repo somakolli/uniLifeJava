@@ -6,7 +6,6 @@ import de.uniReddit.uniReddit.Exceptions.ResourceExistsException;
 import de.uniReddit.uniReddit.Models.*;
 import de.uniReddit.uniReddit.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import static de.uniReddit.uniReddit.GraphQL.HelperFunctions.checkAuthorization;
@@ -39,7 +38,7 @@ public class Mutation implements GraphQLMutationResolver {
 
 
     public University writeUniversity(String name, String location){
-        UTUser user = getUser(userRepository);
+        UtUser user = getUser(userRepository);
         if(user.getRole()!=Roles.Admin)
             throw new NotAuthorizedException((long) 0);
         University university = new University(name, location);
@@ -48,7 +47,7 @@ public class Mutation implements GraphQLMutationResolver {
     }
 
     public UniSubject writeUniSubject( String name, Long universityId, String description){
-        UTUser user = checkAuthorization(universityId, userRepository);
+        UtUser user = checkAuthorization(universityId, userRepository);
         University university = universityRepository.findOne(universityId);
         if(uniSubjectRepository.findByUniversityAndName(university, name)!=null){
             Object[] params = {university, name};
@@ -61,7 +60,7 @@ public class Mutation implements GraphQLMutationResolver {
     }
     public UniThread writeUniThread(String title, String uniSubjectName, String content, Long universitId){
         UniSubject uniSubject = checkExistance(uniSubjectRepository, universityRepository, uniSubjectName, universitId);
-        UTUser user = checkAuthorization(uniSubject.getUniversityId(), userRepository);
+        UtUser user = checkAuthorization(uniSubject.getUniversityId(), userRepository);
         UniThread uniThread = new UniThread(content, user, title, uniSubject);
         threadRepository.save(uniThread);
         return uniThread;
@@ -69,7 +68,7 @@ public class Mutation implements GraphQLMutationResolver {
 
     public Comment writeUniComment(Long parentId, String content){
         Post post = checkExistance(postRepository, parentId);
-        UTUser user = checkAuthorization(post.getUniversityId(), userRepository);
+        UtUser user = checkAuthorization(post.getUniversityId(), userRepository);
         Comment comment = new Comment(content, user, post);
         if(!post.hasComments()){
             post.setHasComments(true);
@@ -80,8 +79,8 @@ public class Mutation implements GraphQLMutationResolver {
     }
     public Post upvote(Long postId){
         Post post = checkExistance(postRepository, postId);
-        UTUser user = checkAuthorization(post.getUniversityId(), userRepository);
-        UTUser creator = post.getCreator();
+        UtUser user = checkAuthorization(post.getUniversityId(), userRepository);
+        UtUser creator = post.getCreator();
         System.out.println(user.getUpvotedPosts().contains(post));
         if (user.getUpvotedPosts().contains(post)) {
             postRepository.decrementVotesById(postId);
@@ -97,8 +96,8 @@ public class Mutation implements GraphQLMutationResolver {
         userRepository.save(creator);
         return post;
     }
-    public UTUser setUniversity(Long universityId){
-        UTUser user = HelperFunctions.getUser(userRepository);
+    public UtUser setUniversity(Long universityId){
+        UtUser user = HelperFunctions.getUser(userRepository);
         University university = HelperFunctions.checkExistance(universityRepository, universityId);
         user.setUniversity(university);
         userRepository.save(user);
@@ -107,7 +106,7 @@ public class Mutation implements GraphQLMutationResolver {
 
     public UniSubject subscribe(Long unisubjectId) {
         UniSubject uniSubject = checkExistance(uniSubjectRepository, unisubjectId);
-        UTUser user = HelperFunctions.checkAuthorization(uniSubject.getUniversityId(), userRepository);
+        UtUser user = HelperFunctions.checkAuthorization(uniSubject.getUniversityId(), userRepository);
         if(user.subscribe(uniSubject)){
             uniSubjectRepository.incrementVotesById(unisubjectId);
             uniSubject.setNumberOfSubscribers(uniSubject.getNumberOfSubscribers()+1);

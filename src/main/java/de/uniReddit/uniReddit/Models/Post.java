@@ -1,16 +1,9 @@
 package de.uniReddit.uniReddit.Models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.core.annotation.Order;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author Sokol Makolli
@@ -33,7 +26,7 @@ public abstract class Post extends UniItem{
     private String content;
 
     @ManyToOne
-    private UTUser creator;
+    private UtUser creator;
 
     @Column
     private boolean hasComments;
@@ -41,7 +34,7 @@ public abstract class Post extends UniItem{
     @Transient
     private boolean upvoted = false;
 
-    Post(String content, UTUser creator, University university) {
+    Post(String content, UtUser creator, University university) {
         super(university);
         this.content = content;
         setCreator(creator);
@@ -67,7 +60,7 @@ public abstract class Post extends UniItem{
         return this.upvotes;
     }
 
-    public UTUser getCreator(){
+    public UtUser getCreator(){
         return this.creator;
     }
 
@@ -80,7 +73,7 @@ public abstract class Post extends UniItem{
         updated = (int) (System.currentTimeMillis() / 1000L);
     }
 
-    public void setCreator(UTUser creator) {
+    public void setCreator(UtUser creator) {
         this.creator = creator;
     }
 

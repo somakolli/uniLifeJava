@@ -1,25 +1,15 @@
 package de.uniReddit.uniReddit.GraphQL;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
-import de.uniReddit.uniReddit.Exceptions.NotAuthenticatedException;
-import de.uniReddit.uniReddit.Exceptions.NotAuthorizedException;
-import de.uniReddit.uniReddit.Exceptions.ResourceNotFoundException;
 import de.uniReddit.uniReddit.Models.*;
 import de.uniReddit.uniReddit.Repositories.*;
 import graphql.GraphQLException;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import javax.xml.bind.ValidationException;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 
 import static de.uniReddit.uniReddit.GraphQL.HelperFunctions.*;
 
@@ -51,11 +41,11 @@ public class Query implements GraphQLQueryResolver{
     }
     public UniThread getUniThread(Long threadId){
         UniThread thread = checkExistance(threadRepository, threadId);
-        UTUser user = checkAuthorization(thread.getUniversityId(), userRepository);
+        UtUser user = checkAuthorization(thread.getUniversityId(), userRepository);
         if(user.getUpvotedPosts().contains(thread)) thread.setUpvoted(true);
         return thread;
     }
-    public UTUser getMe() {
+    public UtUser getMe() {
         return getUser(userRepository);
     }
 
@@ -65,7 +55,7 @@ public class Query implements GraphQLQueryResolver{
                                           String sortProperties) throws GraphQLException{
 
         checkExistance(universityRepository, universityId);
-        UTUser user = checkAuthorization(universityId, userRepository);
+        UtUser user = checkAuthorization(universityId, userRepository);
         List<UniSubject> uniSubjects = uniSubjectRepository.findAllByUniversity(universityRepository.findOne(universityId),
                 new PageRequest(page, pageSize, Sort.Direction.fromString(sortDirection),
                         sortProperties));
@@ -82,7 +72,7 @@ public class Query implements GraphQLQueryResolver{
 
 
         UniSubject uniSubject = checkExistance(uniSubjectRepository, uniSubjectId);;
-        UTUser user = checkAuthorization(uniSubject.getUniversityId(), userRepository);
+        UtUser user = checkAuthorization(uniSubject.getUniversityId(), userRepository);
         List<UniThread> threads = threadRepository.findAllByUniSubject(uniSubject, new PageRequest(page, pageSize, Sort.Direction.fromString(sortDirection),
                 sortProperties));
         checkUpvoted(threads, user, userRepository, postRepository);
@@ -94,7 +84,7 @@ public class Query implements GraphQLQueryResolver{
                                          String sortDirection,
                                          String sortProperties){
         UniSubject uniSubject = checkExistance(uniSubjectRepository, universityRepository, uniSubjectName, universityId);
-        UTUser user = checkAuthorization(uniSubject.getUniversityId(), userRepository);
+        UtUser user = checkAuthorization(uniSubject.getUniversityId(), userRepository);
         List<UniThread> threads = threadRepository.findAllByUniSubject(uniSubject, new PageRequest(page, pageSize, Sort.Direction.fromString(sortDirection),
                 sortProperties));
         checkUpvoted(threads, user, userRepository, postRepository);
@@ -105,7 +95,7 @@ public class Query implements GraphQLQueryResolver{
                                         String sortDirection,
                                         String sortProperties){
         Post post = checkExistance(postRepository, postId);
-        UTUser user = checkAuthorization(post.getUniversityId(), userRepository);
+        UtUser user = checkAuthorization(post.getUniversityId(), userRepository);
         List<Comment> comments = commentRepository.findAllByParent(postRepository.findOne(postId),
                 new PageRequest(page, pageSize, Sort.Direction.fromString(sortDirection),
                         sortProperties));
@@ -114,13 +104,13 @@ public class Query implements GraphQLQueryResolver{
     }
     public UniSubject getUniSubject(Long uniSubjectId){
         UniSubject uniSubject = checkExistance(uniSubjectRepository, uniSubjectId);
-        UTUser user = checkAuthorization(uniSubject.getUniversityId(), userRepository);
+        UtUser user = checkAuthorization(uniSubject.getUniversityId(), userRepository);
         uniSubject.setSubscribed(user.getSubscribedSubjects().contains(uniSubject));
         return uniSubject;
     }
 
     public List<UniThread> getMyTimeLine(int page, int pageSize, String sortDirection, String sortProperties){
-        UTUser user = getUser(userRepository);
+        UtUser user = getUser(userRepository);
         return threadRepository.findAllByUniSubjectIn(user.getSubscribedSubjects(),
                 new PageRequest(page, pageSize, Sort.Direction.fromString(sortDirection),
                         sortProperties));

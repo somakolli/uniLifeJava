@@ -7,11 +7,11 @@ import org.junit.Test;
 /**
  *  @author Sokol Makolli
  */
-public class UTUserTest {
+public class UtUserTest {
     private static final String email = "s.makolli@aol.de";
 
 
-    private UTUser UTUser;
+    private UtUser UTUser;
 
     private UniSubject uniSubject;
 
@@ -25,7 +25,7 @@ public class UTUserTest {
     public void setup() {
         uni = new University("Uni Stuttgart", "Stuttgart");
         uni.setId((long)1);
-        UTUser = new UTUserBuilder().setEmail(email).setPassword("").setUniversity(uni).createUTUser();
+        UTUser = new UtUserBuilder().setEmail(email).setPassword("").setUniversity(uni).createUTUser();
         UTUser.setId((long)2);
         UTUser.setUniversity(uni);
         uniSubject = new UniSubjectBuilder().setName("dsa").setUniversity(uni).createUniSubject();

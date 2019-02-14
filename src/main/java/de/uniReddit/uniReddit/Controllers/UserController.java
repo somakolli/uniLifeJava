@@ -1,10 +1,8 @@
 package de.uniReddit.uniReddit.Controllers;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import de.uniReddit.uniReddit.GraphQL.HelperFunctions;
 import de.uniReddit.uniReddit.Models.Roles;
-import de.uniReddit.uniReddit.Models.UTUser;
-import de.uniReddit.uniReddit.Models.UniSubject;
+import de.uniReddit.uniReddit.Models.UtUser;
 import de.uniReddit.uniReddit.Models.University;
 import de.uniReddit.uniReddit.Repositories.UniSubjectRepository;
 import de.uniReddit.uniReddit.Repositories.UniversityRepository;
@@ -14,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -41,7 +38,7 @@ public class UserController {
     returns the given user given the pathvariable username
      */
     @RequestMapping(method = RequestMethod.GET, value = "/{email}")
-    UTUser get(@PathVariable String email){
+    UtUser get(@PathVariable String email){
         return userRepository.findByEmail(email);
     }
 
@@ -55,7 +52,7 @@ public class UserController {
         if(currentUsername==null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         if(!userRepository.findByEmail(currentUsername).getRole().equals(Roles.Admin))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        UTUser UTUser = userRepository.findByEmail(username);
+        UtUser UTUser = userRepository.findByEmail(username);
         UTUser.setRole(Roles.Admin);
         userRepository.save(UTUser);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
@@ -69,7 +66,7 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         if(username==null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        UTUser UTUser = userRepository.findByEmail(username);
+        UtUser UTUser = userRepository.findByEmail(username);
         return ResponseEntity.ok(UTUser.getRole());
     }
 
@@ -99,7 +96,7 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/setUniversity/{universityId}")
     ResponseEntity<?> setUniversity(@PathVariable Long universityId){
-        UTUser user = HelperFunctions.getUser(userRepository);
+        UtUser user = HelperFunctions.getUser(userRepository);
         University university = HelperFunctions.checkExistance(universityRepository, universityId);
         user.setUniversity(university);
         userRepository.save(user);

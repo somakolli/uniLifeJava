@@ -1,18 +1,14 @@
 package de.uniReddit.uniReddit.security;
 
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
 import de.uniReddit.uniReddit.Models.Roles;
-import de.uniReddit.uniReddit.Models.UTUser;
+import de.uniReddit.uniReddit.Models.UtUser;
 import de.uniReddit.uniReddit.Repositories.UserRepository;
-import io.jsonwebtoken.Jwts;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -69,7 +65,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter{
             String picture = userCreds.getPicture();
             if(uid != null){
                 if(!userRepository.existsByEmail(email)){
-                    UTUser user = new UTUser();
+                    UtUser user = new UtUser();
                     user.setEmail(email);
                     user.setFirstName(name);
                     user.setProfilePictureUrl(picture);

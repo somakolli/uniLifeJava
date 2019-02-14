@@ -15,8 +15,8 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 
 @Entity
-@DiscriminatorValue("UTUSER")
-public class UTUser extends UniItem{
+@DiscriminatorValue("UT_USER")
+public class UtUser extends UniItem{
     //Firebase ID
     @Column(unique = true)
     private String uid;
@@ -52,11 +52,11 @@ public class UTUser extends UniItem{
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Post> upvotedPosts = new HashSet<>();
 
-    public UTUser() {
+    public UtUser() {
         // JPA
     }
 
-    public UTUser(String firstName, String surName, String email, String profilePictureUrl, University university) {
+    public UtUser(String firstName, String surName, String email, String profilePictureUrl, University university) {
         super(university);
         this.firstName = firstName;
         this.surName = surName;
@@ -64,7 +64,7 @@ public class UTUser extends UniItem{
         this.profilePictureUrl = profilePictureUrl;
     }
 
-    public UTUser(String email, String username, University university) {
+    public UtUser(String email, String username, University university) {
         super(university);
         this.email = email;
     }

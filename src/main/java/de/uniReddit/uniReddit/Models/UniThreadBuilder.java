@@ -2,7 +2,7 @@ package de.uniReddit.uniReddit.Models;
 
 public class UniThreadBuilder {
     private String content;
-    private UTUser creator;
+    private UtUser creator;
     private String title;
     private UniSubject uniSubject;
 
@@ -11,7 +11,7 @@ public class UniThreadBuilder {
         return this;
     }
 
-    public UniThreadBuilder setCreator(UTUser creator) {
+    public UniThreadBuilder setCreator(UtUser creator) {
         this.creator = creator;
         return this;
     }

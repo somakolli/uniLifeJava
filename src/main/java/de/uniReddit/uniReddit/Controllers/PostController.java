@@ -1,7 +1,7 @@
 package de.uniReddit.uniReddit.Controllers;
 
 import de.uniReddit.uniReddit.Models.Post;
-import de.uniReddit.uniReddit.Models.UTUser;
+import de.uniReddit.uniReddit.Models.UtUser;
 import de.uniReddit.uniReddit.Repositories.PostRepository;
 import de.uniReddit.uniReddit.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.UUID;
 
 /**
  * Created by Sokol on 24.11.2017.
@@ -40,11 +38,11 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found");
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        UTUser user = userRepository.findByEmail(email);
+        UtUser user = userRepository.findByEmail(email);
         if(user==null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         Post post = postRepository.findOne(postId);
-        UTUser creator = post.getCreator();
+        UtUser creator = post.getCreator();
         if (user.getUpvotedPosts().contains(post)) {
             postRepository.decrementVotesById(postId);
             user.getUpvotedPosts().remove(post);
