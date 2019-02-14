@@ -1,7 +1,6 @@
-# Datasource
 spring.datasource.driverClassName=org.postgresql.Driver
-spring.datasource.url=jdbc:postgresql://aaw3pxw4q70ie.cjn86prde6jl.eu-central-1.rds.amazonaws.com:5432/ebdb
-spring.datasource.username=postgres
-spring.datasource.password=QxprcWXB7yzKDXLX
-spring.jpa.hibernate.ddl-auto=create-drop
-server.port = 5000
+spring.datasource.maxActive=10
+spring.datasource.maxIdle=5
+spring.datasource.minIdle=2
+spring.datasource.initialSize=5
+spring.datasource.removeAbandoned=true
