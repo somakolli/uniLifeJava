@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 
 @Entity
-@DiscriminatorValue("USER")
+@DiscriminatorValue("UTUSER")
 public class UTUser extends UniItem{
     //Firebase ID
     @Column(unique = true)
