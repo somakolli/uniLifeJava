@@ -1,7 +1,11 @@
 package de.uniReddit.uniReddit.Controllers;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import de.uniReddit.uniReddit.Models.*;
+import de.uniReddit.uniReddit.GraphQL.HelperFunctions;
+import de.uniReddit.uniReddit.Models.Roles;
+import de.uniReddit.uniReddit.Models.UTUser;
+import de.uniReddit.uniReddit.Models.UniSubject;
+import de.uniReddit.uniReddit.Models.University;
 import de.uniReddit.uniReddit.Repositories.UniSubjectRepository;
 import de.uniReddit.uniReddit.Repositories.UniversityRepository;
 import de.uniReddit.uniReddit.Repositories.UserRepository;
@@ -13,8 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 
 /**
  * Created by Sokol on 25.09.2017.
@@ -25,126 +27,22 @@ public class UserController {
     private final UserRepository userRepository;
     private final UniSubjectRepository uniSubjectRepository;
     private final UniversityRepository universityRepository;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     UserController(UserRepository userRepository,
                    UniSubjectRepository uniSubjectRepository,
-                   UniversityRepository universityRepository,
-                   BCryptPasswordEncoder bCryptPasswordEncoder){
+                   UniversityRepository universityRepository){
         this.userRepository = userRepository;
         this.uniSubjectRepository = uniSubjectRepository;
         this.universityRepository = universityRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }
-
-    /*
-    creates a user given the user encoded in json
-     */
-    @RequestMapping(method = RequestMethod.POST, value = "/sign-up")
-    ResponseEntity<?> add(@RequestBody UTUser UTUser) throws URISyntaxException {
-
-        UTUser.setUniversity(universityRepository.findOne(UTUser.getUniversityId()));
-
-        if(userRepository.existsByUsername(UTUser.getUsername()))
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("username exists");
-
-        if(userRepository.existsByEmail(UTUser.getEmail()))
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("email exists");
-
-        if(!universityRepository.exists(UTUser.getUniversity().getId())){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("university not found");
-        }
-        University university = this.universityRepository.findOne(UTUser.getUniversityId());
-
-        String passwordEnc = bCryptPasswordEncoder.encode(UTUser.getPassword());
-
-        UTUser.setPassword(passwordEnc);
-
-        this.userRepository.save(UTUser);
-
-        URI uri = new URI("/api/users/" + UTUser.getUsername());
-        return ResponseEntity.created(uri).build();
-
     }
 
     /*
     returns the given user given the pathvariable username
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/{username}")
-    @JsonView(View.Everyone.class)
-    UTUser get(@PathVariable String username){
-        return userRepository.findByUsername(username);
-    }
-
-    /*
-    subscribes the current user to the given subject
-     */
-    @RequestMapping(method = RequestMethod.GET, value = "/subscribe")
-    ResponseEntity<?> subscribe(@RequestParam Long uniSubjectId){
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        if(!uniSubjectRepository.exists(uniSubjectId))
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("uniSubject not found");
-        UTUser UTUser = userRepository.findByUsername(username);
-        UniSubject uniSubject = uniSubjectRepository.findOne(uniSubjectId);
-        UTUser.subscribe(uniSubject);
-        userRepository.save(UTUser);
-        uniSubjectRepository.save(uniSubject);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-    }
-
-    /*
-    @promise unbscribes the current user to the given subject
-     */
-    @RequestMapping(method = RequestMethod.GET, value = "/unsubscribe")
-    ResponseEntity<?> unsubscribe( @RequestParam Long uniSubjectId){
-        if(!uniSubjectRepository.exists(uniSubjectId))
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("uniSubject not found");
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        UTUser UTUser = userRepository.findByUsername(username);
-        UniSubject uniSubject = uniSubjectRepository.findOne(uniSubjectId);
-        UTUser.unSubscribe(uniSubject);
-        userRepository.save(UTUser);
-        uniSubjectRepository.save(uniSubject);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-    }
-
-    @RequestMapping(method = RequestMethod.PUT)
-    ResponseEntity<?> update(@RequestParam String username,
-                             @RequestParam String email,
-                             @RequestParam Long universityId){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName();
-
-        if(!currentUsername.equals(username))
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        if(!userRepository.existsByUsername(username))
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("username not found");
-        if(!universityRepository.exists(universityId))
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("universoty not found");
-        UTUser UTUser = userRepository.findByUsername(username);
-
-        UTUser.setEmail(email);
-        UTUser.setUniversity(universityRepository.findOne(universityId));
-        UTUser.setEmail(email);
-        this.userRepository.save(UTUser);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-    }
-
-    @RequestMapping(method = RequestMethod.DELETE)
-    ResponseEntity<?> delete(@RequestParam String username){
-        if(!userRepository.existsByUsername(username))
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("username not found");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName();
-
-        if(!currentUsername.equals(username))
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-
-        this.universityRepository.delete(userRepository.findByUsername(username).getId());
-        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+    @RequestMapping(method = RequestMethod.GET, value = "/{email}")
+    UTUser get(@PathVariable String email){
+        return userRepository.findByEmail(email);
     }
 
     /*
@@ -154,9 +52,10 @@ public class UserController {
     ResponseEntity elevate(@RequestParam String username){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
-        if(!userRepository.findByUsername(currentUsername).getRole().equals(Roles.Admin))
+        if(currentUsername==null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if(!userRepository.findByEmail(currentUsername).getRole().equals(Roles.Admin))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        UTUser UTUser = userRepository.findByUsername(username);
+        UTUser UTUser = userRepository.findByEmail(username);
         UTUser.setRole(Roles.Admin);
         userRepository.save(UTUser);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
@@ -169,21 +68,11 @@ public class UserController {
     ResponseEntity<?> getRole(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        UTUser UTUser = userRepository.findByUsername(username);
+        if(username==null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        UTUser UTUser = userRepository.findByEmail(username);
         return ResponseEntity.ok(UTUser.getRole());
     }
 
-    /*
-    @return the currently authenticated user
-     */
-    @JsonView(View.Authorized.class)
-    @RequestMapping(method = RequestMethod.GET, value = "/me")
-    ResponseEntity<UTUser> getCurrentUser(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        UTUser UTUser = userRepository.findByUsername(username);
-        return ResponseEntity.ok(UTUser);
-    }
 
     /*
     validates the property with the given value
@@ -194,7 +83,7 @@ public class UserController {
     ResponseEntity<?> exists(@PathVariable String property,@PathVariable String value){
         value = value.replace("(dot)", ".");
         if(property.equals("username")) {
-            if (userRepository.existsByUsername(value)) {
+            if (userRepository.existsByEmail(value)) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).header("Error-Message", "Username already in use.").build();
             }
             return ResponseEntity.ok().build();
@@ -206,6 +95,15 @@ public class UserController {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/setUniversity/{universityId}")
+    ResponseEntity<?> setUniversity(@PathVariable Long universityId){
+        UTUser user = HelperFunctions.getUser(userRepository);
+        University university = HelperFunctions.checkExistance(universityRepository, universityId);
+        user.setUniversity(university);
+        userRepository.save(user);
+        return ResponseEntity.accepted().build();
     }
 
 }

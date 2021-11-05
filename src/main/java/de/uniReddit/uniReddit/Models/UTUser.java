@@ -1,12 +1,13 @@
 package de.uniReddit.uniReddit.Models;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -14,76 +15,66 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 
 @Entity
-public class UTUser {
+@DiscriminatorValue("USER")
+public class UTUser extends UniItem{
+    //Firebase ID
+    @Column(unique = true)
+    private String uid;
 
-    @Id
-    @GeneratedValue
-    @JsonView(View.Authorized.class)
-    private Long id;
+    @Column
+    private String firstName;
+
+    @Column
+    private String surName;
 
     @NotNull
     @NotEmpty
     @Column(unique = true)
-    @JsonView(View.Everyone.class)
     private String email;
 
-    @NotNull
-    @NotEmpty
-    @Column(unique = true)
-    @JsonView(View.Everyone.class)
-    private String username;
-
-    @NotNull
-    @NotEmpty
     @Column
-    private String password;
+    private String profilePictureUrl;
 
     @NotNull
     @Column
     @Enumerated(EnumType.STRING)
-    @JsonView(View.Authorized.class)
     private Roles role = Roles.User;
 
     @Column
-    @JsonView(View.Everyone.class)
-    private AtomicLong karma = new AtomicLong(0);
+    private long karma = 0;
 
     @Column
-    @JsonView(View.Authorized.class)
     private Date registeredDate = new Date();
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "creator")
-    private Set<Post> createdPosts = new HashSet<>();
-
-    @JsonIgnore
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<UniSubject> subscribedSubjects = new HashSet<>();
 
-    @JsonIgnore
-    @ManyToOne
-    private University university;
-
-    @Transient
-    @JsonView(View.Everyone.class)
-    private Long universityId;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Post> upvotedPosts = new HashSet<>();
 
     public UTUser() {
         // JPA
     }
 
-    public Long getId() {
-        return id;
+    public UTUser(String firstName, String surName, String email, String profilePictureUrl, University university) {
+        super(university);
+        this.firstName = firstName;
+        this.surName = surName;
+        this.email = email;
+        this.profilePictureUrl = profilePictureUrl;
     }
 
-    public Set<Post> getCreatedPosts(){
-        return createdPosts;
+    public UTUser(String email, String username, University university) {
+        super(university);
+        this.email = email;
     }
 
-    public Set<Long> getCreatedPostIds(){
-        HashSet<Long> ids = new HashSet<>();
-        getCreatedPosts().forEach(user -> ids.add(user.getId()));
-        return ids;
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
+    }
+
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
     }
 
     public Roles getRole() {
@@ -92,22 +83,6 @@ public class UTUser {
 
     public void setRole(Roles role) {
         this.role = role;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getEmail() {
@@ -123,86 +98,57 @@ public class UTUser {
         return registeredDate;
     }
 
-    public University getUniversity() {
-        return university;
-    }
-
-    public Long getUniversityId() {
-        if(university!=null)
-            return university.getId();
-        return universityId;
-    }
-
-    public void setUniversityId(Long universityId) {
-        this.universityId = universityId;
-    }
-
-    public void setUniversity(University university) {
-        university.getUTUsers().add(this);
-        this.university = university;
-    }
-
+    // @return true if subscribe false if unsubscribe
     public boolean subscribe(UniSubject uniSubject){
-        uniSubject.getSubscribedUTUsers().add(this);
-        return subscribedSubjects.add(uniSubject);
+        if(subscribedSubjects.contains(uniSubject)){
+            uniSubject.setSubscribed(false);
+            subscribedSubjects.remove(uniSubject);
+            return false;
+        }
+        else {
+            uniSubject.setSubscribed(true);
+            subscribedSubjects.add(uniSubject);
+            return true;
+        }
     }
 
-    public Set<UniSubject> getSubscribedSubjects() {
-        return subscribedSubjects;
-    }
-
-    public Set<Long> getSubscribedSubjectsIds(){
-        HashSet<Long> ids = new HashSet<>();
-        getSubscribedSubjects().forEach(user -> ids.add(user.getId()));
-        return ids;
+    public List<UniSubject> getSubscribedSubjects() {
+        return new ArrayList<>(subscribedSubjects);
     }
 
     public long getKarma() {
-        return karma.get();
-    }
-
-    public void unSubscribe(UniSubject uniSubject) {
-        uniSubject.getSubscribedUTUsers().remove(this);
-        subscribedSubjects.remove(uniSubject);
+        return karma;
     }
 
     public void setKarma(long karma) {
-        this.karma.set(karma);
+        this.karma=karma;
     }
 
-    public static final class UserBuilder {
-        private UTUser UTUser;
+    public String getFirstName() {
+        return firstName;
+    }
 
-        public UserBuilder() {
-            UTUser = new UTUser();
-        }
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-        public static UserBuilder anUser() {
-            return new UserBuilder();
-        }
+    public String getSurName() {
+        return surName;
+    }
 
-        public UserBuilder email(String email) {
-            UTUser.setEmail(email);
-            return this;
-        }
+    public void setSurName(String surName) {
+        this.surName = surName;
+    }
 
-        public UserBuilder username(String username) {
-            UTUser.setUsername(username);
-            return this;
-        }
+    public Set<Post> getUpvotedPosts() {
+        return upvotedPosts;
+    }
 
-        public UserBuilder university(University university) {
-            UTUser.setUniversity(university);
-            return this;
-        }
+    public String getUid() {
+        return uid;
+    }
 
-        public UserBuilder password(String password) {
-            UTUser.setPassword(password);
-            return this;
-        }
-
-        public UTUser build() {
-            return UTUser;
-        }
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 }

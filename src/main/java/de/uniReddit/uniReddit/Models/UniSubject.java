@@ -1,85 +1,53 @@
 package de.uniReddit.uniReddit.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by sokol on 06.08.17.
  */
 @Entity
-public class UniSubject {
-    @Id
-    @GeneratedValue
-    private long id;
+@Inheritance
+@DiscriminatorValue("SUBJECT")
+public class UniSubject extends UniItem {
 
     @Column
     private String name;
 
-    @JsonIgnore
-    @ManyToOne
-    private University university;
+    @Column
+    private String description = "";
 
-    @JsonIgnore
-    @ManyToMany
-    private Set<UTUser> subscribedUTUsers = new HashSet<>();
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "uniSubject")
-    private Set<UniThread> uniThreads = new HashSet<>();
+    @Column
+    private Long numberOfSubscribers = (long)0;
 
     @Transient
-    private Long universityId;
+    private boolean subscribed = false;
 
-    UniSubject() {
+    public UniSubject() {
     }
 
-    public Long getUniversityId() {
-        if(university!=null)
-            return university.getId();
-        return universityId;
+    public UniSubject(String name, University university) {
+        super(university);
+        this.name = name;
     }
 
-    public void setUniversityId(Long universityId) {
-        this.universityId = universityId;
+    public UniSubject(University university, String name, String description) {
+        super(university);
+        this.name = name;
+        this.description = description;
     }
 
-    public UniSubject(University university) {
-        this.university = university;
+    public String getDescription() {
+        return description;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public University getUniversity() {
-        return university;
-    }
-
-    public void setUniversity(University university) {
-        this.university = university;
-    }
-
-    public Set<UTUser> getSubscribedUTUsers() {
-        return subscribedUTUsers;
-    }
-
-    public void setSubscribedUTUsers(Set<UTUser> subscribedUTUsers) {
-        this.subscribedUTUsers = subscribedUTUsers;
-    }
-
-    public Set<UniThread> getUniThreads() {
-        return uniThreads;
-    }
-
-    public void setUniThreads(Set<UniThread> uniThreads) {
-        this.uniThreads = uniThreads;
-    }
-
-    public void setId(long id) {
-        this.id = id;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getName() {
@@ -90,4 +58,27 @@ public class UniSubject {
         this.name = name;
     }
 
+    public boolean getSubscribed(){
+        return subscribed;
+    }
+
+    public void setSubscribed(boolean subscribed){
+        this.subscribed = subscribed;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        return ((UniSubject) obj).getId().equals(getId());
+    }
+
+    public Long getNumberOfSubscribers() {
+        return numberOfSubscribers;
+    }
+
+    public void setNumberOfSubscribers(Long numberOfSubscribers) {
+        this.numberOfSubscribers = numberOfSubscribers;
+    }
+
+    public boolean isSubscribed() {
+        return subscribed;
+    }
 }

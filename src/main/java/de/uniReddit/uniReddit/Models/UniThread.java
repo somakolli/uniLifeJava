@@ -7,12 +7,12 @@ import javax.persistence.*;
  */
 @Entity
 @Inheritance
-@DiscriminatorValue("T")
+@DiscriminatorValue("THREAD")
 public class UniThread extends Post{
     @Column
     private String title;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private UniSubject uniSubject;
 
     @Transient
@@ -42,50 +42,14 @@ public class UniThread extends Post{
         this.uniSubject = uniSubject;
     }
 
-    UniThread(){
+    public UniThread(){
         super();
         //JPA
     }
 
     public UniThread(String content, UTUser creator, String title, UniSubject uniSubject) {
-        super(content, creator);
+        super(content, creator, uniSubject.getUniversity());
         this.title = title;
         this.uniSubject = uniSubject;
-    }
-
-    public static final class UniThreadBuilder {
-        private UniThread uniThread;
-
-        public UniThreadBuilder() {
-            uniThread = new UniThread();
-        }
-
-        public static UniThreadBuilder anUniThread() {
-            return new UniThreadBuilder();
-        }
-
-        public UniThreadBuilder title(String title) {
-            uniThread.setTitle(title);
-            return this;
-        }
-
-        public UniThreadBuilder uniSubject(UniSubject uniSubject) {
-            uniThread.setUniSubject(uniSubject);
-            return this;
-        }
-
-        public UniThreadBuilder content(String content) {
-            uniThread.setContent(content);
-            return this;
-        }
-
-        public UniThreadBuilder creator(UTUser creator) {
-            uniThread.setCreator(creator);
-            return this;
-        }
-
-        public UniThread build() {
-            return uniThread;
-        }
     }
 }

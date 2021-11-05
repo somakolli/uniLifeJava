@@ -10,7 +10,6 @@ import org.junit.Test;
 public class UTUserTest {
     private static final String email = "s.makolli@aol.de";
 
-    private static final String username = "sokol";
 
     private UTUser UTUser;
 
@@ -18,43 +17,40 @@ public class UTUserTest {
 
     private University uni;
 
+    private UniThread thread;
+
+    private Comment comment;
+
     @Before
-    public void setup(){
-        UTUser = new UTUser.UserBuilder().username(username).email(email).build();
+    public void setup() {
         uni = new University("Uni Stuttgart", "Stuttgart");
-        uniSubject = new UniSubject(uni);
-
-
+        uni.setId((long)1);
+        UTUser = new UTUserBuilder().setEmail(email).setPassword("").setUniversity(uni).createUTUser();
+        UTUser.setId((long)2);
+        UTUser.setUniversity(uni);
+        uniSubject = new UniSubjectBuilder().setName("dsa").setUniversity(uni).createUniSubject();
+        uniSubject.setId((long)3);
+        thread = new UniThreadBuilder().setContent("Content").setCreator(UTUser).setTitle("Title").setUniSubject(uniSubject).createUniThread();
+        thread.setId((long)4);
+        comment = new CommentBuilder().setContent("Content").setCreator(UTUser).setParent(thread).createComment();
+        comment.setId((long)5);
     }
 
-
     @Test
-    public void testMinConstructor(){
+    public void testMinConstructor() {
         Assert.assertEquals(email, UTUser.getEmail());
-        Assert.assertEquals(username, UTUser.getUsername());
     }
 
     @Test
-    public void testSubscription(){
-        Assert.assertTrue(UTUser.subscribe(uniSubject));
-        Assert.assertTrue(UTUser.getSubscribedSubjects().contains(uniSubject));
-        Assert.assertTrue(uniSubject.getSubscribedUTUsers().contains(UTUser));
-    }
-
-    @Test
-    public void testUnsubscribe(){
-        UTUser.unSubscribe(uniSubject);
-        Assert.assertFalse(UTUser.getSubscribedSubjects().contains(uniSubject));
-        Assert.assertFalse(uniSubject.getSubscribedUTUsers().contains(UTUser));
-    }
-
-    @Test
-    public void enrollmentTest(){
+    public void enrollmentTest() {
         UTUser.setUniversity(uni);
         Assert.assertTrue(UTUser.getUniversity().equals(uni));
-        Assert.assertTrue(uni.getUTUsers().contains(UTUser));
     }
-
-
-
+    @Test
+    public void subscribeTest() {
+        UTUser.subscribe(uniSubject);
+        Assert.assertTrue(UTUser.getSubscribedSubjects().contains(uniSubject));
+        UTUser.subscribe(uniSubject);
+        Assert.assertTrue(!UTUser.getSubscribedSubjects().contains(uniSubject));
+    }
 }

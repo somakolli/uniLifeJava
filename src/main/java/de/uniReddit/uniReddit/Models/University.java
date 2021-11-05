@@ -1,25 +1,18 @@
 package de.uniReddit.uniReddit.Models;
 
-import com.fasterxml.jackson.annotation.*;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author Sokol Makolli
  */
 @Entity
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
-public class University {
-    @Id
-    @GeneratedValue
-    private Long id;
-
+@DiscriminatorValue("UNIVERSITY")
+public class University extends Node {
     @NotEmpty
     @NotNull
     @Column
@@ -30,14 +23,11 @@ public class University {
     @Column
     private String location;
 
-    public University() {
+    private University() {
         //JPA
     }
-    @JsonIgnore
-    @OneToMany(mappedBy = "university")
-    private Set<UTUser> UTUsers = new HashSet<>();
 
-    University(String name, String location) {
+    public University(String name, String location) {
         this.name = name;
         this.location = location;
     }
@@ -46,17 +36,8 @@ public class University {
         this.name = name;
     }
 
-    @JsonIgnore
-    public Set<UTUser> getUTUsers() {
-        return UTUsers;
-    }
-
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getName() {
@@ -67,36 +48,4 @@ public class University {
         return location;
     }
 
-    @JsonIgnore
-    public HashSet<Long> getUserIds(){
-        HashSet<Long> ids = new HashSet<>();
-        getUTUsers().forEach(user -> ids.add(user.getId()));
-        return ids;
-    }
-
-    public static final class UniversityBuilder {
-        private University university;
-
-        public UniversityBuilder() {
-            university = new University();
-        }
-
-        public static UniversityBuilder anUniversity() {
-            return new UniversityBuilder();
-        }
-
-        public UniversityBuilder name(String name) {
-            university.setName(name);
-            return this;
-        }
-
-        public UniversityBuilder location(String location) {
-            university.setLocation(location);
-            return this;
-        }
-
-        public University build() {
-            return university;
-        }
-    }
 }

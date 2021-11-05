@@ -2,52 +2,44 @@ package de.uniReddit.uniReddit.Models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.core.annotation.Order;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author Sokol Makolli
  */
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "POST_TYPE")
-@Table(name = "POST")
-public abstract class Post {
-    @Id
-    @GeneratedValue
-    private Long id;
+@DiscriminatorValue("POST")
+public abstract class Post extends UniItem{
+    @Column
+    private int created = (int) (System.currentTimeMillis() / 1000L);;
 
     @Column
-    private final Date created = new Date();
-
-    @Column
-    private Date updated = new Date();
-
-    @JsonIgnore
-    @ManyToMany
-    private Set<UTUser> upvoters = new HashSet<>();
+    private int updated = (int) (System.currentTimeMillis() / 1000L);;
 
     @Column
     @NotNull
     @Order
     private long upvotes = 0;
 
-    @Column
+    @Column(columnDefinition="TEXT")
     private String content;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "parent")
-    private Set<Comment> children = new HashSet<>();
-
-    @JsonBackReference
     @ManyToOne
     private UTUser creator;
 
-    Post(String content, UTUser creator)
-    {
+    @Transient
+    private boolean upvoted = false;
+
+    Post(String content, UTUser creator, University university) {
+        super(university);
         this.content = content;
         setCreator(creator);
     }
@@ -56,19 +48,11 @@ public abstract class Post {
         // JPA
     }
 
-    public Long getUniversityId() {
-        return creator.getUniversityId();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Date getCreated() {
+    public int getCreated() {
         return created;
     }
 
-    public Date getUpdated() {
+    public int getUpdated() {
         return updated;
     }
 
@@ -80,56 +64,51 @@ public abstract class Post {
         return this.upvotes;
     }
 
-    public long getChildrenCount(){
-        return children.size();
-    }
-
     public UTUser getCreator(){
         return this.creator;
     }
 
-    public String getCreatorUsername(){
-        return this.creator.getUsername();
+    public String getShortContent(){
+        return content.length() > 100 ? content.substring(0, 100) : content;
     }
 
     public void setContent(String content){
         this.content = content;
-        updated = new Date();
+        updated = (int) (System.currentTimeMillis() / 1000L);
     }
 
     public void setCreator(UTUser creator) {
-        creator.getCreatedPosts().add(this);
         this.creator = creator;
     }
 
     public void addChild(Comment comment){
         if(!comment.getParent().equals(this))
             comment.setParent(this);
-        if(!children.contains(comment))
-            children.add(comment);
-    };
-
-    boolean containsChild(Comment comment){
-        return children.contains(comment);
     }
 
-    public void upvote(UTUser UTUser) {
-        if(upvoters.contains(UTUser)){
-            upvoters.remove(UTUser);
-        }else{
-            upvoters.add(UTUser);
-        }
-        upvotes = upvoters.size();
+    public void setUpdated(int updated) {
+        this.updated = updated;
     }
 
-    public List<Long> getChildrenIds(){
-        List<Long> childrenIds = new ArrayList<>();
-        for (Comment comment :
-                children) {
-            childrenIds.add(comment.getId());
-        }
-        return childrenIds;
+    public void setUpvotes(long upvotes) {
+        this.upvotes = upvotes;
     }
 
+    public void setCreated(int created) {
+        this.created = created;
+    }
 
+    public boolean isUpvoted() {
+        return upvoted;
+    }
+
+    public void setUpvoted(boolean upvoted) {
+        this.upvoted = upvoted;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(getClass()!=obj.getClass()) return false;
+        return this.getId().equals(((Node)obj).getId());
+    }
 }
